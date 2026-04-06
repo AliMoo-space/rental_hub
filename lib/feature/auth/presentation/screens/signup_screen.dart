@@ -120,8 +120,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   },
                 ),
                 HeightSpace(40),
-
-                PrimrayButtonWidget(
+                PrimaryButtonWidget(
                   buttonText: 'Create Account',
                   onPress: () {
                     final isFormValid = formKey.currentState!.validate();

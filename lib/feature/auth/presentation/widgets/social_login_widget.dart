@@ -7,8 +7,15 @@ import 'package:rental_hub/core/widgets/primary_button_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 
 class SocialLoginWidget extends StatelessWidget {
-  const SocialLoginWidget({super.key, required this.text});
+  const SocialLoginWidget({
+    super.key,
+    required this.text,
+    this.onGooglePressed,
+    this.onFacebookPressed,
+  });
   final String text;
+  final VoidCallback? onGooglePressed;
+  final VoidCallback? onFacebookPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +35,13 @@ class SocialLoginWidget extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: PrimrayButtonWidget(
-                onPress: () {},
+              child: PrimaryButtonWidget(
+                onPress: onGooglePressed,
                 buttonColor: Colors.grey[100],
                 height: 56.h,
                 buttonText: 'Google',
                 icon: SvgPicture.asset(
-                  'assets/icons/google.svg',
+                  AppAssets.google,
                   width: 24.w,
                   height: 24.h,
                 ),
@@ -43,8 +50,8 @@ class SocialLoginWidget extends StatelessWidget {
             ),
             WidthSpace(18),
             Expanded(
-              child: PrimrayButtonWidget(
-                onPress: () {},
+              child: PrimaryButtonWidget(
+                onPress: onFacebookPressed,
                 buttonColor: Colors.grey[100],
                 height: 56.h,
                 buttonText: 'Facebook',

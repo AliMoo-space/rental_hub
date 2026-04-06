@@ -3,7 +3,7 @@ import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class PrimrayButtonWidget extends StatelessWidget {
+class PrimaryButtonWidget extends StatelessWidget {
   final String? buttonText;
   final Color? buttonColor;
   final double? width;
@@ -15,7 +15,7 @@ class PrimrayButtonWidget extends StatelessWidget {
   final Widget? trailingIcon;
   final void Function()? onPress;
   final bool isLoading;
-  const PrimrayButtonWidget({
+  const PrimaryButtonWidget({
     super.key,
     this.buttonText,
     this.buttonColor,

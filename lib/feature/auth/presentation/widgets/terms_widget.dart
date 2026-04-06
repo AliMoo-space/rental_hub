@@ -16,23 +16,18 @@ class TermsWidget extends StatelessWidget {
         Checkbox(
           value: value,
           activeColor: AppColors.primaryColor,
-          side: BorderSide(
-            color: !value ? AppColors.primaryColor : Colors.red,
-            width: .3,
-          ),
+          side: BorderSide(width: .3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.r),
           ),
           onChanged: onChanged,
         ),
-
         Expanded(
           child: Text.rich(
             TextSpan(
               style: TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
               children: [
                 const TextSpan(text: 'I agree to the '),
-
                 TextSpan(
                   text: 'Terms of Service',
                   style: const TextStyle(
@@ -44,9 +39,7 @@ class TermsWidget extends StatelessWidget {
                       // navigate to terms
                     },
                 ),
-
                 const TextSpan(text: ' and '),
-
                 TextSpan(
                   text: 'Privacy Policy',
                   style: const TextStyle(
@@ -58,7 +51,6 @@ class TermsWidget extends StatelessWidget {
                       // navigate to privacy
                     },
                 ),
-
                 const TextSpan(text: '.'),
               ],
             ),
