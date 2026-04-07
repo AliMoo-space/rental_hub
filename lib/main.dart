@@ -4,7 +4,6 @@ import 'package:rental_hub/core/databases/cache/cache_helper.dart';
 import 'package:rental_hub/core/utils/service_locator.dart';
 import 'package:rental_hub/core/routing/router_generation_config.dart';
 import 'package:rental_hub/core/styling/theme_data.dart';
-import 'package:rental_hub/core/styling/app_constants.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

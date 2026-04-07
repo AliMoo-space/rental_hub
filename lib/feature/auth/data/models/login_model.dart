@@ -1,7 +1,7 @@
 import 'package:rental_hub/feature/auth/domain/entities/login_entity.dart';
 
 class LoginModel extends LoginEntity {
-  LoginModel({
+  const LoginModel({
     required super.accessToken,
     required super.expiresAtUtc,
     required super.refreshToken,
