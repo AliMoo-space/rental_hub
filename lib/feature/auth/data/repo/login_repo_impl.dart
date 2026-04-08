@@ -19,8 +19,8 @@ class LoginRepoImpl implements LoginRepo {
     } on ServerException catch (e) {
       return Left(
         Failure(
-          errMessage: e.errorModel.firstErrorMessage,
           statusCode: e.errorModel.statusCode,
+          errMessage: e.errorModel.firstErrorMessage,
         ),
       );
     } catch (e) {

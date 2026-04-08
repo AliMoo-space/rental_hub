@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rental_hub/feature/auth/domain/entities/forgot_password_entity.dart';
-import 'package:rental_hub/feature/auth/domain/entities/forgot_password_params.dart';
 import 'package:rental_hub/feature/auth/domain/usecases/forgot_password_use_case.dart';
 
 class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
@@ -30,9 +29,7 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
 
     emit(const ForgotPasswordLoading());
 
-    final result = await forgotPasswordUseCase(
-      ForgotPasswordParams(email: trimmedEmail),
-    );
+    final result = await forgotPasswordUseCase(trimmedEmail);
 
     result.fold(
       (failure) => emit(ForgotPasswordError(failure.errMessage)),

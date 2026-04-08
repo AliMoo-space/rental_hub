@@ -52,9 +52,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
         if (state is ForgotPasswordSuccess) {
           showMsg(
-            state.entity.message.isEmpty
+            state.entity.email.isEmpty
                 ? 'Verification code sent successfully'
-                : state.entity.message,
+                : state.entity.email,
             context,
           );
           context.goNamed(AppRoutes.otpVerificationScreen, extra: state.email);

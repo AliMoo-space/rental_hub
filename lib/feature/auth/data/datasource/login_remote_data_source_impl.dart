@@ -3,6 +3,7 @@ import 'package:rental_hub/core/databases/api/end_points.dart';
 import 'package:rental_hub/core/databases/cache/cache_helper.dart';
 import 'package:rental_hub/core/errors/error_handling.dart';
 import 'package:rental_hub/core/errors/error_model.dart';
+import 'package:rental_hub/core/utils/response_parser.dart';
 import 'package:rental_hub/feature/auth/data/models/login_model.dart';
 import 'package:rental_hub/feature/auth/domain/entities/login_entity.dart';
 import 'package:rental_hub/feature/auth/domain/entities/login_params.dart';
@@ -40,12 +41,9 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
   }
 
   Map<String, dynamic> _extractPayload(dynamic raw) {
-    if (raw is Map<String, dynamic>) {
-      final nestedData = raw['data'];
-      if (nestedData is Map<String, dynamic>) {
-        return Map<String, dynamic>.from(nestedData);
-      }
-      return raw;
+    final payload = ResponseParser.extractDataPayload(raw);
+    if (payload.isNotEmpty) {
+      return payload;
     }
 
     throw ServerException(
