@@ -6,16 +6,14 @@ import 'package:rental_hub/feature/auth/domain/entities/validate_otp_entity.dart
 import 'package:rental_hub/feature/auth/domain/entities/validate_otp_params.dart';
 import 'package:rental_hub/feature/auth/domain/repo/validate_otp_repo.dart';
 
-class ValidateOtpEntityImp implements ValidateOtpRepo {
-  final ValidateOtpRemoteDataSource validateOtpRemoteDataSource;
+class OtpRepositoryImpl implements OtpRepository {
+  final OtpRemoteDataSource otpRemoteDataSource;
 
-  ValidateOtpEntityImp(this.validateOtpRemoteDataSource);
+  OtpRepositoryImpl(this.otpRemoteDataSource);
   @override
-  Future<Either<Failure, ValidateOtpEntity>> validateOtp(
-    ValidateOtpParams params,
-  ) async {
+  Future<Either<Failure, OtpEntity>> verifyOtp(OtpParams params) async {
     try {
-      final result = await validateOtpRemoteDataSource.validateOtp(params);
+      final result = await otpRemoteDataSource.verifyOtp(params);
       return Right(result);
     } on ServerException catch (e) {
       return Left(
@@ -25,7 +23,24 @@ class ValidateOtpEntityImp implements ValidateOtpRepo {
         ),
       );
     } catch (e) {
-      return Left(Failure(errMessage: 'Failed to validate OTP'));
+      return Left(Failure(errMessage: 'Failed to verify OTP'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, OtpEntity>> resendOtp(String email) async {
+    try {
+      final result = await otpRemoteDataSource.resendOtp(email);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(
+          errMessage: e.errorModel.firstErrorMessage,
+          statusCode: e.errorModel.statusCode,
+        ),
+      );
+    } catch (e) {
+      return Left(Failure(errMessage: 'Failed to resend OTP'));
     }
   }
 }

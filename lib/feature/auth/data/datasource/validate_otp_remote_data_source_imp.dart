@@ -6,12 +6,12 @@ import 'package:rental_hub/feature/auth/data/models/validate_otp_model.dart';
 import 'package:rental_hub/feature/auth/domain/entities/validate_otp_entity.dart';
 import 'package:rental_hub/feature/auth/domain/entities/validate_otp_params.dart';
 
-class ValidateOtpRemoteDataSourceImp implements ValidateOtpRemoteDataSource {
+class OtpRemoteDataSourceImpl implements OtpRemoteDataSource {
   final ApiConsumer apiConsumer;
-  ValidateOtpRemoteDataSourceImp({required this.apiConsumer});
+  OtpRemoteDataSourceImpl({required this.apiConsumer});
 
   @override
-  Future<ValidateOtpEntity> validateOtp(ValidateOtpParams params) async {
+  Future<OtpEntity> verifyOtp(OtpParams params) async {
     final response = await apiConsumer.post(
       EndPoints.validateOtpEndpoint,
       data: {'email': params.email, 'otp': params.otp},
@@ -20,6 +20,21 @@ class ValidateOtpRemoteDataSourceImp implements ValidateOtpRemoteDataSource {
       response.data,
       defaultMessage: 'OTP validated successfully',
     );
-    return ValidateOtpModel.fromJson(payLoad);
+    return OtpModel.fromJson(payLoad);
+  }
+
+  @override
+  Future<OtpEntity> resendOtp(String email) async {
+    final response = await apiConsumer.post(
+      EndPoints.forgotPasswordEndpoint,
+      data: {'email': email},
+    );
+
+    final payload = ResponseParser.extractMessagePayload(
+      response.data,
+      defaultMessage: 'Verification code sent successfully',
+    );
+
+    return OtpModel.fromJson(payload);
   }
 }

@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-class ValidateOtpEntity extends Equatable {
+class OtpEntity extends Equatable {
   final String message;
 
-  const ValidateOtpEntity({required this.message});
+  const OtpEntity({required this.message});
 
   @override
   List<Object?> get props => [message];

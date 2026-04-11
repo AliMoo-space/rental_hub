@@ -38,7 +38,7 @@ class RouterGenerationConfig {
         builder: (context, state) {
           final email = (state.extra is String) ? state.extra! as String : '';
           return BlocProvider(
-            create: (context) => OtpCubit(),
+            create: (context) => getIt<OtpCubit>(param1: email),
             child: OtpVerificationScreen(email: email),
           );
         },

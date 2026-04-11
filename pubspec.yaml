@@ -30,6 +30,7 @@ dependencies:
   go_transitions: ^0.8.3
   lottie: ^3.3.2
   meta: ^1.17.0
+  pin_code_fields: ^9.3.0
   pretty_dio_logger: ^1.4.0
   shared_preferences: ^2.5.5
   shimmer: ^3.0.0

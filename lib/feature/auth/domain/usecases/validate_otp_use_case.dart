@@ -1,25 +1,38 @@
 import 'package:dartz/dartz.dart';
 import 'package:rental_hub/core/errors/failure.dart';
+import 'package:rental_hub/core/utils/validation_utils.dart';
 import 'package:rental_hub/feature/auth/domain/entities/validate_otp_entity.dart';
 import 'package:rental_hub/feature/auth/domain/entities/validate_otp_params.dart';
 import 'package:rental_hub/feature/auth/domain/repo/validate_otp_repo.dart';
 
-class ValidateOtpUseCase {
-  final ValidateOtpRepo validateOtpRepo;
+class VerifyOtpUseCase {
+  final OtpRepository otpRepository;
 
-  ValidateOtpUseCase(this.validateOtpRepo);
+  VerifyOtpUseCase(this.otpRepository);
 
-  Future<Either<Failure, ValidateOtpEntity>> call(
-    ValidateOtpParams params,
-  ) async {
-    final otp = params.otp.trim();
-    if (otp.length != 6) {
-      return Left(Failure(errMessage: "OTP must be 6 digits"));
-    }
-    if (!RegExp(r'^\d+$').hasMatch(otp)) {
-      return Left(Failure(errMessage: "OTP must contain only digits"));
+  Future<Either<Failure, OtpEntity>> call(OtpParams params) async {
+    final email = params.email.trim();
+    if (email.isEmpty) {
+      return const Left(ValidationFailure(errMessage: 'Enter Your Email'));
     }
 
-    return await validateOtpRepo.validateOtp(params);
+    if (!ValidationUtils.isValidEmail(email)) {
+      return const Left(
+        ValidationFailure(errMessage: 'Please enter a valid email address'),
+      );
+    }
+
+    final otp = ValidationUtils.normalizeOtp(params.otp);
+    if (otp.length != ValidationUtils.otpLength) {
+      return const Left(InvalidOtpFailure(errMessage: 'OTP must be 6 digits'));
+    }
+
+    if (!ValidationUtils.hasOnlyDigits(otp)) {
+      return const Left(
+        InvalidOtpFailure(errMessage: 'OTP must contain only digits'),
+      );
+    }
+
+    return otpRepository.verifyOtp(OtpParams(email: email, otp: otp));
   }
 }

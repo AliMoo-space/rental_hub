@@ -2,26 +2,39 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rental_hub/core/errors/failure.dart';
+import 'package:rental_hub/feature/auth/domain/entities/validate_otp_params.dart';
+import 'package:rental_hub/feature/auth/domain/usecases/resend_otp_use_case.dart';
+import 'package:rental_hub/feature/auth/domain/usecases/validate_otp_use_case.dart';
 
 class OtpCubit extends Cubit<OtpState> {
+  final String email;
+  final VerifyOtpUseCase verifyOtpUseCase;
+  final ResendOtpUseCase resendOtpUseCase;
   final int codeLength;
   final int resendSeconds;
 
-  OtpCubit({this.codeLength = 6, this.resendSeconds = 30})
-    : _digits = List<String>.filled(codeLength, ''),
-      super(
-        OtpInitial(
-          digits: List<String>.filled(codeLength, ''),
-          secondsRemaining: resendSeconds,
-          canResend: false,
-        ),
-      ) {
+  OtpCubit({
+    required this.email,
+    required this.verifyOtpUseCase,
+    required this.resendOtpUseCase,
+    this.codeLength = 6,
+    this.resendSeconds = 30,
+  }) : _digits = List<String>.filled(codeLength, ''),
+       _secondsRemaining = resendSeconds,
+       super(
+         OtpUpdated(
+           digits: List<String>.filled(codeLength, ''),
+           secondsRemaining: resendSeconds,
+           canResend: false,
+         ),
+       ) {
     _startResendTimer();
   }
 
   final List<String> _digits;
   Timer? _timer;
-  int _secondsRemaining = 0;
+  int _secondsRemaining;
 
   String get otpCode => _digits.join();
 
@@ -31,23 +44,21 @@ class OtpCubit extends Cubit<OtpState> {
     }
 
     _digits[index] = value;
-    _emitInitial();
+    _emitUpdated();
+  }
+
+  void updateCode(String value) {
+    final sanitized = value.replaceAll(RegExp(r'\D'), '');
+
+    for (var i = 0; i < codeLength; i++) {
+      _digits[i] = i < sanitized.length ? sanitized[i] : '';
+    }
+
+    _emitUpdated();
   }
 
   Future<void> verifyCode() async {
     if (state is OtpLoading) {
-      return;
-    }
-
-    if (_digits.any((digit) => digit.isEmpty)) {
-      emit(
-        OtpError(
-          message: 'Please enter the complete code',
-          digits: List<String>.from(_digits),
-          secondsRemaining: _secondsRemaining,
-          canResend: _secondsRemaining == 0,
-        ),
-      );
       return;
     }
 
@@ -59,14 +70,19 @@ class OtpCubit extends Cubit<OtpState> {
       ),
     );
 
-    await Future<void>.delayed(const Duration(milliseconds: 900));
+    final result = await verifyOtpUseCase(
+      OtpParams(email: email, otp: otpCode),
+    );
 
-    emit(
-      OtpSuccess(
-        message: 'Code verified successfully',
-        digits: List<String>.from(_digits),
-        secondsRemaining: _secondsRemaining,
-        canResend: _secondsRemaining == 0,
+    result.fold(
+      (failure) => _emitFailure(failure),
+      (entity) => emit(
+        OtpSuccess(
+          message: entity.message,
+          digits: List<String>.from(_digits),
+          secondsRemaining: _secondsRemaining,
+          canResend: _secondsRemaining == 0,
+        ),
       ),
     );
   }
@@ -76,20 +92,27 @@ class OtpCubit extends Cubit<OtpState> {
       return;
     }
 
+    final result = await resendOtpUseCase(email);
+
+    result.fold((failure) => _emitFailure(failure), (entity) {
+      _resetDigits();
+      _startResendTimer();
+
+      emit(
+        OtpCodeResent(
+          message: entity.message,
+          digits: List<String>.from(_digits),
+          secondsRemaining: _secondsRemaining,
+          canResend: _secondsRemaining == 0,
+        ),
+      );
+    });
+  }
+
+  void _resetDigits() {
     for (var i = 0; i < _digits.length; i++) {
       _digits[i] = '';
     }
-
-    _startResendTimer();
-
-    emit(
-      OtpSuccess(
-        message: 'A new verification code has been sent',
-        digits: List<String>.from(_digits),
-        secondsRemaining: _secondsRemaining,
-        canResend: _secondsRemaining == 0,
-      ),
-    );
   }
 
   void _startResendTimer() {
@@ -103,13 +126,24 @@ class OtpCubit extends Cubit<OtpState> {
       } else {
         _secondsRemaining -= 1;
       }
-      _emitInitial();
+      _emitUpdated();
     });
   }
 
-  void _emitInitial() {
+  void _emitUpdated() {
     emit(
-      OtpInitial(
+      OtpUpdated(
+        digits: List<String>.from(_digits),
+        secondsRemaining: _secondsRemaining,
+        canResend: _secondsRemaining == 0,
+      ),
+    );
+  }
+
+  void _emitFailure(Failure failure) {
+    emit(
+      OtpError(
+        message: failure.errMessage,
         digits: List<String>.from(_digits),
         secondsRemaining: _secondsRemaining,
         canResend: _secondsRemaining == 0,
@@ -139,8 +173,8 @@ abstract class OtpState extends Equatable {
   List<Object?> get props => [digits, secondsRemaining, canResend];
 }
 
-class OtpInitial extends OtpState {
-  const OtpInitial({
+class OtpUpdated extends OtpState {
+  const OtpUpdated({
     required super.digits,
     required super.secondsRemaining,
     required super.canResend,
@@ -159,6 +193,20 @@ class OtpSuccess extends OtpState {
   final String message;
 
   const OtpSuccess({
+    required this.message,
+    required super.digits,
+    required super.secondsRemaining,
+    required super.canResend,
+  });
+
+  @override
+  List<Object?> get props => [...super.props, message];
+}
+
+class OtpCodeResent extends OtpState {
+  final String message;
+
+  const OtpCodeResent({
     required this.message,
     required super.digits,
     required super.secondsRemaining,
