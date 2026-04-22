@@ -14,9 +14,7 @@ import 'package:rental_hub/feature/auth/presentation/widgets/otp_pin_code_field_
 
 class OtpVerificationScreen extends StatefulWidget {
   const OtpVerificationScreen({super.key, required this.email});
-
   final String email;
-
   @override
   State<OtpVerificationScreen> createState() => _OtpVerificationScreenState();
 }
@@ -50,14 +48,13 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     return BlocConsumer<OtpCubit, OtpState>(
       listener: (context, state) {
         _syncPinController(state.digits);
-
         if (state is OtpError) {
           showMsg(state.message, context, isError: true);
         }
 
         if (state is OtpSuccess) {
           showMsg(state.message, context);
-          context.pushNamed(AppRoutes.resetPasswordScreen);
+          context.pushNamed(AppRoutes.resetPasswordScreen, extra: widget.email);
         }
 
         if (state is OtpCodeResent) {
@@ -104,11 +101,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     },
                   ),
                   HeightSpace(24),
+
                   PrimaryButtonWidget(
                     buttonText: 'Verify Code',
                     isLoading: isLoading,
                     onPress: () {
-                      FocusManager.instance.primaryFocus?.unfocus();
                       context.read<OtpCubit>().verifyCode();
                     },
                   ),
@@ -117,7 +114,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     child: TextButton(
                       onPressed: state.canResend
                           ? () {
-                              FocusManager.instance.primaryFocus?.unfocus();
                               context.read<OtpCubit>().resendCode();
                             }
                           : null,
@@ -128,7 +124,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         style: AppStyles.black10BoldStyle.copyWith(
                           color: state.canResend
                               ? AppColors.primaryColor
-                              : AppColors.greyColor,
+                              : AppColors.secondaryColor,
                           fontSize: 14.sp,
                         ),
                       ),

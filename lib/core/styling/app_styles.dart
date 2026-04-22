@@ -29,7 +29,7 @@ class AppStyles {
     fontFamily: AppFonts.mainFontName,
     fontSize: 12.sp,
     fontWeight: FontWeight.w500,
-    color: AppColors.greyColor,
+    color: AppColors.secondaryColor,
   );
 
   static TextStyle black10BoldStyle = TextStyle(
@@ -44,5 +44,23 @@ class AppStyles {
     fontSize: 18.sp,
     fontWeight: FontWeight.bold,
     color: Colors.black,
+  );
+  static TextStyle intro32semiBold = TextStyle(
+    fontFamily: AppFonts.mainFontWeight,
+    fontSize: 32.sp,
+    fontWeight: FontWeight.w600,
+    color: AppColors.secondaryColor,
+  );
+  static TextStyle intro16medium = TextStyle(
+    fontFamily: AppFonts.mainFontWeight,
+    fontSize: 16.sp,
+    fontWeight: FontWeight.w400,
+    color: AppColors.smallSecondaryColor,
+  );
+  static TextStyle hendi500Size20 = TextStyle(
+    fontFamily: AppFonts.mainFontWeight,
+    fontSize: 20.sp,
+    fontWeight: FontWeight.w500,
+    color: AppColors.whiteColor,
   );
 }

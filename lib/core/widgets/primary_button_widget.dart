@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PrimaryButtonWidget extends StatelessWidget {
   final String? buttonText;
+  final TextStyle? style;
   final Color? buttonColor;
   final double? width;
   final double? height;
@@ -28,6 +29,7 @@ class PrimaryButtonWidget extends StatelessWidget {
     this.trailingIcon,
     this.onPress,
     this.isLoading = false,
+    this.style,
   });
 
   @override
@@ -54,11 +56,13 @@ class PrimaryButtonWidget extends StatelessWidget {
                 icon != null ? const WidthSpace(8) : const SizedBox.shrink(),
                 Text(
                   buttonText ?? "",
-                  style: TextStyle(
-                    color: textColor ?? Colors.white,
-                    fontWeight: FontWeight.w500,
-                    fontSize: fontSize ?? 16.sp,
-                  ),
+                  style:
+                      style ??
+                      TextStyle(
+                        color: textColor ?? Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: fontSize ?? 16.sp,
+                      ),
                 ),
                 trailingIcon != null
                     ? const WidthSpace(8)

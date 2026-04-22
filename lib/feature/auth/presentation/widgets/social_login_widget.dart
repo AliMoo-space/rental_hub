@@ -23,40 +23,53 @@ class SocialLoginWidget extends StatelessWidget {
       children: [
         Row(
           children: [
-            Expanded(child: Divider(thickness: 1)),
+            const Expanded(child: Divider(thickness: 1)),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Text(text, style: AppStyles.grey12MediumStyle),
+              child: Text(
+                text,
+                style: AppStyles.grey12MediumStyle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-            Expanded(child: Divider(thickness: 1)), // فاصل يمين
+            const Expanded(child: Divider(thickness: 1)),
           ],
         ),
-        HeightSpace(32),
+        const HeightSpace(30),
+
         Row(
           children: [
             Expanded(
               child: PrimaryButtonWidget(
-                onPress: onGooglePressed,
+                onPress: onFacebookPressed,
                 buttonColor: Colors.grey[100],
-                height: 56.h,
-                buttonText: 'Google',
+                width: 161.w,
+                height: 41.h,
+                buttonText: 'Facebook',
+                fontSize: 12.sp,
                 icon: SvgPicture.asset(
-                  AppAssets.google,
+                  AppAssets.facebook,
                   width: 24.w,
                   height: 24.h,
                 ),
                 textColor: Colors.black,
               ),
             ),
-            WidthSpace(18),
+
+            WidthSpace(18.w),
             Expanded(
               child: PrimaryButtonWidget(
-                onPress: onFacebookPressed,
+                onPress: onGooglePressed,
                 buttonColor: Colors.grey[100],
-                height: 56.h,
-                buttonText: 'Facebook',
+                width: 161.w,
+
+                fontSize: 12.sp,
+
+                height: 41.h,
+                buttonText: 'Google',
                 icon: SvgPicture.asset(
-                  AppAssets.facebook,
+                  AppAssets.google,
                   width: 24.w,
                   height: 24.h,
                 ),

@@ -7,13 +7,24 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:rental_hub/feature/localization/presentation/cubit/locale_cubit.dart';
 
 import 'package:rental_hub/main.dart';
 
+class _LocaleCubitDependencyStub {
+  @override
+  dynamic noSuchMethod(Invocation invocation) => null;
+}
+
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+    final localeCubit = LocaleCubit(
+      _LocaleCubitDependencyStub() as dynamic,
+      _LocaleCubitDependencyStub() as dynamic,
+    );
+
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(MyApp(localeCubit: localeCubit));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
@@ -26,5 +37,7 @@ void main() {
     // Verify that our counter has incremented.
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
+
+    await localeCubit.close();
   });
 }

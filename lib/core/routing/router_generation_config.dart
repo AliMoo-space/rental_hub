@@ -11,11 +11,24 @@ import 'package:rental_hub/feature/auth/presentation/screens/forgot_password_scr
 import 'package:rental_hub/feature/auth/presentation/screens/otp_verification_screen.dart';
 import 'package:rental_hub/feature/auth/presentation/screens/reset_password_screen.dart';
 import 'package:rental_hub/feature/auth/presentation/widgets/animated_auth_toggle.dart';
+import 'package:rental_hub/feature/home/presentation/screens/home_screen.dart';
+import 'package:rental_hub/feature/intro/intro_screen.dart';
+import 'package:rental_hub/feature/splash/splash_view.dart';
 
 class RouterGenerationConfig {
   static GoRouter goRouter = GoRouter(
-    initialLocation: AppRoutes.animatedAuthToggle,
+    initialLocation: AppRoutes.splashScreen,
     routes: [
+      GoRoute(
+        name: AppRoutes.splashScreen,
+        path: AppRoutes.splashScreen,
+        builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.introScreen,
+        path: AppRoutes.introScreen,
+        builder: (context, state) => const IntroScreen(),
+      ),
       GoRoute(
         name: AppRoutes.animatedAuthToggle,
         path: AppRoutes.animatedAuthToggle,
@@ -55,6 +68,11 @@ class RouterGenerationConfig {
         name: AppRoutes.authSuccessScreen,
         path: AppRoutes.authSuccessScreen,
         builder: (context, state) => const AuthSuccessScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.homeScreen,
+        path: AppRoutes.homeScreen,
+        builder: (context, state) => const HomeScreen(),
       ),
     ],
   );
