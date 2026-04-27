@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -55,7 +53,6 @@ class _IntroScreenState extends State<IntroScreen>
       ),
     );
 
-    /// 🎯 Card Animation (40% → 100%)
     _cardSlide = Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
         .animate(
           CurvedAnimation(
@@ -132,7 +129,7 @@ class _IntroScreenState extends State<IntroScreen>
                   padding: const EdgeInsets.all(44),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(l10n.rentAndEarn, style: AppStyles.intro32semiBold),
                       HeightSpace(8),
@@ -140,7 +137,8 @@ class _IntroScreenState extends State<IntroScreen>
                       HeightSpace(32),
                       PrimaryButtonWidget(
                         height: 77.w,
-                        width: 331.h,
+                        width: 330.w,
+                        bordersRadius: 29,
                         buttonText: l10n.getStarted,
                         style: AppStyles.hendi500Size20,
                         trailingIcon: SvgPicture.asset(
@@ -148,7 +146,7 @@ class _IntroScreenState extends State<IntroScreen>
                           width: 20.w,
                         ),
                         onPress: () {
-                          context.push(AppRoutes.homeScreen);
+                          context.push(AppRoutes.mainScreen);
                         },
                       ),
                       HeightSpace(36),

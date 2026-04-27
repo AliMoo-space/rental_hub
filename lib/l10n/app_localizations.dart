@@ -283,6 +283,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Arabic'**
   String get arabic;
+
+  /// No description provided for @getEverythingYouWant.
+  ///
+  /// In en, this message translates to:
+  /// **'Get everything you want'**
+  String get getEverythingYouWant;
+
+  /// No description provided for @searchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search here ...'**
+  String get searchHint;
+
+  /// No description provided for @home.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
+  /// No description provided for @community.
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get community;
 }
 
 class _AppLocalizationsDelegate

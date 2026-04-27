@@ -13,6 +13,7 @@ import 'package:rental_hub/feature/auth/presentation/screens/reset_password_scre
 import 'package:rental_hub/feature/auth/presentation/widgets/animated_auth_toggle.dart';
 import 'package:rental_hub/feature/home/presentation/screens/home_screen.dart';
 import 'package:rental_hub/feature/intro/intro_screen.dart';
+import 'package:rental_hub/feature/main/main_screen.dart';
 import 'package:rental_hub/feature/splash/splash_view.dart';
 
 class RouterGenerationConfig {
@@ -68,6 +69,11 @@ class RouterGenerationConfig {
         name: AppRoutes.authSuccessScreen,
         path: AppRoutes.authSuccessScreen,
         builder: (context, state) => const AuthSuccessScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.mainScreen,
+        path: AppRoutes.mainScreen,
+        builder: (context, state) => const MainScreen(),
       ),
       GoRoute(
         name: AppRoutes.homeScreen,

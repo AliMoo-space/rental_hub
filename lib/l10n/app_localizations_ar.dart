@@ -68,7 +68,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get messages => 'الرسائل';
 
   @override
-  String get profile => 'الملف الشخصي';
+  String get profile => 'حسابي';
 
   @override
   String get logout => 'تسجيل الخروج';
@@ -102,4 +102,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get arabic => 'العربية';
+
+  @override
+  String get getEverythingYouWant => 'احصل على كل ما تريد ';
+
+  @override
+  String get searchHint => 'ابحث هنا ...';
+
+  @override
+  String get home => 'الرئيسية';
+
+  @override
+  String get community => 'المجمتع';
 }

@@ -76,22 +76,22 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   vertical: 18.h,
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24.r),
+                  borderRadius: BorderRadius.circular(30.r),
                   borderSide: BorderSide(color: Color(0xffE8ECF4), width: 1),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24.r),
+                  borderRadius: BorderRadius.circular(30.r),
                   borderSide: BorderSide(
                     color: AppColors.primaryColor,
                     width: 1,
                   ),
                 ),
                 errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24.r),
+                  borderRadius: BorderRadius.circular(30.r),
                   borderSide: const BorderSide(color: Colors.red, width: 1),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24.r),
+                  borderRadius: BorderRadius.circular(30.r),
                   borderSide: const BorderSide(color: Colors.red, width: 1),
                 ),
                 filled: true,

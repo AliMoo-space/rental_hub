@@ -29,5 +29,12 @@
   "skip": "تخطي",
   "language": "اللغة",
   "english": "الإنجليزية",
-  "arabic": "العربية"
+  "arabic": "العربية",
+  "getEverythingYouWant": "احصل على كل ما تريد ",
+  "searchHint": "ابحث هنا ...",
+  "home": "الرئيسية",
+  "community": "المجمتع",
+  "messages": "الرسائل",
+  "profile": "حسابي"
 }
+

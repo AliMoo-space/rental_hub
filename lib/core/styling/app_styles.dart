@@ -63,4 +63,16 @@ class AppStyles {
     fontWeight: FontWeight.w500,
     color: AppColors.whiteColor,
   );
+  static TextStyle instrumentSans500Size14 = TextStyle(
+    fontFamily: AppFonts.instrumentSans,
+    fontSize: 14.sp,
+    fontWeight: FontWeight.w500,
+    color: AppColors.smallSecondaryColor,
+  );
+  static TextStyle instrumentSans700Size24 = TextStyle(
+    fontFamily: AppFonts.instrumentSans,
+    fontSize: 24.sp,
+    fontWeight: FontWeight.bold,
+    color: AppColors.smallSecondaryColor,
+  );
 }

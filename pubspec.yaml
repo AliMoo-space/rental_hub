@@ -22,6 +22,7 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^9.1.1
   flutter_localization: ^0.4.0
+  flutter_rating_stars: ^1.1.0
   flutter_screenutil: ^5.9.3
   flutter_secure_storage: ^10.0.0
   flutter_staggered_animations: ^1.1.1
@@ -48,14 +49,16 @@ flutter:
     - assets/images/
     - assets/icons/
   fonts:
-    - family: HindSiliguri-SemiBold
+
+    - family: HindSiliguri
       fonts:
         - asset: assets/fonts/HindSiliguri-SemiBold.ttf
-          weight: 600
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+          
+    - family: InstrumentSans
+      fonts:
+        - asset: assets/fonts/InstrumentSans_Condensed-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/InstrumentSans_Condensed-Regular.ttf
+          weight: 400
 flutter_intl:
   enabled: true

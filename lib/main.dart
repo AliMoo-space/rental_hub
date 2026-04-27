@@ -10,7 +10,6 @@ import 'package:rental_hub/l10n/app_localizations.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupServiceLocator();
-
   final localeCubit = getIt<LocaleCubit>();
   await localeCubit.loadInitialLocale(
     supportedLocales: AppLocalizations.supportedLocales,

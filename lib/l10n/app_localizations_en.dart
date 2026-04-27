@@ -102,4 +102,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get arabic => 'Arabic';
+
+  @override
+  String get getEverythingYouWant => 'Get everything you want';
+
+  @override
+  String get searchHint => 'Search here ...';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get community => 'Community';
 }

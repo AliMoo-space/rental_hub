@@ -29,5 +29,11 @@
   "skip": "Skip",
   "language": "Language",
   "english": "English",
-  "arabic": "Arabic"
+  "arabic": "Arabic",
+  "getEverythingYouWant": "Get everything you want",
+  "searchHint": "Search here ...",
+  "home": "Home",
+  "community": "Community",
+  "messages": "Messages",
+  "profile": "Profile"
 }
