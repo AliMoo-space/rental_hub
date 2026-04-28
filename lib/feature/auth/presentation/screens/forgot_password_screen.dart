@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
@@ -53,7 +54,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         if (state is ForgotPasswordSuccess) {
           showMsg(
             state.entity.email.isEmpty
-                ? 'Verification code sent successfully'
+                ? context.l10n.verificationCodeSent
                 : state.entity.email,
             context,
           );
@@ -62,63 +63,86 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       },
       builder: (context, state) {
         final isLoading = state is ForgotPasswordLoading;
+        final isRtl = Directionality.of(context) == TextDirection.rtl;
+
         return Scaffold(
           appBar: AppBar(),
           body: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    HeightSpace(12),
-                    Text.rich(
-                      TextSpan(
-                        style: AppStyles.primaryHeadLinesStyle.copyWith(
-                          fontSize: 36.sp,
-                          color: Colors.black,
-                        ),
-                        children: [
-                          const TextSpan(text: 'Forgot '),
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                child: Form(
+                  key: formKey,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 600.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        HeightSpace(12.h),
+
+                        // Header Section
+                        Text.rich(
                           TextSpan(
-                            text: 'Password',
-                            style: TextStyle(color: AppColors.primaryColor),
+                            style: AppStyles.primaryHeadLinesStyle.copyWith(
+                              fontSize: 36.sp,
+                              color: Colors.black,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: isRtl
+                                    ? '${context.l10n.forgotPasswordTitle} '
+                                    : 'Forgot ',
+                              ),
+                              TextSpan(
+                                text: isRtl ? '' : context.l10n.password,
+                                style: TextStyle(color: AppColors.primaryColor),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        HeightSpace(12.h),
+                        Text(
+                          context.l10n.forgotPasswordSubtitle,
+                          style: AppStyles.subtitlesStyles.copyWith(
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                        HeightSpace(48.h),
+
+                        // Email Field
+                        CustomTextField(
+                          title: context.l10n.emailAddress,
+                          hintText: context.l10n.emailHint,
+                          controller: emailController,
+                          spacing: 16.h,
+                          validator: (value) {
+                            final input = value?.trim() ?? '';
+                            if (input.isEmpty) {
+                              return context.l10n.enterYourEmail;
+                            }
+                            final emailRegex = RegExp(
+                              r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
+                            );
+                            if (!emailRegex.hasMatch(input)) {
+                              return context.l10n.validEmail;
+                            }
+                            return null;
+                          },
+                        ),
+
+                        // Send Code Button
+                        HeightSpace(24.h),
+                        PrimaryButtonWidget(
+                          buttonText: context.l10n.sendVerificationCode,
+                          isLoading: isLoading,
+                          onPress: () {
+                            context.go(AppRoutes.otpVerificationScreen);
+                          },
+                          // _onSendPressed,
+                        ),
+                      ],
                     ),
-                    Text(
-                      'Enter your email and we will send a verification code to reset your password.',
-                      style: AppStyles.subtitlesStyles,
-                    ),
-                    HeightSpace(48),
-                    CustomTextField(
-                      title: 'Email Address',
-                      hintText: 'hello@gmail.com',
-                      controller: emailController,
-                      spacing: 16,
-                      validator: (value) {
-                        final input = value?.trim() ?? '';
-                        if (input.isEmpty) {
-                          return 'Enter Your Email';
-                        }
-                        final emailRegex = RegExp(
-                          r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
-                        );
-                        if (!emailRegex.hasMatch(input)) {
-                          return 'Please enter a valid email address';
-                        }
-                        return null;
-                      },
-                    ),
-                    HeightSpace(24),
-                    PrimaryButtonWidget(
-                      buttonText: 'Send Verification Code',
-                      isLoading: isLoading,
-                      onPress: _onSendPressed,
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),

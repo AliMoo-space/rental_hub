@@ -60,13 +60,19 @@ class AppStyles {
   static TextStyle hendi500Size20 = TextStyle(
     fontFamily: AppFonts.mainFontWeight,
     fontSize: 20.sp,
-    fontWeight: FontWeight.w500,
-    color: AppColors.whiteColor,
+    fontWeight: FontWeight.w600,
+    color: AppColors.secondaryColor,
   );
   static TextStyle instrumentSans500Size14 = TextStyle(
     fontFamily: AppFonts.instrumentSans,
     fontSize: 14.sp,
     fontWeight: FontWeight.w500,
+    color: AppColors.smallSecondaryColor,
+  );
+  static TextStyle instrumentSans700Size18 = TextStyle(
+    fontFamily: AppFonts.instrumentSans,
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w700,
     color: AppColors.smallSecondaryColor,
   );
   static TextStyle instrumentSans700Size24 = TextStyle(

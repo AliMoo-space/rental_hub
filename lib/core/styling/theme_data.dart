@@ -24,5 +24,10 @@ class AppThemes {
       buttonColor: AppColors.primaryColor,
       disabledColor: AppColors.secondaryColor,
     ),
+    appBarTheme: const AppBarTheme(
+      surfaceTintColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+    ),
   );
 }

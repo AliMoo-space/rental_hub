@@ -1,0 +1,47 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Flutter: Gen L10n",
+      "type": "shell",
+      "command": "flutter",
+      "args": ["gen-l10n"],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "showReuseMessage": false
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter: Watch Gen L10n",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-Command",
+        "$watcher = New-Object System.IO.FileSystemWatcher; $watcher.Path = 'lib/l10n'; $watcher.Filter = '*.arb'; $watcher.IncludeSubdirectories = $false; Register-ObjectEvent -InputObject $watcher -EventName 'Changed' -Action { Write-Host 'ARB file changed, regenerating localization...'; flutter gen-l10n } | Out-Null; Write-Host 'Watching l10n folder for changes...'; while($true) { Start-Sleep -Seconds 1 }"
+      ],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^.*$",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^Watching l10n folder.*",
+          "endsPattern": "^.*$"
+        }
+      }
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/feature/home/presentation/screens/home_screen.dart';
+import 'package:rental_hub/feature/profile/presentation/screens/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -20,7 +21,7 @@ class _MainScreenState extends State<MainScreen> {
     Container(color: Colors.green),
     Container(color: Colors.blue),
     Container(color: Colors.red),
-    Container(color: Colors.amber),
+    ProfileScreen(),
   ];
 
   void onTabTapped(int index) {
@@ -62,7 +63,6 @@ class _MainScreenState extends State<MainScreen> {
             BottomNavigationBarItem(
               icon: SvgPicture.asset(
                 width: 30.w,
-
                 AppAssets.community,
                 color: currentIndex == 1
                     ? const Color(0xFF6A72F5)

@@ -10,7 +10,7 @@ import 'package:rental_hub/core/widgets/primary_button_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 import 'package:rental_hub/feature/auth/presentation/widgets/social_login_widget.dart';
 import 'package:rental_hub/feature/intro/widgets/refactor.dart';
-import 'package:rental_hub/l10n/app_localizations.dart';
+import 'package:rental_hub/l10n/generated/app_localizations.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
@@ -140,13 +140,15 @@ class _IntroScreenState extends State<IntroScreen>
                         width: 330.w,
                         bordersRadius: 29,
                         buttonText: l10n.getStarted,
-                        style: AppStyles.hendi500Size20,
+                        style: AppStyles.hendi500Size20.copyWith(
+                          color: Colors.white,
+                        ),
                         trailingIcon: SvgPicture.asset(
                           AppAssets.arrow,
                           width: 20.w,
                         ),
                         onPress: () {
-                          context.push(AppRoutes.mainScreen);
+                          context.push(AppRoutes.animatedAuthToggle);
                         },
                       ),
                       HeightSpace(36),

@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 
 class TermsWidget extends StatelessWidget {
@@ -13,45 +14,54 @@ class TermsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
+        // Checkbox (RTL aware)
         Checkbox(
           value: value,
           activeColor: AppColors.primaryColor,
-          side: BorderSide(width: .3),
+          side: BorderSide(width: 1.sp, color: Colors.grey[400]!),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.r),
           ),
           onChanged: onChanged,
         ),
+
+        // Terms and Privacy Text
         Expanded(
           child: Text.rich(
             TextSpan(
-              style: TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
+              style: TextStyle(
+                fontSize: 13.sp,
+                color: Colors.grey[700],
+                height: 1.4,
+              ),
               children: [
-                const TextSpan(text: 'I agree to the '),
+                TextSpan(text: context.l10n.iAgreeToThe),
                 TextSpan(
-                  text: 'Terms of Service',
-                  style: const TextStyle(
-                    color: Colors.blue,
+                  text: context.l10n.termsOfServiceLink,
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
                     fontWeight: FontWeight.w500,
+                    decoration: TextDecoration.underline,
                   ),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       // navigate to terms
                     },
                 ),
-                const TextSpan(text: ' and '),
+                TextSpan(text: context.l10n.and),
                 TextSpan(
-                  text: 'Privacy Policy',
-                  style: const TextStyle(
-                    color: Colors.blue,
+                  text: context.l10n.privacyPolicyLink,
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
                     fontWeight: FontWeight.w500,
+                    decoration: TextDecoration.underline,
                   ),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       // navigate to privacy
                     },
                 ),
-                const TextSpan(text: '.'),
+                TextSpan(text: context.l10n.period),
               ],
             ),
           ),

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
@@ -45,6 +46,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+
     return BlocConsumer<OtpCubit, OtpState>(
       listener: (context, state) {
         _syncPinController(state.digits);
@@ -67,70 +70,93 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         return Scaffold(
           appBar: AppBar(),
           body: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  HeightSpace(12),
-                  Text.rich(
-                    TextSpan(
-                      style: AppStyles.primaryHeadLinesStyle.copyWith(
-                        fontSize: 36.sp,
-                        color: Colors.black,
-                      ),
-                      children: [
-                        const TextSpan(text: 'Verify '),
-                        TextSpan(
-                          text: 'Code',
-                          style: TextStyle(color: AppColors.primaryColor),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Text(
-                    'Enter the 6-digit code sent to ${widget.email}',
-                    style: AppStyles.subtitlesStyles,
-                  ),
-                  HeightSpace(48),
-                  OtpPinCodeFieldWidget(
-                    controller: _pinController,
-                    length: _codeLength,
-                    onChanged: (value) {
-                      context.read<OtpCubit>().updateCode(value);
-                    },
-                  ),
-                  HeightSpace(24),
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 600.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      HeightSpace(12.h),
 
-                  PrimaryButtonWidget(
-                    buttonText: 'Verify Code',
-                    isLoading: isLoading,
-                    onPress: () {
-                      context.read<OtpCubit>().verifyCode();
-                    },
-                  ),
-                  HeightSpace(24),
-                  Center(
-                    child: TextButton(
-                      onPressed: state.canResend
-                          ? () {
-                              context.read<OtpCubit>().resendCode();
-                            }
-                          : null,
-                      child: Text(
-                        state.canResend
-                            ? 'Resend Code'
-                            : 'Resend in ${state.secondsRemaining}s',
-                        style: AppStyles.black10BoldStyle.copyWith(
-                          color: state.canResend
-                              ? AppColors.primaryColor
-                              : AppColors.secondaryColor,
+                      // Header Section
+                      Text.rich(
+                        TextSpan(
+                          style: AppStyles.primaryHeadLinesStyle.copyWith(
+                            fontSize: 36.sp,
+                            color: Colors.black,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: isRtl
+                                  ? '${context.l10n.verifyCode} '
+                                  : 'Verify ',
+                            ),
+                            TextSpan(
+                              text: isRtl ? '' : context.l10n.next,
+                              style: TextStyle(color: AppColors.primaryColor),
+                            ),
+                          ],
+                        ),
+                      ),
+                      HeightSpace(12.h),
+                      Text(
+                        context.l10n.verifyCodeSubtitle(widget.email),
+                        style: AppStyles.subtitlesStyles.copyWith(
                           fontSize: 14.sp,
                         ),
                       ),
-                    ),
+                      HeightSpace(48.h),
+
+                      // OTP Input Field
+                      OtpPinCodeFieldWidget(
+                        controller: _pinController,
+                        length: _codeLength,
+                        onChanged: (value) {
+                          context.read<OtpCubit>().updateCode(value);
+                        },
+                      ),
+                      HeightSpace(24.h),
+
+                      // Verify Code Button
+                      PrimaryButtonWidget(
+                        buttonText: context.l10n.verifyCode,
+                        isLoading: isLoading,
+                        onPress: () {
+                          context.go(
+                            AppRoutes.resetPasswordScreen,
+                            extra: widget.email,
+                          );
+                          // context.read<OtpCubit>().verifyCode();
+                        },
+                      ),
+
+                      // Resend Code Button
+                      HeightSpace(24.h),
+                      Center(
+                        child: TextButton(
+                          onPressed: state.canResend
+                              ? () {
+                                  context.read<OtpCubit>().resendCode();
+                                }
+                              : null,
+                          child: Text(
+                            state.canResend
+                                ? context.l10n.resendCode
+                                : '${context.l10n.resendCode} ${state.secondsRemaining}s',
+                            style: AppStyles.black10BoldStyle.copyWith(
+                              color: state.canResend
+                                  ? AppColors.primaryColor
+                                  : AppColors.secondaryColor,
+                              fontSize: 14.sp,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),

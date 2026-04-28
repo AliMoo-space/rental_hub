@@ -1,6 +1,8 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rental_hub/core/extensions/localization_extension.dart';
+import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/feature/auth/presentation/screens/login_screen.dart';
 import 'package:rental_hub/feature/auth/presentation/screens/signup_screen.dart';
 
@@ -66,100 +68,108 @@ class _AnimatedAuthToggleState extends State<AnimatedAuthToggle>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(height: 48.h),
-          Center(
-            child: AnimatedToggleSwitch<int>.size(
-              current: value,
-              values: const [0, 1],
-              height: 68.h,
-              indicatorSize: Size.fromWidth(100.w),
-              iconOpacity: 1.0,
-              borderWidth: 5.0,
-              iconAnimationType: AnimationType.none,
-              textDirection: TextDirection.ltr,
-              customIconBuilder: (context, local, global) {
-                final val = local.value;
-                final labels = ['Login', 'Sign Up'];
-                final isSelected = val == value;
-                return GestureDetector(
-                  onTap: () => _onToggle(val),
-                  child: AnimatedBuilder(
-                    animation: _animations[val],
-                    builder: (context, child) {
-                      return Transform.scale(
-                        scale: _animations[val].value,
-                        child: Text(
-                          labels[val],
-                          style: TextStyle(
-                            color: isSelected
-                                ? const Color(0xFF1A6BCC)
-                                : Colors.black,
-                            fontWeight: isSelected
-                                ? FontWeight.w600
-                                : FontWeight.w500,
-                            fontSize: 14.sp,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                );
-              },
-              style: ToggleStyle(
-                backgroundColor: const Color(0xFFECEEF1),
-                borderColor: Colors.transparent,
-                borderRadius: BorderRadius.circular(50),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0xFFB8BEC7),
-                    blurRadius: 6,
-                    offset: Offset(3, 3),
-                  ),
-                  BoxShadow(
-                    color: Colors.white,
-                    blurRadius: 6,
-                    offset: Offset(-3, -3),
-                  ),
-                ],
-              ),
-              styleBuilder: (i) => ToggleStyle(
-                indicatorColor: Colors.white,
-                borderRadius: BorderRadius.circular(50),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0xFFB8BEC7),
-                    blurRadius: 5,
-                    offset: Offset(2, 2),
-                  ),
-                  BoxShadow(
-                    color: Colors.white,
-                    blurRadius: 5,
-                    offset: Offset(-2, -2),
-                  ),
-                ],
-              ),
-              onChanged: _onToggle,
-            ),
-          ),
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
 
-          SizedBox(height: 30.h),
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              onPageChanged: (i) {
-                setState(() => value = i);
-                for (final c in _controllers) {
-                  c.reset();
-                }
-                _controllers[i].forward();
-              },
-              children: const [LoginScreen(), SignUpScreen()],
+    // Build localized labels
+    final labels = [context.l10n.login, context.l10n.signup];
+
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(height: 32.h),
+            Center(
+              child: AnimatedToggleSwitch<int>.size(
+                current: value,
+                values: const [0, 1],
+                height: 68.h,
+                indicatorSize: Size.fromWidth(100.w),
+                iconOpacity: 1.0,
+                borderWidth: 5.0,
+                iconAnimationType: AnimationType.none,
+                textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+                customIconBuilder: (context, local, global) {
+                  final val = local.value;
+                  final isSelected = val == value;
+                  return GestureDetector(
+                    onTap: () => _onToggle(val),
+                    child: AnimatedBuilder(
+                      animation: _animations[val],
+                      builder: (context, child) {
+                        return Transform.scale(
+                          scale: _animations[val].value,
+                          child: Text(
+                            labels[val],
+                            style: TextStyle(
+                              color: isSelected
+                                  ? AppColors.primaryColor
+                                  : Colors.black,
+                              fontWeight: isSelected
+                                  ? FontWeight.w600
+                                  : FontWeight.w500,
+                              fontSize: 14.sp,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+                style: ToggleStyle(
+                  backgroundColor: const Color(0xFFECEEF1),
+                  borderColor: Colors.transparent,
+                  borderRadius: BorderRadius.circular(50.r),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0xFFB8BEC7),
+                      blurRadius: 6,
+                      offset: Offset(3, 3),
+                    ),
+                    BoxShadow(
+                      color: Colors.white,
+                      blurRadius: 6,
+                      offset: Offset(-3, -3),
+                    ),
+                  ],
+                ),
+                styleBuilder: (i) => ToggleStyle(
+                  indicatorColor: Colors.white,
+                  borderRadius: BorderRadius.circular(50.r),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0xFFB8BEC7),
+                      blurRadius: 5,
+                      offset: Offset(2, 2),
+                    ),
+                    BoxShadow(
+                      color: Colors.white,
+                      blurRadius: 5,
+                      offset: Offset(-2, -2),
+                    ),
+                  ],
+                ),
+                onChanged: _onToggle,
+              ),
             ),
-          ),
-        ],
+            SizedBox(height: 30.h),
+
+            // Page View for Login/Signup Screens
+            Expanded(
+              child: PageView(
+                controller: _pageController,
+                physics: const NeverScrollableScrollPhysics(),
+                onPageChanged: (i) {
+                  setState(() => value = i);
+                  for (final c in _controllers) {
+                    c.reset();
+                  }
+                  _controllers[i].forward();
+                },
+                children: const [LoginScreen(), SignUpScreen()],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -16,6 +16,13 @@ class AppAssets {
   static const String uilMessage = '${_iconsPath}uil_message.svg';
   static const String uilLocation = '${_iconsPath}location.svg';
   static const String uiHeart = '${_iconsPath}heart.svg';
+  static const String mdiRobot = '${_iconsPath}mdi_robot.svg';
+  static const String uiSettings = '${_iconsPath}setting.svg';
+  static const String solarHeart = '${_iconsPath}solar_heart.svg';
+  static const String uiVector = '${_iconsPath}vector.svg';
+  static const String uiWallet = '${_iconsPath}wallet.svg';
+  static const String uiUser = '${_iconsPath}gridicons_user.svg';
+  static const String uiChat = '${_iconsPath}chat.svg';
   static const String uiPlus = '${_iconsPath}plus.svg';
 
   //images

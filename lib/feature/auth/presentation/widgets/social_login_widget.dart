@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/primary_button_widget.dart';
@@ -19,16 +20,18 @@ class SocialLoginWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+
     return Column(
       children: [
         Row(
           children: [
             const Expanded(child: Divider(thickness: 1)),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: Text(
                 text,
-                style: AppStyles.grey12MediumStyle,
+                style: AppStyles.grey12MediumStyle.copyWith(fontSize: 12.sp),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -36,42 +39,53 @@ class SocialLoginWidget extends StatelessWidget {
             const Expanded(child: Divider(thickness: 1)),
           ],
         ),
-        const HeightSpace(30),
+        const HeightSpace(24),
 
+        // Social Buttons Row
         Row(
           children: [
             Expanded(
               child: PrimaryButtonWidget(
                 onPress: onFacebookPressed,
                 buttonColor: Colors.grey[100],
-                width: 161.w,
+                width: double.infinity,
                 height: 41.h,
-                buttonText: 'Facebook',
+                buttonText: context.l10n.facebook,
                 fontSize: 12.sp,
-                icon: SvgPicture.asset(
-                  AppAssets.facebook,
-                  width: 24.w,
-                  height: 24.h,
+                icon: Padding(
+                  padding: EdgeInsets.only(
+                    right: isRtl ? 8.w : 0,
+                    left: isRtl ? 0 : 8.w,
+                  ),
+                  child: SvgPicture.asset(
+                    AppAssets.facebook,
+                    width: 20.w,
+                    height: 20.h,
+                  ),
                 ),
                 textColor: Colors.black,
               ),
             ),
 
-            WidthSpace(18.w),
+            WidthSpace(16.w),
             Expanded(
               child: PrimaryButtonWidget(
                 onPress: onGooglePressed,
                 buttonColor: Colors.grey[100],
-                width: 161.w,
-
-                fontSize: 12.sp,
-
+                width: double.infinity,
                 height: 41.h,
-                buttonText: 'Google',
-                icon: SvgPicture.asset(
-                  AppAssets.google,
-                  width: 24.w,
-                  height: 24.h,
+                buttonText: context.l10n.google,
+                fontSize: 12.sp,
+                icon: Padding(
+                  padding: EdgeInsets.only(
+                    right: isRtl ? 8.w : 0,
+                    left: isRtl ? 0 : 8.w,
+                  ),
+                  child: SvgPicture.asset(
+                    AppAssets.google,
+                    width: 20.w,
+                    height: 20.h,
+                  ),
                 ),
                 textColor: Colors.black,
               ),

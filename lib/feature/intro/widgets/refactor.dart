@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/feature/localization/presentation/cubit/locale_cubit.dart';
-import 'package:rental_hub/l10n/app_localizations.dart';
+import 'package:rental_hub/l10n/generated/app_localizations.dart';
 
 class IntroLanguageButton extends StatelessWidget {
   const IntroLanguageButton({

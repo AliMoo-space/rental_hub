@@ -5,7 +5,7 @@ import 'package:rental_hub/feature/localization/presentation/cubit/locale_cubit.
 import 'package:rental_hub/core/utils/service_locator.dart';
 import 'package:rental_hub/core/routing/router_generation_config.dart';
 import 'package:rental_hub/core/styling/theme_data.dart';
-import 'package:rental_hub/l10n/app_localizations.dart';
+import 'package:rental_hub/l10n/generated/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

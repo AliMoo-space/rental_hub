@@ -19,6 +19,11 @@ class OtpPinCodeFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Calculate responsive cell size based on screen width
+    final screenWidth = MediaQuery.of(context).size.width;
+    final availableWidth = screenWidth - (48.w); // Total horizontal padding
+    final cellSize = (availableWidth - (length - 1) * 10.w) / length;
+
     return MaterialPinField(
       pinController: controller,
       length: length,
@@ -27,16 +32,16 @@ class OtpPinCodeFieldWidget extends StatelessWidget {
       enablePaste: true,
       theme: MaterialPinTheme(
         shape: MaterialPinShape.outlined,
-        cellSize: Size(48.w, 56.h),
-        borderRadius: BorderRadius.circular(16.r),
-        spacing: 10.w,
+        cellSize: Size(cellSize.clamp(40.w, 56.w), 56.h),
+        borderRadius: BorderRadius.circular(12.r),
+        spacing: 8.w,
         fillColor: const Color(0xffF7F8F9),
         focusedFillColor: const Color(0xffF7F8F9),
         filledFillColor: const Color(0xffF7F8F9),
         borderColor: const Color(0xffE8ECF4),
         focusedBorderColor: AppColors.primaryColor,
         filledBorderColor: const Color(0xffE8ECF4),
-        textStyle: AppStyles.black18BoldStyle,
+        textStyle: AppStyles.black18BoldStyle.copyWith(fontSize: 20.sp),
         cursorColor: AppColors.primaryColor,
         entryAnimation: MaterialPinAnimation.fade,
       ),

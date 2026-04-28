@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
@@ -59,102 +60,137 @@ class _LoginScreenState extends State<LoginScreen> {
           showMsg(state.message, context, isError: true);
         }
         if (state is LoginSuccess) {
-          showMsg('Login successful', context);
+          showMsg(context.l10n.loginSuccessful, context);
         }
       },
       builder: (context, state) {
         final isLoading = state is LoginLoading;
+        final isRtl = Directionality.of(context) == TextDirection.rtl;
+
         return Scaffold(
           body: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    HeightSpace(48),
-                    Text(
-                      'Rental Hub',
-                      style: AppStyles.primaryHeadLinesStyle.copyWith(
-                        color: AppColors.primaryColor,
-                        fontSize: 48.sp,
-                      ),
-                    ),
-                    Text(
-                      'Welcome back. Your next premiumstay is just a few taps away.',
-                      style: AppStyles.subtitlesStyles,
-                    ),
-                    HeightSpace(48),
-                    CustomTextField(
-                      title: 'Email Address',
-                      hintText: 'hello@gmail.com',
-                      validator: (p) {
-                        if (p == null || p.isEmpty) {
-                          return 'Enter Your Email';
-                        }
-                        return null;
-                      },
-                      controller: email,
-                      spacing: 16,
-                    ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.only(end: 14.w),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Password', style: AppStyles.black10BoldStyle),
-                          InkWell(
-                            onTap: () {
-                              context.pushNamed(AppRoutes.forgotPasswordScreen);
-                            },
-                            child: Text(
-                              'Forgot Password?',
-                              style: AppStyles.black10BoldStyle.copyWith(
-                                color: AppColors.primaryColor,
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                child: Form(
+                  key: formKey,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 600.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        HeightSpace(48.h),
+                        // Header Section
+                        Text(
+                          context.l10n.rentalHub,
+                          style: AppStyles.primaryHeadLinesStyle.copyWith(
+                            color: AppColors.primaryColor,
+                            fontSize: 48.sp,
+                          ),
+                        ),
+                        HeightSpace(12.h),
+                        Text(
+                          context.l10n.welcomeBackLogin,
+                          style: AppStyles.subtitlesStyles.copyWith(
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                        HeightSpace(48.h),
+
+                        // Email Field
+                        CustomTextField(
+                          title: context.l10n.emailAddress,
+                          hintText: context.l10n.emailHint,
+                          validator: (p) {
+                            if (p == null || p.isEmpty) {
+                              return context.l10n.enterYourEmail;
+                            }
+                            return null;
+                          },
+                          controller: email,
+                          spacing: 16.h,
+                        ),
+
+                        // Password Label and Forgot Password
+                        HeightSpace(12.h),
+                        Padding(
+                          padding: EdgeInsetsDirectional.only(
+                            end: isRtl ? 0 : 14.w,
+                            start: isRtl ? 14.w : 0,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  context.l10n.password,
+                                  style: AppStyles.black10BoldStyle,
+                                ),
                               ),
-                            ),
+                              InkWell(
+                                onTap: () {
+                                  context.pushNamed(
+                                    AppRoutes.forgotPasswordScreen,
+                                  );
+                                },
+                                child: Text(
+                                  context.l10n.forgotPassword,
+                                  style: AppStyles.black10BoldStyle.copyWith(
+                                    color: AppColors.primaryColor,
+                                    fontSize: 12.sp,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        HeightSpace(6.h),
+
+                        // Password Field
+                        CustomTextField(
+                          hintText: '••••••••',
+                          validator: (p) {
+                            if (p == null || p.isEmpty) {
+                              return context.l10n.enterYourPassword;
+                            }
+                            if (p.length < 6) {
+                              return context.l10n.passwordMinLength;
+                            }
+                            return null;
+                          },
+                          isPassword: true,
+                          controller: password,
+                          spacing: 16.h,
+                        ),
+
+                        // Login Button
+                        HeightSpace(24.h),
+                        PrimaryButtonWidget(
+                          buttonText: context.l10n.loginToHub,
+                          isLoading: isLoading,
+                          onPress: () {
+                            context.go(AppRoutes.mainScreen);
+                            // _onLoginPressed,
+                          },
+                        ),
+
+                        // Social Login Section
+                        HeightSpace(32.h),
+                        SocialLoginWidget(
+                          text: context.l10n.connectWith,
+                          onGooglePressed: () {
+                            log('Google sign-in tapped');
+                            showMsg(
+                              context.l10n.googleSignInNotImplemented,
+                              context,
+                              isError: true,
+                            );
+                          },
+                        ),
+                        HeightSpace(32.h),
+                      ],
                     ),
-                    HeightSpace(6),
-                    CustomTextField(
-                      hintText: '********',
-                      validator: (p) {
-                        if (p == null || p.isEmpty) {
-                          return 'Enter Your Password';
-                        }
-                        if (p.length < 6) {
-                          return "Password must be at least 6 characters";
-                        }
-                        return null;
-                      },
-                      isPassword: true,
-                      controller: password,
-                      spacing: 16,
-                    ),
-                    PrimaryButtonWidget(
-                      buttonText: 'Login to Hub',
-                      isLoading: isLoading,
-                      onPress: _onLoginPressed,
-                    ),
-                    HeightSpace(32),
-                    SocialLoginWidget(
-                      text: 'CONNECT WITH',
-                      onGooglePressed: () {
-                        log('Google sign-in tapped');
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Google sign in is not implemented yet',
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    HeightSpace(32),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -163,14 +199,14 @@ class _LoginScreenState extends State<LoginScreen> {
             padding: EdgeInsets.only(bottom: 16.h),
             child: InkWell(
               onTap: () {
-                // TODO: Implement Terms of Service page navigation
-                showMsg('Terms of Service page coming soon', context);
+                showMsg(context.l10n.termsOfServicePageComingSoon, context);
               },
-              child: const Text(
-                'Terms of Service',
+              child: Text(
+                context.l10n.termsOfService,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
+                  fontSize: 13.sp,
                   decoration: TextDecoration.underline,
                 ),
               ),

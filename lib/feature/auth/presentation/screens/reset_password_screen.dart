@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
@@ -50,6 +51,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+
     return BlocConsumer<ResetPasswordCubit, ResetPasswordState>(
       listener: (context, state) {
         if (state is ResetPasswordError) {
@@ -66,75 +69,99 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         return Scaffold(
           appBar: AppBar(),
           body: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    HeightSpace(12),
-                    Text.rich(
-                      TextSpan(
-                        style: AppStyles.primaryHeadLinesStyle.copyWith(
-                          fontSize: 36.sp,
-                          color: Colors.black,
-                        ),
-                        children: [
-                          const TextSpan(text: 'Reset '),
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                child: Form(
+                  key: formKey,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 600.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        HeightSpace(12.h),
+
+                        // Header Section
+                        Text.rich(
                           TextSpan(
-                            text: 'Password',
-                            style: TextStyle(color: AppColors.primaryColor),
+                            style: AppStyles.primaryHeadLinesStyle.copyWith(
+                              fontSize: 36.sp,
+                              color: Colors.black,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: isRtl
+                                    ? '${context.l10n.resetPassword} '
+                                    : 'Reset ',
+                              ),
+                              TextSpan(
+                                text: isRtl ? '' : context.l10n.password,
+                                style: TextStyle(color: AppColors.primaryColor),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        HeightSpace(12.h),
+                        Text(
+                          context.l10n.resetPasswordSubtitle,
+                          style: AppStyles.subtitlesStyles.copyWith(
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                        HeightSpace(48.h),
+
+                        // New Password Field
+                        CustomTextField(
+                          title: context.l10n.newPassword,
+                          hintText: '••••••••',
+                          isPassword: true,
+                          controller: passwordController,
+                          spacing: 16.h,
+                          validator: (value) {
+                            final input = value?.trim() ?? '';
+                            if (input.isEmpty) {
+                              return context.l10n.enterYourPassword;
+                            }
+                            if (input.length < 6) {
+                              return context.l10n.passwordMinLength;
+                            }
+                            return null;
+                          },
+                        ),
+
+                        // Confirm Password Field
+                        CustomTextField(
+                          title: context.l10n.confirmPassword,
+                          hintText: '••••••••',
+                          isPassword: true,
+                          controller: confirmPasswordController,
+                          spacing: 16.h,
+                          validator: (value) {
+                            final input = value?.trim() ?? '';
+                            if (input.isEmpty) {
+                              return context.l10n.confirmPasswordMessage;
+                            }
+                            if (input != passwordController.text.trim()) {
+                              return context.l10n.passwordsDoNotMatch;
+                            }
+                            return null;
+                          },
+                        ),
+
+                        // Update Password Button
+                        HeightSpace(24.h),
+                        PrimaryButtonWidget(
+                          buttonText: context.l10n.updatePassword,
+                          isLoading: isLoading,
+                          onPress: () {
+                            context.go(AppRoutes.authSuccessScreen);
+
+                            // _onResetPressed,
+                          },
+                        ),
+                      ],
                     ),
-                    Text(
-                      'Create a new password for your Rental Hub account.',
-                      style: AppStyles.subtitlesStyles,
-                    ),
-                    HeightSpace(48),
-                    CustomTextField(
-                      title: 'New Password',
-                      hintText: '********',
-                      isPassword: true,
-                      controller: passwordController,
-                      spacing: 16,
-                      validator: (value) {
-                        final input = value?.trim() ?? '';
-                        if (input.isEmpty) {
-                          return 'Enter Your Password';
-                        }
-                        if (input.length < 6) {
-                          return 'Password must be at least 6 characters';
-                        }
-                        return null;
-                      },
-                    ),
-                    CustomTextField(
-                      title: 'Confirm Password',
-                      hintText: '********',
-                      isPassword: true,
-                      controller: confirmPasswordController,
-                      spacing: 16,
-                      validator: (value) {
-                        final input = value?.trim() ?? '';
-                        if (input.isEmpty) {
-                          return 'Confirm your password';
-                        }
-                        if (input != passwordController.text.trim()) {
-                          return 'Passwords do not match';
-                        }
-                        return null;
-                      },
-                    ),
-                    HeightSpace(24),
-                    PrimaryButtonWidget(
-                      buttonText: 'Update Password',
-                      isLoading: isLoading,
-                      onPress: _onResetPressed,
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),

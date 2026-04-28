@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:rental_hub/core/extensions/localization_extension.dart';
+import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
+import 'package:rental_hub/core/utils/snack_bar_widget.dart';
 import 'package:rental_hub/core/widgets/custom_text_field.dart';
 import 'package:rental_hub/core/widgets/primary_button_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
@@ -38,110 +42,140 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 
+  void _onSignUpPressed(BuildContext context) {
+    final isFormValid = formKey.currentState!.validate();
+
+    if (!isChecked) {
+      showMsg(context.l10n.termsOfService, context, isError: true);
+      return;
+    }
+
+    if (isFormValid && isChecked) {
+      // signup logic
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+
     return Scaffold(
       body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                HeightSpace(48),
-                Text.rich(
-                  TextSpan(
-                    style: AppStyles.primaryHeadLinesStyle.copyWith(
-                      fontSize: 36.sp,
-                      color: Colors.black,
-                    ),
-                    children: [
-                      const TextSpan(text: 'Join '),
-                      TextSpan(
-                        text: 'Rental Hub',
-                        style: TextStyle(color: AppColors.primaryColor),
-                      ),
-                    ],
-                  ),
-                ),
-                Text(
-                  'Create an account to start exploring premium properties today.',
-                  style: AppStyles.subtitlesStyles,
-                ),
-                HeightSpace(48),
-                CustomTextField(
-                  title: 'Full Name',
-                  hintText: 'Ali Mohamed',
-                  validator: (p) {
-                    if (p == null || p.isEmpty) {
-                      return 'Enter Your Full Name';
-                    }
-                    return null;
-                  },
-                  controller: name,
-                  spacing: 16,
-                ),
-                CustomTextField(
-                  title: 'Email Address',
-                  hintText: 'hello@gmail.com',
-                  validator: (p) {
-                    if (p == null || p.isEmpty) {
-                      return 'Enter Your Email';
-                    }
-                    return null;
-                  },
-                  controller: email,
-                  spacing: 16,
-                ),
-                HeightSpace(6),
-                CustomTextField(
-                  title: 'Password',
-                  hintText: '********',
-                  validator: (p) {
-                    if (p == null || p.isEmpty) {
-                      return 'Enter Your Password';
-                    }
-                    if (p.length < 6) {
-                      return "Password must be at least 6 characters";
-                    }
-                    return null;
-                  },
-                  isPassword: true,
-                  controller: password,
-                  spacing: 16,
-                ),
-                TermsWidget(
-                  value: isChecked,
-                  onChanged: (value) {
-                    setState(() {
-                      isChecked = value!;
-                    });
-                  },
-                ),
-                HeightSpace(40),
-                PrimaryButtonWidget(
-                  buttonText: 'Create Account',
-                  onPress: () {
-                    final isFormValid = formKey.currentState!.validate();
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+            child: Form(
+              key: formKey,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 600.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    HeightSpace(48.h),
 
-                    if (!isChecked) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: Colors.red,
-                          content: Text('You must agree to Terms & Privacy'),
+                    // Header Section
+                    Text.rich(
+                      TextSpan(
+                        style: AppStyles.primaryHeadLinesStyle.copyWith(
+                          fontSize: 36.sp,
+                          color: Colors.black,
                         ),
-                      );
-                    }
-                    if (isFormValid && isChecked) {
-                      // signup logic
-                    }
-                  },
+                        children: [
+                          TextSpan(
+                            text: isRtl ? '${context.l10n.rentalHub} ' : '',
+                          ),
+                          TextSpan(text: isRtl ? 'انضم إلى' : 'Join '),
+                          TextSpan(
+                            text: isRtl ? '' : context.l10n.rentalHub,
+                            style: TextStyle(color: AppColors.primaryColor),
+                          ),
+                        ],
+                      ),
+                    ),
+                    HeightSpace(12.h),
+                    Text(
+                      context.l10n.createAccountSubtitle,
+                      style: AppStyles.subtitlesStyles.copyWith(
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                    HeightSpace(48.h),
+
+                    // Full Name Field
+                    CustomTextField(
+                      title: context.l10n.fullName,
+                      hintText: context.l10n.fullNameHint,
+                      validator: (p) {
+                        if (p == null || p.isEmpty) {
+                          return context.l10n.enterYourFullName;
+                        }
+                        return null;
+                      },
+                      controller: name,
+                      spacing: 16.h,
+                    ),
+
+                    // Email Field
+                    CustomTextField(
+                      title: context.l10n.emailAddress,
+                      hintText: context.l10n.emailHint,
+                      validator: (p) {
+                        if (p == null || p.isEmpty) {
+                          return context.l10n.enterYourEmail;
+                        }
+                        return null;
+                      },
+                      controller: email,
+                      spacing: 16.h,
+                    ),
+
+                    // Password Field
+                    HeightSpace(6.h),
+                    CustomTextField(
+                      title: context.l10n.password,
+                      hintText: '••••••••',
+                      validator: (p) {
+                        if (p == null || p.isEmpty) {
+                          return context.l10n.enterYourPassword;
+                        }
+                        if (p.length < 6) {
+                          return context.l10n.passwordMinLength;
+                        }
+                        return null;
+                      },
+                      isPassword: true,
+                      controller: password,
+                      spacing: 16.h,
+                    ),
+
+                    // Terms and Privacy Widget
+                    HeightSpace(20.h),
+                    TermsWidget(
+                      value: isChecked,
+                      onChanged: (value) {
+                        setState(() {
+                          isChecked = value!;
+                        });
+                      },
+                    ),
+
+                    // Create Account Button
+                    HeightSpace(24.h),
+                    PrimaryButtonWidget(
+                      buttonText: context.l10n.signup,
+                      onPress: () {
+                        // context.go(AppRoutes.mainScreen);
+                        _onSignUpPressed(context);
+                      },
+                    ),
+
+                    // Social Login Section
+                    HeightSpace(24.h),
+                    SocialLoginWidget(text: context.l10n.connectWith),
+                    HeightSpace(24.h),
+                  ],
                 ),
-                HeightSpace(32),
-                SocialLoginWidget(text: 'OR CONNECT WITH'),
-                HeightSpace(32),
-              ],
+              ),
             ),
           ),
         ),
