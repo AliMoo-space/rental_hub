@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
-import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 
 class CustomTextField extends StatefulWidget {
   final double? spacing;
@@ -52,8 +51,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (widget.title != null)
-              Text(widget.title!, style: AppStyles.black10BoldStyle),
-            if (widget.title != null) HeightSpace(6),
+              Text(widget.title!, style: AppStyles.inputLabel),
+            if (widget.title != null) SizedBox(height: 6.h),
             TextFormField(
               focusNode: _focusNode,
               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -66,18 +65,17 @@ class _CustomTextFieldState extends State<CustomTextField> {
               cursorColor: AppColors.primaryColor,
               decoration: InputDecoration(
                 hintText: widget.hintText ?? "",
-                hintStyle: TextStyle(
-                  fontSize: 15.sp,
-                  color: const Color(0xff8391A1),
-                  fontWeight: FontWeight.w200,
-                ),
+                hintStyle: AppStyles.inputHint,
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: 18.w,
                   vertical: 18.h,
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30.r),
-                  borderSide: BorderSide(color: Color(0xffE8ECF4), width: 1),
+                  borderSide: const BorderSide(
+                    color: AppColors.borderColor,
+                    width: 1,
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30.r),
@@ -88,14 +86,20 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30.r),
-                  borderSide: const BorderSide(color: Colors.red, width: 1),
+                  borderSide: const BorderSide(
+                    color: AppColors.errorColor,
+                    width: 1,
+                  ),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30.r),
-                  borderSide: const BorderSide(color: Colors.red, width: 1),
+                  borderSide: const BorderSide(
+                    color: AppColors.errorColor,
+                    width: 1,
+                  ),
                 ),
                 filled: true,
-                fillColor: const Color(0xffF7F8F9),
+                fillColor: AppColors.surfaceColor,
                 suffixIcon: widget.isPassword == true
                     ? IconButton(
                         onPressed: () {
@@ -107,7 +111,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                           _obscureText
                               ? Icons.visibility_off
                               : Icons.visibility,
-                          color: AppColors.secondaryColor,
+                          color: AppColors.textSecondaryColor,
                           size: 20.sp,
                         ),
                       )

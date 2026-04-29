@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
+import 'package:rental_hub/core/styling/app_styles.dart';
 
 class TermsWidget extends StatelessWidget {
   final bool value;
@@ -18,7 +19,7 @@ class TermsWidget extends StatelessWidget {
         Checkbox(
           value: value,
           activeColor: AppColors.primaryColor,
-          side: BorderSide(width: 1.sp, color: Colors.grey[400]!),
+          side: const BorderSide(width: 1, color: AppColors.borderColor),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.r),
           ),
@@ -29,20 +30,14 @@ class TermsWidget extends StatelessWidget {
         Expanded(
           child: Text.rich(
             TextSpan(
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: Colors.grey[700],
-                height: 1.4,
+              style: AppStyles.bodySmall.copyWith(
+                color: AppColors.textSecondaryColor,
               ),
               children: [
                 TextSpan(text: context.l10n.iAgreeToThe),
                 TextSpan(
                   text: context.l10n.termsOfServiceLink,
-                  style: TextStyle(
-                    color: AppColors.primaryColor,
-                    fontWeight: FontWeight.w500,
-                    decoration: TextDecoration.underline,
-                  ),
+                  style: AppStyles.linkText,
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       // navigate to terms
@@ -51,11 +46,7 @@ class TermsWidget extends StatelessWidget {
                 TextSpan(text: context.l10n.and),
                 TextSpan(
                   text: context.l10n.privacyPolicyLink,
-                  style: TextStyle(
-                    color: AppColors.primaryColor,
-                    fontWeight: FontWeight.w500,
-                    decoration: TextDecoration.underline,
-                  ),
+                  style: AppStyles.linkText,
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       // navigate to privacy

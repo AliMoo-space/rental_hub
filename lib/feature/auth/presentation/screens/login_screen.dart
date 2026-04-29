@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Header Section
                         Text(
                           context.l10n.rentalHub,
-                          style: AppStyles.primaryHeadLinesStyle.copyWith(
+                          style: AppStyles.displayLarge.copyWith(
                             color: AppColors.primaryColor,
                             fontSize: 48.sp,
                           ),
@@ -91,9 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         HeightSpace(12.h),
                         Text(
                           context.l10n.welcomeBackLogin,
-                          style: AppStyles.subtitlesStyles.copyWith(
-                            fontSize: 14.sp,
-                          ),
+                          style: AppStyles.bodyMedium,
                         ),
                         HeightSpace(48.h),
 
@@ -124,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Expanded(
                                 child: Text(
                                   context.l10n.password,
-                                  style: AppStyles.black10BoldStyle,
+                                  style: AppStyles.inputLabel,
                                 ),
                               ),
                               InkWell(
@@ -135,16 +133,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                                 child: Text(
                                   context.l10n.forgotPassword,
-                                  style: AppStyles.black10BoldStyle.copyWith(
+                                  style: AppStyles.bodySmall.copyWith(
                                     color: AppColors.primaryColor,
-                                    fontSize: 12.sp,
+                                    decoration: TextDecoration.underline,
                                   ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        HeightSpace(6.h),
+                        HeightSpace(4.h),
 
                         // Password Field
                         CustomTextField(
@@ -204,9 +202,8 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Text(
                 context.l10n.termsOfService,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13.sp,
+                style: AppStyles.bodySmall.copyWith(
+                  fontWeight: FontWeight.w700,
                   decoration: TextDecoration.underline,
                 ),
               ),

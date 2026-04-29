@@ -18,7 +18,8 @@ import 'package:rental_hub/feature/splash/splash_view.dart';
 
 class RouterGenerationConfig {
   static GoRouter goRouter = GoRouter(
-    initialLocation: AppRoutes.splashScreen,
+    initialLocation: AppRoutes.mainScreen,
+    // initialLocation: AppRoutes.splashScreen,
     routes: [
       GoRoute(
         name: AppRoutes.splashScreen,

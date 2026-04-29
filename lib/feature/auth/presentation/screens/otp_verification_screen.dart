@@ -83,10 +83,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                       // Header Section
                       Text.rich(
                         TextSpan(
-                          style: AppStyles.primaryHeadLinesStyle.copyWith(
-                            fontSize: 36.sp,
-                            color: Colors.black,
-                          ),
+                          style: AppStyles.displayLarge,
                           children: [
                             TextSpan(
                               text: isRtl
@@ -95,7 +92,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             ),
                             TextSpan(
                               text: isRtl ? '' : context.l10n.next,
-                              style: TextStyle(color: AppColors.primaryColor),
+                              style: AppStyles.linkText.copyWith(
+                                decoration: TextDecoration.none,
+                              ),
                             ),
                           ],
                         ),
@@ -103,9 +102,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                       HeightSpace(12.h),
                       Text(
                         context.l10n.verifyCodeSubtitle(widget.email),
-                        style: AppStyles.subtitlesStyles.copyWith(
-                          fontSize: 14.sp,
-                        ),
+                        style: AppStyles.bodyMedium,
                       ),
                       HeightSpace(48.h),
 

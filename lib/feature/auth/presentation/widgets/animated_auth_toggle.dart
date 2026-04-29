@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
+import 'package:rental_hub/core/styling/app_shadows.dart';
+import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/feature/auth/presentation/screens/login_screen.dart';
 import 'package:rental_hub/feature/auth/presentation/screens/signup_screen.dart';
 
@@ -100,14 +102,13 @@ class _AnimatedAuthToggleState extends State<AnimatedAuthToggle>
                           scale: _animations[val].value,
                           child: Text(
                             labels[val],
-                            style: TextStyle(
+                            style: AppStyles.bodyMedium.copyWith(
                               color: isSelected
                                   ? AppColors.primaryColor
-                                  : Colors.black,
+                                  : AppColors.textPrimaryColor,
                               fontWeight: isSelected
                                   ? FontWeight.w600
                                   : FontWeight.w500,
-                              fontSize: 14.sp,
                             ),
                           ),
                         );
@@ -116,42 +117,20 @@ class _AnimatedAuthToggleState extends State<AnimatedAuthToggle>
                   );
                 },
                 style: ToggleStyle(
-                  backgroundColor: const Color(0xFFECEEF1),
+                  backgroundColor: AppColors.toggleBackgroundColor,
                   borderColor: Colors.transparent,
                   borderRadius: BorderRadius.circular(50.r),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0xFFB8BEC7),
-                      blurRadius: 6,
-                      offset: Offset(3, 3),
-                    ),
-                    BoxShadow(
-                      color: Colors.white,
-                      blurRadius: 6,
-                      offset: Offset(-3, -3),
-                    ),
-                  ],
+                  boxShadow: AppShadows.toggleBackground,
                 ),
                 styleBuilder: (i) => ToggleStyle(
-                  indicatorColor: Colors.white,
+                  indicatorColor: AppColors.whiteColor,
                   borderRadius: BorderRadius.circular(50.r),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0xFFB8BEC7),
-                      blurRadius: 5,
-                      offset: Offset(2, 2),
-                    ),
-                    BoxShadow(
-                      color: Colors.white,
-                      blurRadius: 5,
-                      offset: Offset(-2, -2),
-                    ),
-                  ],
+                  boxShadow: AppShadows.toggleIndicator,
                 ),
                 onChanged: _onToggle,
               ),
             ),
-            SizedBox(height: 30.h),
+            SizedBox(height: 20.h),
 
             // Page View for Login/Signup Screens
             Expanded(

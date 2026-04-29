@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_assets.dart';
+import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/primary_button_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
@@ -31,7 +32,7 @@ class SocialLoginWidget extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: Text(
                 text,
-                style: AppStyles.grey12MediumStyle.copyWith(fontSize: 12.sp),
+                style: AppStyles.bodySmall,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -47,7 +48,7 @@ class SocialLoginWidget extends StatelessWidget {
             Expanded(
               child: PrimaryButtonWidget(
                 onPress: onFacebookPressed,
-                buttonColor: Colors.grey[100],
+                buttonColor: AppColors.surfaceVariantColor,
                 width: double.infinity,
                 height: 41.h,
                 buttonText: context.l10n.facebook,
@@ -63,7 +64,7 @@ class SocialLoginWidget extends StatelessWidget {
                     height: 20.h,
                   ),
                 ),
-                textColor: Colors.black,
+                textColor: AppColors.textPrimaryColor,
               ),
             ),
 
@@ -71,7 +72,7 @@ class SocialLoginWidget extends StatelessWidget {
             Expanded(
               child: PrimaryButtonWidget(
                 onPress: onGooglePressed,
-                buttonColor: Colors.grey[100],
+                buttonColor: AppColors.surfaceVariantColor,
                 width: double.infinity,
                 height: 41.h,
                 buttonText: context.l10n.google,
@@ -87,7 +88,7 @@ class SocialLoginWidget extends StatelessWidget {
                     height: 20.h,
                   ),
                 ),
-                textColor: Colors.black,
+                textColor: AppColors.textPrimaryColor,
               ),
             ),
           ],

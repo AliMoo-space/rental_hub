@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
-import 'package:rental_hub/core/routing/app_routes.dart';
-import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/utils/snack_bar_widget.dart';
 import 'package:rental_hub/core/widgets/custom_text_field.dart';
@@ -76,10 +73,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     // Header Section
                     Text.rich(
                       TextSpan(
-                        style: AppStyles.primaryHeadLinesStyle.copyWith(
-                          fontSize: 36.sp,
-                          color: Colors.black,
-                        ),
+                        style: AppStyles.displayLarge,
                         children: [
                           TextSpan(
                             text: isRtl ? '${context.l10n.rentalHub} ' : '',
@@ -87,7 +81,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           TextSpan(text: isRtl ? 'انضم إلى' : 'Join '),
                           TextSpan(
                             text: isRtl ? '' : context.l10n.rentalHub,
-                            style: TextStyle(color: AppColors.primaryColor),
+                            style: AppStyles.linkText.copyWith(
+                              decoration: TextDecoration.none,
+                            ),
                           ),
                         ],
                       ),
@@ -95,9 +91,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     HeightSpace(12.h),
                     Text(
                       context.l10n.createAccountSubtitle,
-                      style: AppStyles.subtitlesStyles.copyWith(
-                        fontSize: 14.sp,
-                      ),
+                      style: AppStyles.bodyMedium,
                     ),
                     HeightSpace(48.h),
 
@@ -130,7 +124,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
 
                     // Password Field
-                    HeightSpace(6.h),
+                    HeightSpace(4.h),
                     CustomTextField(
                       title: context.l10n.password,
                       hintText: '••••••••',

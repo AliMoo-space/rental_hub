@@ -28,7 +28,7 @@ class AuthSuccessScreen extends StatelessWidget {
                   width: 92.w,
                   height: 92.h,
                   decoration: const BoxDecoration(
-                    color: Color(0xffEAF5FF),
+                    color: AppColors.primarySoftColor,
                     shape: BoxShape.circle,
                   ),
                   alignment: Alignment.center,
@@ -43,9 +43,8 @@ class AuthSuccessScreen extends StatelessWidget {
                 // Success Title
                 Text(
                   context.l10n.passwordUpdated,
-                  style: AppStyles.primaryHeadLinesStyle.copyWith(
-                    color: Colors.black,
-                    fontSize: 32.sp,
+                  style: AppStyles.displayMedium.copyWith(
+                    color: AppColors.textPrimaryColor,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -54,7 +53,7 @@ class AuthSuccessScreen extends StatelessWidget {
                 // Success Message
                 Text(
                   context.l10n.passwordUpdateSuccess,
-                  style: AppStyles.subtitlesStyles.copyWith(fontSize: 14.sp),
+                  style: AppStyles.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
                 HeightSpace(36.h),

@@ -8,7 +8,6 @@ import 'package:rental_hub/core/widgets/primary_button_widget.dart';
 import 'package:rental_hub/core/widgets/primary_outline_button_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 import 'package:rental_hub/feature/home/presentation/widgets/home_recommended_item_card_widget.dart';
-import 'package:rental_hub/feature/home/presentation/widgets/home_recommended_items_list_widget.dart';
 import 'package:rental_hub/feature/profile/presentation/widgets/app_drawer.dart';
 
 class ProfileScreen extends StatefulWidget {

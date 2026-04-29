@@ -1,4 +1,5 @@
 import 'package:rental_hub/core/styling/app_colors.dart';
+import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -58,9 +59,8 @@ class PrimaryButtonWidget extends StatelessWidget {
                   buttonText ?? "",
                   style:
                       style ??
-                      TextStyle(
-                        color: textColor ?? Colors.white,
-                        fontWeight: FontWeight.w500,
+                      AppStyles.buttonLabel.copyWith(
+                        color: textColor ?? AppColors.whiteColor,
                         fontSize: fontSize ?? 16.sp,
                       ),
                 ),
