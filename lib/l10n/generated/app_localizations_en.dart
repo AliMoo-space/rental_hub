@@ -299,4 +299,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get period => '.';
+
+  @override
+  String get myRentals => 'My Rentals';
 }

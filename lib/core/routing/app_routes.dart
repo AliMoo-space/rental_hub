@@ -8,4 +8,7 @@ class AppRoutes {
   static const String authSuccessScreen = '/authSuccessScreen';
   static const String mainScreen = '/mainScreen';
   static const String homeScreen = '/homeScreen';
+  static const String favoritesScreen = '/favoritesScreen';
+  static const String dealsScreen = '/dealsScreen';
+  static const String communityScreen = '/communityScreen';
 }

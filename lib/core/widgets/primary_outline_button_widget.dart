@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 
 class PrimaryOutlineButtonWidget extends StatelessWidget {
   const PrimaryOutlineButtonWidget({

@@ -298,4 +298,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get period => '.';
+
+  @override
+  String get myRentals => 'إيجاراتي';
 }

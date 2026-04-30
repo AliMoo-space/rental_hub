@@ -11,6 +11,9 @@ import 'package:rental_hub/feature/auth/presentation/screens/forgot_password_scr
 import 'package:rental_hub/feature/auth/presentation/screens/otp_verification_screen.dart';
 import 'package:rental_hub/feature/auth/presentation/screens/reset_password_screen.dart';
 import 'package:rental_hub/feature/auth/presentation/widgets/animated_auth_toggle.dart';
+import 'package:rental_hub/feature/community/presentation/screens/community_screen.dart';
+import 'package:rental_hub/feature/deals/presentation/screens/deals_screen.dart';
+import 'package:rental_hub/feature/favorites/presentation/screens/favorites_screen.dart';
 import 'package:rental_hub/feature/home/presentation/screens/home_screen.dart';
 import 'package:rental_hub/feature/intro/intro_screen.dart';
 import 'package:rental_hub/feature/main/main_screen.dart';
@@ -80,6 +83,21 @@ class RouterGenerationConfig {
         name: AppRoutes.homeScreen,
         path: AppRoutes.homeScreen,
         builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.communityScreen,
+        path: AppRoutes.communityScreen,
+        builder: (context, state) => const CommunityScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.favoritesScreen,
+        path: AppRoutes.favoritesScreen,
+        builder: (context, state) => const FavoritesScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.dealsScreen,
+        path: AppRoutes.dealsScreen,
+        builder: (context, state) => const DealsScreen(),
       ),
     ],
   );

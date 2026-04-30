@@ -661,6 +661,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'.'**
   String get period;
+
+  /// No description provided for @myRentals.
+  ///
+  /// In en, this message translates to:
+  /// **'My Rentals'**
+  String get myRentals;
 }
 
 class _AppLocalizationsDelegate

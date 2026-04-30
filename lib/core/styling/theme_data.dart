@@ -103,6 +103,7 @@ class AppThemes {
       surfaceTintColor: Colors.transparent,
       backgroundColor: Colors.transparent,
       elevation: 0,
+      iconTheme: IconThemeData(color: Colors.grey),
     ),
   );
 }

@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
+import 'package:rental_hub/feature/community/presentation/screens/community_screen.dart';
 import 'package:rental_hub/feature/home/presentation/screens/home_screen.dart';
 import 'package:rental_hub/feature/profile/presentation/screens/profile_screen.dart';
 
@@ -19,9 +20,9 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> screens = [
     HomeScreen(),
-    Container(color: Colors.green),
     Container(color: Colors.blue),
     Container(color: Colors.red),
+    CommunityScreen(),
     ProfileScreen(),
   ];
 
@@ -61,13 +62,14 @@ class _MainScreenState extends State<MainScreen> {
             BottomNavigationBarItem(
               icon: SvgPicture.asset(
                 width: 30.w,
-                AppAssets.community,
+                AppAssets.uilMessage,
                 color: currentIndex == 1
                     ? AppColors.primaryColor
                     : AppColors.bottomNavigationInactiveColor,
               ),
-              label: context.l10n.community,
+              label: context.l10n.messages,
             ),
+
             BottomNavigationBarItem(
               icon: Container(
                 padding: const EdgeInsets.all(8),
@@ -86,12 +88,12 @@ class _MainScreenState extends State<MainScreen> {
             BottomNavigationBarItem(
               icon: SvgPicture.asset(
                 width: 30.w,
-                AppAssets.uilMessage,
+                AppAssets.community,
                 color: currentIndex == 3
                     ? AppColors.primaryColor
                     : AppColors.bottomNavigationInactiveColor,
               ),
-              label: context.l10n.messages,
+              label: context.l10n.community,
             ),
             BottomNavigationBarItem(
               icon: SvgPicture.asset(

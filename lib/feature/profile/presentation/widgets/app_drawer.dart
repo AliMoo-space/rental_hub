@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
+import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/primary_outline_button_widget.dart';
@@ -41,16 +43,14 @@ class AppDrawer extends StatelessWidget {
         icon: AppAssets.uiVector,
         title: context.l10n.deals,
         onTap: () {
-          Navigator.pop(context);
-          Navigator.pushNamed(context, '/deals');
+          context.pushNamed(AppRoutes.dealsScreen);
         },
       ),
       DrawerItem(
         icon: AppAssets.solarHeart,
         title: context.l10n.favorites,
         onTap: () {
-          Navigator.pop(context);
-          Navigator.pushNamed(context, '/favorites');
+          context.pushNamed(AppRoutes.favoritesScreen);
         },
       ),
       DrawerItem(

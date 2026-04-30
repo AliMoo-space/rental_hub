@@ -57,11 +57,10 @@ class AppStyles {
 
   // Heading small
   static TextStyle get headlineSmall => _style(
-    fontSize: 20,
+    fontSize: 20.sp,
     fontWeight: FontWeight.w600,
     color: AppColors.textSecondary,
     fontFamily: AppFonts.mainFontWeight,
-    height: 1.25,
   );
 
   // Title styles
