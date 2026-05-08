@@ -6,7 +6,7 @@ import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_shadows.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
-import 'package:rental_hub/core/widgets/rental_header.dart';
+import 'package:rental_hub/core/widgets/deals_filter_header_widget.dart';
 import 'package:rental_hub/feature/home/presentation/widgets/home_header_widget.dart';
 
 class CommunityScreen extends StatefulWidget {
@@ -42,18 +42,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
               children: [
                 _CreateCommunityPostCard(),
                 SizedBox(height: 14.h),
-                RentalsHeader(
-                  title: context.l10n.myRentals,
-                  filters: _filters,
-                  selectedFilterIndex: _selectedFilterIndex,
-                  onSearchTap: () {
-                    // Implement search functionality
-                  },
-                  onFilterSelected: (index) {
-                    setState(() {
-                      _selectedFilterIndex = index;
-                    });
-                  },
+                FilterHeaderWidget(
+                  title: 'عروض المجتمع',
+                  selectedFilter: _filters[_selectedFilterIndex],
+                  onSearchTap: () {},
+                  onFilterTap: () {},
                 ),
                 SizedBox(height: 14.h),
                 const _CommunityOfferCard(),

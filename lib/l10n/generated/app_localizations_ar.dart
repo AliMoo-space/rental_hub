@@ -174,7 +174,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get passwordMinLength => 'يجب أن تكون كلمة المرور 6 أحرف على الأقل';
 
   @override
-  String get loginToHub => 'تسجيل الدخول إلى Hub';
+  String get loginToHub => 'تسجيل الدخول';
 
   @override
   String get googleSignInNotImplemented =>
@@ -261,10 +261,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get backToLogin => 'العودة إلى تسجيل الدخول';
 
   @override
-  String get facebook => 'Facebook';
+  String get facebook => 'فيسبوك';
 
   @override
-  String get google => 'Google';
+  String get google => 'جوجل';
 
   @override
   String get loginSuccessful => 'تم تسجيل الدخول بنجاح';
@@ -288,6 +288,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get iAgreeToThe => 'أوافق على ';
 
   @override
+  String get termsAgreementPrefix => 'بإنضمامك فإينك توافق على ';
+
+  @override
   String get termsOfServiceLink => 'شروط الخدمة';
 
   @override
@@ -297,8 +300,36 @@ class AppLocalizationsAr extends AppLocalizations {
   String get privacyPolicyLink => 'سياسة الخصوصية';
 
   @override
-  String get period => '.';
+  String get termsAgreementSuffix => ' الخاصة بنا.';
 
   @override
   String get myRentals => 'إيجاراتي';
+
+  @override
+  String get balanceAndWallet => 'الرصيد والمحفظة';
+
+  @override
+  String get totalBalance => 'الرصيد الكلي';
+
+  @override
+  String get currency => 'ج.م';
+
+  @override
+  String get pendingBalance => 'رصيد معلق';
+
+  @override
+  String get availableBalance => 'رصيد متاح';
+
+  @override
+  String get withdrawableBalance => 'رصيد قابل للسحب';
+
+  @override
+  String get rechargeBalance => 'شحن رصيد';
+
+  @override
+  String get withdrawBalance => 'سحب رصيد';
+
+  @override
+  String get facebookSignInNotImplemented =>
+      'لم يتم تنفيذ تسجيل الدخول عبر فيسبوك حتى الآن';
 }

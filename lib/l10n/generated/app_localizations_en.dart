@@ -289,6 +289,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get iAgreeToThe => 'I agree to the ';
 
   @override
+  String get termsAgreementPrefix => 'By joining, you agree to our ';
+
+  @override
   String get termsOfServiceLink => 'Terms of Service';
 
   @override
@@ -298,8 +301,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get privacyPolicyLink => 'Privacy Policy';
 
   @override
-  String get period => '.';
+  String get termsAgreementSuffix => '.';
 
   @override
   String get myRentals => 'My Rentals';
+
+  @override
+  String get balanceAndWallet => 'Balance and wallet';
+
+  @override
+  String get totalBalance => 'Total balance';
+
+  @override
+  String get currency => 'EGP';
+
+  @override
+  String get pendingBalance => 'Pending balance';
+
+  @override
+  String get availableBalance => 'Available balance';
+
+  @override
+  String get withdrawableBalance => 'Withdrawable balance';
+
+  @override
+  String get rechargeBalance => 'Recharge balance';
+
+  @override
+  String get withdrawBalance => 'Withdraw balance';
+
+  @override
+  String get facebookSignInNotImplemented =>
+      'Facebook sign in is not implemented yet';
 }

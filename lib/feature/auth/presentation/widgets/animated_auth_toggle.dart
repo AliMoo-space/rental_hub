@@ -76,79 +76,85 @@ class _AnimatedAuthToggleState extends State<AnimatedAuthToggle>
     final labels = [context.l10n.login, context.l10n.signup];
 
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(height: 32.h),
-            Center(
-              child: AnimatedToggleSwitch<int>.size(
-                current: value,
-                values: const [0, 1],
-                height: 68.h,
-                indicatorSize: Size.fromWidth(100.w),
-                iconOpacity: 1.0,
-                borderWidth: 5.0,
-                iconAnimationType: AnimationType.none,
-                textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-                customIconBuilder: (context, local, global) {
-                  final val = local.value;
-                  final isSelected = val == value;
-                  return GestureDetector(
-                    onTap: () => _onToggle(val),
-                    child: AnimatedBuilder(
-                      animation: _animations[val],
-                      builder: (context, child) {
-                        return Transform.scale(
-                          scale: _animations[val].value,
+      body: Column(
+        children: [
+          SizedBox(height: 32.h),
+          Center(
+            child: AnimatedToggleSwitch<int>.size(
+              current: value,
+              values: const [0, 1],
+              height: 68.h,
+              indicatorSize: Size.fromWidth(100.w),
+              iconOpacity: 1.0,
+              borderWidth: 5.0,
+              iconAnimationType: AnimationType.none,
+              textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+              customIconBuilder: (context, local, global) {
+                final val = local.value;
+                final isSelected = val == value;
+                return GestureDetector(
+                  onTap: () => _onToggle(val),
+                  child: AnimatedBuilder(
+                    animation: _animations[val],
+                    builder: (context, child) {
+                      return Transform.scale(
+                        scale: _animations[val].value,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12.w,
+                            vertical: 8.h,
+                          ),
                           child: Text(
                             labels[val],
                             style: AppStyles.bodyMedium.copyWith(
+                              fontSize: 10.sp,
                               color: isSelected
                                   ? AppColors.primaryColor
                                   : AppColors.textPrimaryColor,
                               fontWeight: isSelected
-                                  ? FontWeight.w600
+                                  ? FontWeight.w700
                                   : FontWeight.w500,
+                              letterSpacing: 0.5,
                             ),
                           ),
-                        );
-                      },
-                    ),
-                  );
-                },
-                style: ToggleStyle(
-                  backgroundColor: AppColors.toggleBackgroundColor,
-                  borderColor: Colors.transparent,
-                  borderRadius: BorderRadius.circular(50.r),
-                  boxShadow: AppShadows.toggleBackground,
-                ),
-                styleBuilder: (i) => ToggleStyle(
-                  indicatorColor: AppColors.whiteColor,
-                  borderRadius: BorderRadius.circular(50.r),
-                  boxShadow: AppShadows.toggleIndicator,
-                ),
-                onChanged: _onToggle,
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+              style: ToggleStyle(
+                backgroundColor: AppColors.toggleBackgroundColor,
+                borderColor: Colors.transparent,
+                borderRadius: BorderRadius.circular(50.r),
+                boxShadow: AppShadows.toggleBackground,
               ),
-            ),
-            SizedBox(height: 20.h),
-
-            // Page View for Login/Signup Screens
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                onPageChanged: (i) {
-                  setState(() => value = i);
-                  for (final c in _controllers) {
-                    c.reset();
-                  }
-                  _controllers[i].forward();
-                },
-                children: const [LoginScreen(), SignUpScreen()],
+              styleBuilder: (i) => ToggleStyle(
+                indicatorColor: AppColors.whiteColor,
+                borderRadius: BorderRadius.circular(50.r),
+                boxShadow: AppShadows.toggleIndicator,
               ),
+              onChanged: _onToggle,
             ),
-          ],
-        ),
+          ),
+          SizedBox(height: 20.h),
+      
+          // Page View for Login/Signup Screens
+          Expanded(
+            child: PageView(
+              controller: _pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              onPageChanged: (i) {
+                setState(() => value = i);
+                for (final c in _controllers) {
+                  c.reset();
+                }
+                _controllers[i].forward();
+              },
+              children: const [LoginScreen(), SignUpScreen()],
+            ),
+          ),
+        ],
       ),
     );
   }

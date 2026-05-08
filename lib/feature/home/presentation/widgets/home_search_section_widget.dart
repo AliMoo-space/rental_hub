@@ -33,7 +33,7 @@ class HomeSearchSectionWidget extends StatelessWidget {
           hintText: searchHint,
           suffixIcon: Icon(
             Icons.search_rounded,
-            size: 33.sp,
+            size: 30.sp,
             color: AppColors.secondaryColor,
           ),
         ),

@@ -23,9 +23,13 @@ class LoginSuccess extends LoginState {
 
   @override
   List<Object?> get props => [
-    loginEntity.accessToken,
-    loginEntity.expiresAtUtc,
+    loginEntity.token,
+    loginEntity.expiration,
     loginEntity.refreshToken,
+    loginEntity.userId,
+    loginEntity.email,
+    loginEntity.fullName,
+    loginEntity.role,
   ];
 }
 

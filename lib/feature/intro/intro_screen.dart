@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
@@ -9,8 +10,8 @@ import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/primary_button_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 import 'package:rental_hub/feature/auth/presentation/widgets/social_login_widget.dart';
+import 'package:rental_hub/feature/auth/presentation/widgets/terms_widget.dart';
 import 'package:rental_hub/feature/intro/widgets/refactor.dart';
-import 'package:rental_hub/l10n/generated/app_localizations.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
@@ -38,7 +39,7 @@ class _IntroScreenState extends State<IntroScreen>
       duration: const Duration(milliseconds: 1200),
     );
 
-    /// 🎯 Logo Animation (0 → 40%)
+    ///  Logo Animation (0 → 40%)
     _logoFade = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
@@ -79,8 +80,6 @@ class _IntroScreenState extends State<IntroScreen>
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     return Scaffold(
       body: Stack(
         children: [
@@ -109,7 +108,7 @@ class _IntroScreenState extends State<IntroScreen>
           PositionedDirectional(
             top: 16,
             end: 16,
-            child: IntroLanguageButton(l10n: l10n),
+            child: IntroLanguageButton(l10n: context.l10n),
           ),
 
           Align(
@@ -131,15 +130,21 @@ class _IntroScreenState extends State<IntroScreen>
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(l10n.rentAndEarn, style: AppStyles.intro32semiBold),
+                      Text(
+                        context.l10n.rentAndEarn,
+                        style: AppStyles.intro32semiBold,
+                      ),
                       HeightSpace(8),
-                      Text(l10n.trustedStore, style: AppStyles.intro16medium),
+                      Text(
+                        context.l10n.trustedStore,
+                        style: AppStyles.intro16medium,
+                      ),
                       HeightSpace(32),
                       PrimaryButtonWidget(
-                        height: 77.w,
+                        height: 70.h,
                         width: 330.w,
                         bordersRadius: 29,
-                        buttonText: l10n.getStarted,
+                        buttonText: context.l10n.getStarted,
                         style: AppStyles.hendi500Size20.copyWith(
                           color: Colors.white,
                         ),
@@ -153,7 +158,7 @@ class _IntroScreenState extends State<IntroScreen>
                       ),
                       HeightSpace(36),
                       SocialLoginWidget(
-                        text: l10n.connectWith,
+                        text: context.l10n.connectWith,
                         onGooglePressed: () {},
                       ),
                     ],
@@ -163,6 +168,10 @@ class _IntroScreenState extends State<IntroScreen>
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.only(bottom: 20),
+        child: TermsWidget(value: false, onChanged: (value) {}),
       ),
     );
   }

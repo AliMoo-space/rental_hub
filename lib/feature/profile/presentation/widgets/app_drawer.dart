@@ -35,8 +35,7 @@ class AppDrawer extends StatelessWidget {
         icon: AppAssets.uiWallet,
         title: context.l10n.wallet,
         onTap: () {
-          Navigator.pop(context);
-          Navigator.pushNamed(context, '/wallet');
+          context.pushNamed(AppRoutes.walletScreen);
         },
       ),
       DrawerItem(

@@ -51,7 +51,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (widget.title != null)
-              Text(widget.title!, style: AppStyles.inputLabel),
+              Text(widget.title!, style: AppStyles.labelSmall),
             if (widget.title != null) SizedBox(height: 6.h),
             TextFormField(
               focusNode: _focusNode,

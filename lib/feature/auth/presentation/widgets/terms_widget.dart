@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
@@ -15,26 +14,17 @@ class TermsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        // Checkbox (RTL aware)
-        Checkbox(
-          value: value,
-          activeColor: AppColors.primaryColor,
-          side: const BorderSide(width: 1, color: AppColors.borderColor),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          onChanged: onChanged,
-        ),
+        
 
-        // Terms and Privacy Text
+        // Terms and Privacy Text (centered, single-line)
         Expanded(
           child: Text.rich(
             TextSpan(
-              style: AppStyles.bodySmall.copyWith(
+              style: AppStyles.labelSmall.copyWith(
                 color: AppColors.textSecondaryColor,
               ),
               children: [
-                TextSpan(text: context.l10n.iAgreeToThe),
+                TextSpan(text: context.l10n.termsAgreementPrefix),
                 TextSpan(
                   text: context.l10n.termsOfServiceLink,
                   style: AppStyles.linkText,
@@ -52,9 +42,11 @@ class TermsWidget extends StatelessWidget {
                       // navigate to privacy
                     },
                 ),
-                TextSpan(text: context.l10n.period),
+                TextSpan(text: context.l10n.termsAgreementSuffix),
               ],
             ),
+            textAlign: TextAlign.center,
+        
           ),
         ),
       ],

@@ -3,11 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
+import 'package:rental_hub/core/widgets/deals_filter_header_widget.dart';
 import 'package:rental_hub/core/widgets/primary_outline_button_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 import 'package:rental_hub/feature/deals/presentation/widgets/deals_widgets.dart';
 import 'package:rental_hub/feature/favorites/presentation/widgets/favorites_sheets.dart';
-import 'package:rental_hub/feature/favorites/presentation/widgets/favorites_widgets.dart';
 import 'package:rental_hub/feature/home/presentation/widgets/home_recommended_items_list_widget.dart';
 
 class DealsScreen extends StatefulWidget {
@@ -46,43 +46,11 @@ class _DealsScreenState extends State<DealsScreen> {
           ),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // right side: title
-                  Expanded(
-                    child: Align(
-                      alignment: AlignmentDirectional.centerStart,
-                      child: Text(
-                        context.l10n.myRentals,
-                        textAlign: TextAlign.right,
-                        style: AppStyles.hendi500Size20,
-                      ),
-                    ),
-                  ),
-                  // left side: search + filter
-                  Row(
-                    children: [
-                      IconPill(
-                        icon: Icons.search_rounded,
-                        onTap: _openSearchSheet,
-                      ),
-                      WidthSpace(10),
-                      GestureDetector(
-                        onTap: _openFilterSheet,
-                        child: SizedBox(
-                          width: 110.w,
-                          child: FilterPill(
-                            label: _filters[_selectedFilterIndex],
-                            trailing: Icons.keyboard_arrow_down_rounded,
-                            leading: Icons.calendar_month_rounded,
-                            isCompact: false,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+              FilterHeaderWidget(
+                title: context.l10n.myRentals,
+                selectedFilter: _filters[_selectedFilterIndex],
+                onSearchTap: _openSearchSheet,
+                onFilterTap: _openFilterSheet,
               ),
 
               HeightSpace(12),
@@ -118,44 +86,11 @@ class _DealsScreenState extends State<DealsScreen> {
                 endIndent: 16.w,
               ),
               HeightSpace(20),
-              HeightSpace(12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // right side: title
-                  Expanded(
-                    child: Align(
-                      alignment: AlignmentDirectional.centerStart,
-                      child: Text(
-                        context.l10n.myRentals,
-                        textAlign: TextAlign.right,
-                        style: AppStyles.hendi500Size20,
-                      ),
-                    ),
-                  ),
-                  // left side: search + filter
-                  Row(
-                    children: [
-                      IconPill(
-                        icon: Icons.search_rounded,
-                        onTap: _openSearchSheet,
-                      ),
-                      WidthSpace(10),
-                      GestureDetector(
-                        onTap: _openFilterSheet,
-                        child: SizedBox(
-                          width: 110.w,
-                          child: FilterPill(
-                            label: _filters[_selectedFilterIndex],
-                            trailing: Icons.keyboard_arrow_down_rounded,
-                            leading: Icons.calendar_month_rounded,
-                            isCompact: false,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+              FilterHeaderWidget(
+                title: context.l10n.myRentals,
+                selectedFilter: _filters[_selectedFilterIndex],
+                onSearchTap: _openSearchSheet,
+                onFilterTap: _openFilterSheet,
               ),
 
               HeightSpace(12),

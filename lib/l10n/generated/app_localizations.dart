@@ -638,6 +638,12 @@ abstract class AppLocalizations {
   /// **'I agree to the '**
   String get iAgreeToThe;
 
+  /// No description provided for @termsAgreementPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'By joining, you agree to our '**
+  String get termsAgreementPrefix;
+
   /// No description provided for @termsOfServiceLink.
   ///
   /// In en, this message translates to:
@@ -656,17 +662,71 @@ abstract class AppLocalizations {
   /// **'Privacy Policy'**
   String get privacyPolicyLink;
 
-  /// No description provided for @period.
+  /// No description provided for @termsAgreementSuffix.
   ///
   /// In en, this message translates to:
   /// **'.'**
-  String get period;
+  String get termsAgreementSuffix;
 
   /// No description provided for @myRentals.
   ///
   /// In en, this message translates to:
   /// **'My Rentals'**
   String get myRentals;
+
+  /// No description provided for @balanceAndWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance and wallet'**
+  String get balanceAndWallet;
+
+  /// No description provided for @totalBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Total balance'**
+  String get totalBalance;
+
+  /// No description provided for @currency.
+  ///
+  /// In en, this message translates to:
+  /// **'EGP'**
+  String get currency;
+
+  /// No description provided for @pendingBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending balance'**
+  String get pendingBalance;
+
+  /// No description provided for @availableBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Available balance'**
+  String get availableBalance;
+
+  /// No description provided for @withdrawableBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawable balance'**
+  String get withdrawableBalance;
+
+  /// No description provided for @rechargeBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Recharge balance'**
+  String get rechargeBalance;
+
+  /// No description provided for @withdrawBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw balance'**
+  String get withdrawBalance;
+
+  /// No description provided for @facebookSignInNotImplemented.
+  ///
+  /// In en, this message translates to:
+  /// **'Facebook sign in is not implemented yet'**
+  String get facebookSignInNotImplemented;
 }
 
 class _AppLocalizationsDelegate

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
+import 'package:rental_hub/core/widgets/deals_filter_header_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 import 'package:rental_hub/feature/home/presentation/widgets/home_recommended_items_list_widget.dart';
-import 'package:rental_hub/feature/favorites/presentation/widgets/favorites_widgets.dart';
 import 'package:rental_hub/feature/favorites/presentation/widgets/favorites_sheets.dart';
 
 class FavoritesScreen extends StatefulWidget {
@@ -56,26 +56,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   ),
                 ),
                 // left side: search + filter
-                Row(
-                  children: [
-                    IconPill(
-                      icon: Icons.search_rounded,
-                      onTap: _openSearchSheet,
-                    ),
-                    WidthSpace(10),
-                    GestureDetector(
-                      onTap: _openFilterSheet,
-                      child: SizedBox(
-                        width: 110.w,
-                        child: FilterPill(
-                          label: _filters[_selectedFilterIndex],
-                          trailing: Icons.keyboard_arrow_down_rounded,
-                          leading: Icons.calendar_month_rounded,
-                          isCompact: false,
-                        ),
-                      ),
-                    ),
-                  ],
+                FilterHeaderWidget(
+                  title: '',
+                  selectedFilter: _filters[_selectedFilterIndex],
+                  onSearchTap: _openSearchSheet,
+                  onFilterTap: _openFilterSheet,
                 ),
               ],
             ),

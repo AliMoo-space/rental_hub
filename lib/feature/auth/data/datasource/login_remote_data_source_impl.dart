@@ -30,7 +30,7 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
 
     await cacheHelper.saveSecureData(
       key: 'access_token',
-      value: loginModel.accessToken,
+      value: loginModel.token,
     );
     await cacheHelper.saveSecureData(
       key: 'refresh_token',

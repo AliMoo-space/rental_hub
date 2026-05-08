@@ -15,13 +15,14 @@ class HomeHeaderWidget extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       toolbarHeight: 100.h,
       automaticallyImplyLeading: false,
+      centerTitle: false,
       title: SvgPicture.asset(AppAssets.logo2, width: 151.w),
       actions: [
         Row(
           children: [
             CircleAvatar(
               backgroundColor: AppColors.backgroundColor,
-              radius: 18.r,
+              radius: 20.r,
               child: SvgPicture.asset(AppAssets.bell, width: 30.w),
             ),
             SizedBox(width: 16.w),

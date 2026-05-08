@@ -21,7 +21,7 @@ class SocialLoginWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isRtl = Directionality.of(context) == TextDirection.rtl;
+    // final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     return Column(
       children: [
@@ -48,15 +48,15 @@ class SocialLoginWidget extends StatelessWidget {
             Expanded(
               child: PrimaryButtonWidget(
                 onPress: onFacebookPressed,
-                buttonColor: AppColors.surfaceVariantColor,
+                buttonColor: AppColors.whiteColor,
                 width: double.infinity,
                 height: 41.h,
                 buttonText: context.l10n.facebook,
                 fontSize: 12.sp,
                 icon: Padding(
                   padding: EdgeInsets.only(
-                    right: isRtl ? 8.w : 0,
-                    left: isRtl ? 0 : 8.w,
+                    right:  8.w ,
+                    left:  8.w ,
                   ),
                   child: SvgPicture.asset(
                     AppAssets.facebook,
@@ -72,15 +72,15 @@ class SocialLoginWidget extends StatelessWidget {
             Expanded(
               child: PrimaryButtonWidget(
                 onPress: onGooglePressed,
-                buttonColor: AppColors.surfaceVariantColor,
+                buttonColor: AppColors.whiteColor,
                 width: double.infinity,
                 height: 41.h,
                 buttonText: context.l10n.google,
                 fontSize: 12.sp,
                 icon: Padding(
                   padding: EdgeInsets.only(
-                    right: isRtl ? 8.w : 0,
-                    left: isRtl ? 0 : 8.w,
+                    right:  8.w ,
+                    left:  8.w ,
                   ),
                   child: SvgPicture.asset(
                     AppAssets.google,

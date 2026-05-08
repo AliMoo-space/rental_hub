@@ -18,11 +18,12 @@ import 'package:rental_hub/feature/home/presentation/screens/home_screen.dart';
 import 'package:rental_hub/feature/intro/intro_screen.dart';
 import 'package:rental_hub/feature/main/main_screen.dart';
 import 'package:rental_hub/feature/splash/splash_view.dart';
+import 'package:rental_hub/feature/wallet/presentation/screens/wallet_screen.dart';
 
 class RouterGenerationConfig {
   static GoRouter goRouter = GoRouter(
-    initialLocation: AppRoutes.mainScreen,
-    // initialLocation: AppRoutes.splashScreen,
+    // initialLocation: AppRoutes.mainScreen,
+    initialLocation: AppRoutes.splashScreen,
     routes: [
       GoRoute(
         name: AppRoutes.splashScreen,
@@ -98,6 +99,11 @@ class RouterGenerationConfig {
         name: AppRoutes.dealsScreen,
         path: AppRoutes.dealsScreen,
         builder: (context, state) => const DealsScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.walletScreen,
+        path: AppRoutes.walletScreen,
+        builder: (context, state) => const WalletScreen(),
       ),
     ],
   );

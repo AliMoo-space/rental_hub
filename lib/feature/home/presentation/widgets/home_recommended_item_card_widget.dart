@@ -61,9 +61,9 @@ class HomeRecommendedItemCardWidget extends StatelessWidget {
               left: 14.w,
               right: 321.w,
               child: CircleAvatar(
-                radius: 16.r,
+                radius: 18.r,
                 backgroundColor: const Color(0xffFFFFFF).withValues(alpha: .8),
-                child: SvgPicture.asset(AppAssets.uiHeart, width: 24.w),
+                child: SvgPicture.asset(AppAssets.uiHeart, width: 22.w),
               ),
             ),
             Positioned(

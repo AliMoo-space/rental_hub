@@ -99,9 +99,19 @@
     "updatePassword": "Update Password",
     "confirmPasswordMessage": "Confirm your password",
     "iAgreeToThe": "I agree to the ",
+    "termsAgreementPrefix": "By joining, you agree to our ",
     "termsOfServiceLink": "Terms of Service",
     "and": " and ",
     "privacyPolicyLink": "Privacy Policy",
-    "period": ".",
-    "myRentals": "My Rentals"
+    "termsAgreementSuffix": ".",
+    "myRentals": "My Rentals",
+    "balanceAndWallet":"Balance and wallet",
+    "totalBalance":"Total balance",
+    "currency": "EGP",
+    "pendingBalance": "Pending balance",
+    "availableBalance": "Available balance",
+    "withdrawableBalance": "Withdrawable balance",
+  "rechargeBalance": "Recharge balance",
+  "withdrawBalance": "Withdraw balance",
+  "facebookSignInNotImplemented": "Facebook sign in is not implemented yet"
   }

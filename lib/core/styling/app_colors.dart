@@ -5,6 +5,7 @@ class AppColors {
   // Primary
   static const Color primaryColor = Color(0xff6A72F5);
   static const Color primarySoftColor = Color(0xffCBCEFF);
+  static const Color primaryDarkColor = Color(0xffDADCFF);
 
   // Secondary / neutrals
   static const Color secondaryColor = Color(0xff797979);
@@ -23,32 +24,27 @@ class AppColors {
   // Borders
   static const Color borderColor = Color(0xffE8ECF4);
 
+  // Utility
+  static const Color whiteColor = Color(0xFFFFFFFF);
+
+  // Bottom navigation
+  static const Color bottomNavigationActiveColor = Color(0xff6A72F5);
+  static const Color bottomNavigationInactiveColor = Color(0xffB0B0B0);
+
+  // Text aliases (legacy/semantic names used across the app)
+  static const Color textPrimary = textPrimaryColor;
+  static const Color textSecondary = textSecondaryColor;
+
+  // Input / control colors
+  static const Color inputHintColor = textSecondaryColor;
+
+  // Toggle / segmented control background
+  static const Color toggleBackgroundColor = surfaceVariantColor;
+
   // Semantic
   static const Color successColor = Color(0xff16A34A);
   static const Color errorColor = Color(0xffDC2626);
   static const Color warningColor = Color(0xffF59E0B);
-
-  // Inputs & components
-  static const Color inputHintColor = textSecondaryColor;
-  static const Color inputFillColor = surfaceColor;
-  static const Color toggleBackgroundColor = surfaceVariantColor;
-  static const Color toggleShadowColor = Color(0xffB8BEC7);
-  static const Color disabledColor = textMutedColor;
-  static const Color bottomNavigationInactiveColor = textMutedColor;
-  static const Color bottomNavigationActiveColor = primaryColor;
-
-  // Aliases
-  static const Color primary = primaryColor;
-  static const Color primarySoft = primarySoftColor;
-  static const Color secondary = secondaryColor;
-  static const Color textPrimary = textPrimaryColor;
-  static const Color textSecondary = textSecondaryColor;
-  static const Color textMuted = textMutedColor;
-  static const Color surface = surfaceColor;
-  static const Color surfaceVariant = surfaceVariantColor;
-  static const Color border = borderColor;
-  static const Color blackColor = textPrimaryColor;
-  static const Color whiteColor = Colors.white;
 
   // Decorative palette
   static const List<Color> colorPalette = [

@@ -25,7 +25,6 @@ class DioConsumer extends ApiConsumer {
     }
   }
 
-  //!POST
   @override
   Future<Response<dynamic>> post(
     String path, {

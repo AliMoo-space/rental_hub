@@ -2,16 +2,19 @@ class ResponseParser {
   const ResponseParser._();
 
   static Map<String, dynamic> extractDataPayload(dynamic raw) {
-    if (raw is! Map<String, dynamic>) {
-      return {};
+    if (raw is Map) {
+      final map = Map<String, dynamic>.from(raw);
+
+      final nestedData = map['data'];
+
+      if (nestedData is Map) {
+        return Map<String, dynamic>.from(nestedData);
+      }
+
+      return map;
     }
 
-    final nestedData = raw['data'];
-    if (nestedData is Map<String, dynamic>) {
-      return Map<String, dynamic>.from(nestedData);
-    }
-
-    return Map<String, dynamic>.from(raw);
+    return <String, dynamic>{};
   }
 
   static Map<String, dynamic> extractMessagePayload(
