@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:rental_hub/core/databases/cache/cache_helper.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
+import 'package:rental_hub/core/utils/service_locator.dart';
 import 'package:rental_hub/feature/community/presentation/screens/community_screen.dart';
+import 'package:rental_hub/feature/home/presentation/cubit/category_cubit.dart';
+import 'package:rental_hub/feature/home/presentation/cubit/product_cubit.dart';
 import 'package:rental_hub/feature/home/presentation/screens/home_screen.dart';
 import 'package:rental_hub/feature/profile/presentation/screens/profile_screen.dart';
 
@@ -19,7 +24,13 @@ class _MainScreenState extends State<MainScreen> {
   int currentIndex = 0;
 
   final List<Widget> screens = [
-    HomeScreen(),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => getIt<CategoryCubit>()),
+        BlocProvider(create: (context) => getIt<ProductCubit>()),
+      ],
+      child: const HomeScreen(),
+    ),
     Container(color: Colors.blue),
     Container(color: Colors.red),
     CommunityScreen(),

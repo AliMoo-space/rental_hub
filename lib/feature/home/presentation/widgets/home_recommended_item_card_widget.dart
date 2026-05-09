@@ -6,6 +6,7 @@ import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/primary_button_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
+import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
 import 'package:rental_hub/feature/home/presentation/widgets/home_item_rating_widget.dart';
 
 class HomeRecommendedItemCardWidget extends StatelessWidget {
@@ -13,10 +14,12 @@ class HomeRecommendedItemCardWidget extends StatelessWidget {
     super.key,
     required this.rating,
     required this.onRatingChanged,
+    this.product,
   });
 
   final double rating;
   final ValueChanged<double> onRatingChanged;
+  final ProductEntity? product;
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +39,7 @@ class HomeRecommendedItemCardWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(14.r),
         child: Stack(
           children: [
-            SizedBox(
-              width: 375.w,
-              height: 234.h,
-              child: Image.asset(AppAssets.modernChair, fit: BoxFit.cover),
-            ),
+            SizedBox(width: 375.w, height: 234.h, child: _buildProductImage()),
             Positioned.fill(
               child: DecoratedBox(
                 decoration: BoxDecoration(
@@ -92,7 +91,7 @@ class HomeRecommendedItemCardWidget extends StatelessWidget {
                         WidthSpace(6),
                         Expanded(
                           child: Text(
-                            'مدينة نصر',
+                            product?.locationArea ?? 'مدينة نصر',
                             style: AppStyles.instrumentSans500Size14,
                           ),
                         ),
@@ -116,13 +115,13 @@ class HomeRecommendedItemCardWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'كرسي ديكور',
+                          product?.name ?? 'كرسي ديكور',
                           style: AppStyles.instrumentSans700Size24.copyWith(
                             color: AppColors.secondaryColor,
                           ),
                         ),
                         Text(
-                          '250 ج.م/اليوم',
+                          '${product?.finalPricePerDay ?? 250} ج.م/اليوم',
                           style: AppStyles.instrumentSans700Size24.copyWith(
                             color: AppColors.primaryColor,
                           ),
@@ -150,5 +149,23 @@ class HomeRecommendedItemCardWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildProductImage() {
+    final imagePath = product?.images.isNotEmpty == true
+        ? product!.images.first
+        : '';
+
+    if (imagePath.startsWith('http')) {
+      return Image.network(
+        imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset(AppAssets.modernChair, fit: BoxFit.cover);
+        },
+      );
+    }
+
+    return Image.asset(AppAssets.modernChair, fit: BoxFit.cover);
   }
 }

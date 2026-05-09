@@ -3,6 +3,6 @@ class EndPoints {
   static const String loginEndpoint = "/api/Account/login";
   static const String forgotPasswordEndpoint = "/api/auth/forgot-password";
   static const String validateOtpEndpoint = "/api/auth/validate-otp";
-  static const String getCartEndpoint = "/api/cart";
-  static const String cartEndpoint = "/api/cart/items";
+  static const String categoriesEndpoint = "/api/Categories";
+  static const String productsEndpoint = "/api/Product";
 }

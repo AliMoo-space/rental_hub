@@ -6,18 +6,12 @@ import 'package:rental_hub/core/styling/app_styles.dart';
 class HomeCategoriesWidget extends StatelessWidget {
   const HomeCategoriesWidget({
     super.key,
+    required this.categories,
     required this.selectedCategoryIndex,
     required this.onCategorySelected,
   });
 
-  static const List<String> _categories = [
-    'الكل',
-    'كراسي',
-    'طاولات',
-    'غرف نوم',
-    'مكاتب',
-    'ديكور',
-  ];
+  final List<String> categories;
 
   final int selectedCategoryIndex;
   final ValueChanged<int> onCategorySelected;
@@ -28,9 +22,12 @@ class HomeCategoriesWidget extends StatelessWidget {
       height: 50.h,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: _categories.length,
+        itemCount: categories.length,
         itemBuilder: (context, index) {
-          final isSelected = index == selectedCategoryIndex;
+          final safeSelectedIndex = selectedCategoryIndex < categories.length
+              ? selectedCategoryIndex
+              : 0;
+          final isSelected = index == safeSelectedIndex;
           return Container(
             margin: EdgeInsetsDirectional.only(end: 10.w),
             child: InkWell(
@@ -46,8 +43,13 @@ class HomeCategoriesWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isSelected
                       ? AppColors.primaryColor
-                      : AppColors.backgroundColor,
+                      : AppColors.whiteColor,
                   borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(
+                    color: isSelected
+                        ? AppColors.primaryColor
+                        : AppColors.borderColor,
+                  ),
                   boxShadow: [
                     if (isSelected)
                       BoxShadow(
@@ -61,7 +63,7 @@ class HomeCategoriesWidget extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    _categories[index],
+                    categories[index],
                     style: AppStyles.intro16medium.copyWith(
                       fontSize: 13.sp,
                       color: isSelected

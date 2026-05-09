@@ -131,10 +131,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         PrimaryButtonWidget(
                           buttonText: context.l10n.sendVerificationCode,
                           isLoading: isLoading,
-                          onPress: () {
-                            context.go(AppRoutes.otpVerificationScreen);
-                          },
-                          // _onSendPressed,
+                          onPress: _onSendPressed,
                         ),
                       ],
                     ),

@@ -13,11 +13,7 @@ class LoadingWidget extends StatelessWidget {
       height: height ?? MediaQuery.of(context).size.height,
       width: width ?? MediaQuery.of(context).size.width,
       child: Center(
-        child: LottieBuilder.asset(
-          AppAssets.loadingLottie,
-          width: 150.w,
-          height: 150.w,
-        ),
+        child: CircularProgressIndicator(color: Theme.of(context).primaryColor),
       ),
     );
   }

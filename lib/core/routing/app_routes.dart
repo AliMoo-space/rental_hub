@@ -10,6 +10,5 @@ class AppRoutes {
   static const String homeScreen = '/homeScreen';
   static const String favoritesScreen = '/favoritesScreen';
   static const String dealsScreen = '/dealsScreen';
-  static const String communityScreen = '/communityScreen';
   static const String walletScreen = '/walletScreen';
 }

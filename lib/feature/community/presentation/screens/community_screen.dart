@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rental_hub/core/extensions/localization_extension.dart';
-import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_shadows.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
@@ -169,65 +166,6 @@ class _PostActionChip extends StatelessWidget {
   }
 }
 
-class _FilterChip extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 14.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: AppColors.borderColor),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'الكل',
-            textAlign: TextAlign.end,
-            style: AppStyles.bodySmall.copyWith(
-              color: AppColors.smallSecondaryColor,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(width: 4.w),
-          Icon(
-            Icons.keyboard_arrow_down_rounded,
-            size: 20.sp,
-            color: AppColors.smallSecondaryColor,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SearchButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 36.w,
-      height: 36.w,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: AppColors.borderColor),
-      ),
-      child: Center(
-        child: SvgPicture.asset(
-          AppAssets.searchRounded,
-          width: 18.w,
-          height: 18.w,
-          colorFilter: const ColorFilter.mode(
-            AppColors.smallSecondaryColor,
-            BlendMode.srcIn,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _CommunityOfferCard extends StatelessWidget {
   const _CommunityOfferCard();
 
@@ -238,11 +176,10 @@ class _CommunityOfferCard extends StatelessWidget {
       padding: EdgeInsetsDirectional.all(14.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.borderColor),
         boxShadow: [AppShadows.softCard],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -256,7 +193,6 @@ class _CommunityOfferCard extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 10.w),
-
               Text(
                 'سارة هاني',
                 textAlign: TextAlign.end,
@@ -274,27 +210,17 @@ class _CommunityOfferCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 14.h),
-          Row(
-            children: [
-              Expanded(
-                child: _InfoTag(
-                  icon: Icons.payments_outlined,
-                  text: 'السعر : 500 ج.م',
-                ),
-              ),
-              SizedBox(width: 8.w),
-              Expanded(
-                child: _InfoTag(
-                  icon: Icons.schedule_outlined,
-                  text: 'المدة : يومين',
-                ),
-              ),
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 8.h,
+            children: const [
+              _InfoTag(icon: Icons.location_on_outlined, text: 'القاهرة'),
+              _InfoTag(icon: Icons.access_time, text: 'منذ ساعتين'),
             ],
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 16.h),
           SizedBox(
             width: double.infinity,
-            height: 46.h,
             child: ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
@@ -335,19 +261,17 @@ class _InfoTag extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Flexible(
-            child: Text(
-              text,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.end,
-              style: AppStyles.bodySmall.copyWith(
-                color: AppColors.smallSecondaryColor,
-                fontWeight: FontWeight.w600,
-                fontSize: 11.sp,
-              ),
+          Text(
+            text,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.end,
+            style: AppStyles.bodySmall.copyWith(
+              color: AppColors.smallSecondaryColor,
+              fontWeight: FontWeight.w600,
+              fontSize: 11.sp,
             ),
           ),
           SizedBox(width: 6.w),

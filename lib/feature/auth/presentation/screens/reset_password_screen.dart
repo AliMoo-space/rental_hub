@@ -149,11 +149,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         PrimaryButtonWidget(
                           buttonText: context.l10n.updatePassword,
                           isLoading: isLoading,
-                          onPress: () {
-                            context.go(AppRoutes.authSuccessScreen);
-
-                            // _onResetPressed,
-                          },
+                          onPress: _onResetPressed,
                         ),
                       ],
                     ),

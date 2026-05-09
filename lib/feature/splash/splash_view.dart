@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rental_hub/core/databases/cache/cache_helper.dart';
 import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
+import 'package:rental_hub/core/utils/service_locator.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -46,10 +48,18 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    Future.delayed(const Duration(seconds: 3), () {
-      // ignore: use_build_context_synchronously
+    waitNavigationTo();
+  }
+
+  Future<void> waitNavigationTo() async {
+    await Future.delayed(const Duration(seconds: 3));
+    final value = await getIt<CacheHelper>().getSecureData(key: 'access_token');
+    if (!mounted) return;
+    if (value != null && value.isNotEmpty) {
+      context.go(AppRoutes.mainScreen);
+    } else {
       context.go(AppRoutes.introScreen);
-    });
+    }
   }
 
   @override
@@ -76,8 +86,7 @@ class _SplashScreenState extends State<SplashScreen>
               position: slideAnimation,
               child: ScaleTransition(
                 scale: scaleAnimation,
-                child:
-                 SvgPicture.asset(AppAssets.logo, width: 225, height: 58),
+                child: SvgPicture.asset(AppAssets.logo, width: 225, height: 58),
               ),
             ),
           ),

@@ -27,6 +27,14 @@ import 'package:rental_hub/feature/auth/domain/usecases/resend_otp_use_case.dart
 import 'package:rental_hub/feature/auth/presentation/cubit/login_cubit.dart';
 import 'package:rental_hub/feature/auth/presentation/cubit/forgot_password_cubit.dart';
 import 'package:rental_hub/feature/auth/presentation/cubit/otp_cubit.dart';
+import 'package:rental_hub/feature/home/data/datasource/category_remote_data_source.dart';
+import 'package:rental_hub/feature/home/data/datasource/product_remote_data_source.dart';
+import 'package:rental_hub/feature/home/data/repo/category_repo_impl.dart';
+import 'package:rental_hub/feature/home/data/repo/product_repo_impl.dart';
+import 'package:rental_hub/feature/home/domain/repo/category_repo.dart';
+import 'package:rental_hub/feature/home/domain/repo/product_repo.dart';
+import 'package:rental_hub/feature/home/presentation/cubit/category_cubit.dart';
+import 'package:rental_hub/feature/home/presentation/cubit/product_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -44,6 +52,8 @@ Future<void> setupServiceLocator() async {
     () => LocaleRepositoryImpl(getIt()),
   );
 
+  // Register StorageHelper for secure token access
+
   getIt.registerLazySingleton(() => GetSavedLocaleUseCase(getIt()));
   getIt.registerLazySingleton(() => SaveLocaleUseCase(getIt()));
   getIt.registerLazySingleton(() => LocaleCubit(getIt(), getIt()));
@@ -57,6 +67,17 @@ Future<void> setupServiceLocator() async {
   );
 
   getIt.registerLazySingleton<OtpRepository>(() => OtpRepositoryImpl(getIt()));
+
+  getIt.registerLazySingleton<CategoryRemoteDataSource>(
+    () => CategoryRemoteDataSource(getIt()),
+  );
+
+  getIt.registerLazySingleton<ProductRemoteDataSource>(
+    () => ProductRemoteDataSource(getIt()),
+  );
+
+  getIt.registerLazySingleton<CategoryRepo>(() => CategoryRepoImpl(getIt()));
+  getIt.registerLazySingleton<ProductRepo>(() => ProductRepoImpl(getIt()));
 
   // ======================= USE CASES ========================
 
@@ -83,6 +104,8 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerFactory(() => LoginCubit(getIt()));
   getIt.registerFactory(() => ForgotPasswordCubit(getIt()));
+  getIt.registerFactory(() => CategoryCubit(getIt()));
+  getIt.registerFactory(() => ProductCubit(getIt()));
 
   getIt.registerFactoryParam<OtpCubit, String, void>(
     (email, _) => OtpCubit(
