@@ -50,7 +50,6 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!(formKey.currentState?.validate() ?? false)) {
       return;
     }
-    // context.pushNamed(AppRoutes.mainScreen);
     context.read<LoginCubit>().login(
       LoginParams(email: email.text.trim(), password: password.text.trim()),
     );

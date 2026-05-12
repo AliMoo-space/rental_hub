@@ -5,14 +5,10 @@ import 'package:rental_hub/feature/localization/presentation/cubit/locale_cubit.
 import 'package:rental_hub/l10n/generated/app_localizations.dart';
 
 class IntroLanguageButton extends StatelessWidget {
-  const IntroLanguageButton({
-    required this.l10n,
-    this.iconColor = Colors.black,
-    super.key,
-  });
+  const IntroLanguageButton({required this.l10n, this.iconColor, super.key});
 
   final AppLocalizations l10n;
-  final Color iconColor;
+  final Color? iconColor;
 
   String _localizedLanguageName(String languageCode) {
     switch (languageCode) {
@@ -74,6 +70,7 @@ class IntroLanguageButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final localeCode = context.select(
       (LocaleCubit cubit) => cubit.state.locale.languageCode,
     );
@@ -82,7 +79,11 @@ class IntroLanguageButton extends StatelessWidget {
       onPressed: () => _showLanguageSheet(context, localeCode),
       tooltip:
           '${l10n.language}: ${localeCode == 'ar' ? l10n.english : l10n.arabic}',
-      icon: Icon(Icons.language, color: iconColor, size: 24.sp),
+      icon: Icon(
+        Icons.language,
+        color: iconColor ?? (isDarkMode ? Colors.white : Colors.black),
+        size: 24.sp,
+      ),
     );
   }
 }

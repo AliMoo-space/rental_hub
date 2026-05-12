@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +13,7 @@ import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 import 'package:rental_hub/feature/auth/presentation/widgets/social_login_widget.dart';
 import 'package:rental_hub/feature/auth/presentation/widgets/terms_widget.dart';
 import 'package:rental_hub/feature/intro/widgets/refactor.dart';
+import 'package:rental_hub/feature/theme/presentation/cubit/theme_cubit.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
@@ -80,99 +82,122 @@ class _IntroScreenState extends State<IntroScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          /// الخلفية
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: AppColors.colorPalette,
-              ),
-            ),
-          ),
-          Align(
-            alignment: const Alignment(0, -0.6),
-            child: FadeTransition(
-              opacity: _logoFade,
-              child: ScaleTransition(
-                scale: _logoScale,
-                child: SvgPicture.asset(AppAssets.logo, width: 225, height: 58),
-              ),
-            ),
-          ),
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, themeState) {
+        final isDarkMode =
+            themeState.themeMode == ThemeMode.dark ||
+            (themeState.themeMode == ThemeMode.system &&
+                MediaQuery.of(context).platformBrightness == Brightness.dark);
 
-          /// زرار اللغة
-          PositionedDirectional(
-            top: 16,
-            end: 16,
-            child: IntroLanguageButton(l10n: context.l10n),
-          ),
-
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: SlideTransition(
-              position: _cardSlide,
-              child: FadeTransition(
-                opacity: _cardFade,
-                child: Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(24),
-                    ),
-                  ),
-                  padding: const EdgeInsets.all(44),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        context.l10n.rentAndEarn,
-                        style: AppStyles.intro32semiBold,
-                      ),
-                      HeightSpace(8),
-                      Text(
-                        context.l10n.trustedStore,
-                        style: AppStyles.intro16medium,
-                      ),
-                      HeightSpace(32),
-                      PrimaryButtonWidget(
-                        height: 70.h,
-                        width: 330.w,
-                        bordersRadius: 29,
-                        buttonText: context.l10n.getStarted,
-                        style: AppStyles.hendi500Size20.copyWith(
-                          color: Colors.white,
-                        ),
-                        trailingIcon: SvgPicture.asset(
-                          AppAssets.arrow,
-                          width: 20.w,
-                        ),
-                        onPress: () {
-                          context.push(AppRoutes.animatedAuthToggle);
-                        },
-                      ),
-                      HeightSpace(36),
-                      SocialLoginWidget(
-                        text: context.l10n.connectWith,
-                        onGooglePressed: () {},
-                      ),
-                    ],
+        return Scaffold(
+          body: Stack(
+            children: [
+              /// الخلفية
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: AppColors.colorPalette,
                   ),
                 ),
               ),
-            ),
+              Align(
+                alignment: const Alignment(0, -0.6),
+                child: FadeTransition(
+                  opacity: _logoFade,
+                  child: ScaleTransition(
+                    scale: _logoScale,
+                    child: SvgPicture.asset(
+                      AppAssets.logo,
+                      width: 225,
+                      height: 58,
+                    ),
+                  ),
+                ),
+              ),
+
+              /// زرار اللغة
+              PositionedDirectional(
+                top: 16,
+                end: 16,
+                child: IntroLanguageButton(l10n: context.l10n),
+              ),
+
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: SlideTransition(
+                  position: _cardSlide,
+                  child: FadeTransition(
+                    opacity: _cardFade,
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: isDarkMode
+                            ? const Color(0xFF111827)
+                            : Colors.white,
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(24),
+                        ),
+                      ),
+                      padding: const EdgeInsets.all(44),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            context.l10n.rentAndEarn,
+                            style: AppStyles.intro32semiBold.copyWith(
+                              color: isDarkMode
+                                  ? const Color(0xFFE6EEF6)
+                                  : AppColors.textPrimaryColor,
+                            ),
+                          ),
+                          HeightSpace(8),
+                          Text(
+                            context.l10n.trustedStore,
+                            style: AppStyles.intro16medium.copyWith(
+                              color: isDarkMode
+                                  ? const Color(0xFFB9C6D9)
+                                  : AppColors.textSecondaryColor,
+                            ),
+                          ),
+                          HeightSpace(32),
+                          PrimaryButtonWidget(
+                            height: 70.h,
+                            width: 330.w,
+                            bordersRadius: 29,
+                            buttonText: context.l10n.getStarted,
+                            style: AppStyles.hendi500Size20.copyWith(
+                              color: Colors.white,
+                            ),
+                            trailingIcon: SvgPicture.asset(
+                              AppAssets.arrow,
+                              width: 20.w,
+                            ),
+                            onPress: () {
+                              context.push(AppRoutes.animatedAuthToggle);
+                            },
+                          ),
+                          HeightSpace(36),
+                          SocialLoginWidget(
+                            text: context.l10n.connectWith,
+                            onGooglePressed: () {},
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(bottom: 20),
-        child: TermsWidget(value: false, onChanged: (value) {}),
-      ),
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: TermsWidget(value: false, onChanged: (value) {}),
+          ),
+        );
+      },
     );
   }
 }

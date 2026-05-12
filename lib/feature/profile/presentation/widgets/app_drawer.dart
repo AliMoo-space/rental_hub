@@ -30,10 +30,7 @@ class AppDrawer extends StatelessWidget {
       DrawerItem(
         icon: AppAssets.uiUser,
         title: context.l10n.manageAccount,
-        onTap: () {
-          Navigator.pop(context);
-          Navigator.pushNamed(context, '/profile');
-        },
+        onTap: () {},
       ),
       DrawerItem(
         icon: AppAssets.uiWallet,
@@ -59,26 +56,17 @@ class AppDrawer extends StatelessWidget {
       DrawerItem(
         icon: AppAssets.mdiRobot,
         title: context.l10n.robot,
-        onTap: () {
-          Navigator.pop(context);
-          Navigator.pushNamed(context, '/robot');
-        },
+        onTap: () {},
       ),
       DrawerItem(
         icon: AppAssets.uiChat,
         title: context.l10n.messages,
-        onTap: () {
-          Navigator.pop(context);
-          Navigator.pushNamed(context, '/messages');
-        },
+        onTap: () {},
       ),
       DrawerItem(
         icon: AppAssets.uiSettings,
         title: context.l10n.settings,
-        onTap: () {
-          Navigator.pop(context);
-          Navigator.pushNamed(context, '/settings');
-        },
+        onTap: () {},
       ),
     ];
 
@@ -87,7 +75,6 @@ class AppDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           const _DrawerHeader(),
-
           ...items.map(
             (item) => ListTile(
               leading: SvgPicture.asset(item.icon, width: 30.w),
@@ -128,7 +115,6 @@ class AppDrawer extends StatelessWidget {
                 await getIt<CacheHelper>().clearSecureData();
                 if (!context.mounted) return;
                 context.pushNamed(AppRoutes.animatedAuthToggle);
-                // logout logic هنا
               },
               text: context.l10n.logout,
             ),

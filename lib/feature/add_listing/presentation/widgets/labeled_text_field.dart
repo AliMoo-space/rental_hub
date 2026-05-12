@@ -18,13 +18,17 @@ class LabeledTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
           style: AppStyles.titleMedium.copyWith(
-            color: AppColors.secondaryColor,
+            color: isDarkMode
+                ? AppColors.textMutedColor
+                : AppColors.secondaryColor,
             fontSize: 16.sp,
           ),
         ),
@@ -36,21 +40,31 @@ class LabeledTextField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: AppStyles.bodyMedium.copyWith(
-              color: AppColors.smallSecondaryColor,
+              color: isDarkMode
+                  ? AppColors.textMutedColor
+                  : AppColors.smallSecondaryColor,
             ),
             filled: true,
-            fillColor: Colors.white,
+            fillColor: isDarkMode ? const Color(0xFF111827) : Colors.white,
             contentPadding: EdgeInsetsDirectional.symmetric(
               horizontal: 14.w,
               vertical: 14.h,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: const BorderSide(color: AppColors.borderColor),
+              borderSide: BorderSide(
+                color: isDarkMode
+                    ? const Color(0xFF334155)
+                    : AppColors.borderColor,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: const BorderSide(color: AppColors.borderColor),
+              borderSide: BorderSide(
+                color: isDarkMode
+                    ? const Color(0xFF334155)
+                    : AppColors.borderColor,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),

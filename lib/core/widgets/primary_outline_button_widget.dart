@@ -23,10 +23,12 @@ class PrimaryOutlineButtonWidget extends StatelessWidget {
   final double? fontSize;
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
+        backgroundColor: isDarkMode ? const Color(0xFF111827) : Colors.white,
 
         side: BorderSide(color: borderColor ?? Colors.redAccent, width: 1),
         shape: RoundedRectangleBorder(

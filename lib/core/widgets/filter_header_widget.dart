@@ -65,8 +65,10 @@ class _IconPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Material(
-      color: Colors.white,
+      color: isDarkMode ? const Color(0xFF111827) : Colors.white,
       borderRadius: BorderRadius.circular(14.r),
       child: InkWell(
         borderRadius: BorderRadius.circular(14.r),
@@ -77,9 +79,19 @@ class _IconPill extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14.r),
-            border: Border.all(color: AppColors.borderColor),
+            border: Border.all(
+              color: isDarkMode
+                  ? const Color(0xFF334155)
+                  : AppColors.borderColor,
+            ),
           ),
-          child: Icon(icon, size: 22.sp, color: AppColors.smallSecondaryColor),
+          child: Icon(
+            icon,
+            size: 22.sp,
+            color: isDarkMode
+                ? AppColors.textMutedColor
+                : AppColors.smallSecondaryColor,
+          ),
         ),
       ),
     );
@@ -101,18 +113,28 @@ class _FilterPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       height: isCompact ? 34.h : 42.h,
       padding: EdgeInsetsDirectional.symmetric(horizontal: 12.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDarkMode ? const Color(0xFF111827) : Colors.white,
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: AppColors.borderColor),
+        border: Border.all(
+          color: isDarkMode ? const Color(0xFF334155) : AppColors.borderColor,
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(leading, size: 18.sp, color: AppColors.smallSecondaryColor),
+          Icon(
+            leading,
+            size: 18.sp,
+            color: isDarkMode
+                ? AppColors.textMutedColor
+                : AppColors.smallSecondaryColor,
+          ),
           SizedBox(width: 8.w),
           Expanded(
             child: FittedBox(
@@ -123,14 +145,22 @@ class _FilterPill extends StatelessWidget {
                 textAlign: TextAlign.right,
                 maxLines: 1,
                 style: AppStyles.instrumentSans500Size14.copyWith(
-                  color: AppColors.smallSecondaryColor,
+                  color: isDarkMode
+                      ? AppColors.textMutedColor
+                      : AppColors.smallSecondaryColor,
                   fontSize: 13.sp,
                 ),
               ),
             ),
           ),
           SizedBox(width: 4.w),
-          Icon(trailing, size: 20.sp, color: AppColors.smallSecondaryColor),
+          Icon(
+            trailing,
+            size: 20.sp,
+            color: isDarkMode
+                ? AppColors.textMutedColor
+                : AppColors.smallSecondaryColor,
+          ),
         ],
       ),
     );

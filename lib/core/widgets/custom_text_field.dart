@@ -43,6 +43,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return SizedBox(
       width: widget.width ?? 331.w,
       child: Padding(
@@ -65,15 +67,21 @@ class _CustomTextFieldState extends State<CustomTextField> {
               cursorColor: AppColors.primaryColor,
               decoration: InputDecoration(
                 hintText: widget.hintText ?? "",
-                hintStyle: AppStyles.inputHint,
+                hintStyle: AppStyles.inputHint.copyWith(
+                  color: isDarkMode
+                      ? AppColors.textMutedColor
+                      : AppColors.textSecondaryColor,
+                ),
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: 18.w,
                   vertical: 18.h,
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30.r),
-                  borderSide: const BorderSide(
-                    color: AppColors.borderColor,
+                  borderSide: BorderSide(
+                    color: isDarkMode
+                        ? const Color(0xFF334155)
+                        : AppColors.borderColor,
                     width: 1,
                   ),
                 ),
@@ -99,7 +107,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   ),
                 ),
                 filled: true,
-                fillColor: AppColors.surfaceColor,
+                fillColor: isDarkMode
+                    ? const Color(0xFF111827)
+                    : AppColors.surfaceColor,
                 suffixIcon: widget.isPassword == true
                     ? IconButton(
                         onPressed: () {
@@ -111,7 +121,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
                           _obscureText
                               ? Icons.visibility_off
                               : Icons.visibility,
-                          color: AppColors.textSecondaryColor,
+                          color: isDarkMode
+                              ? AppColors.textMutedColor
+                              : AppColors.textSecondaryColor,
                           size: 20.sp,
                         ),
                       )
