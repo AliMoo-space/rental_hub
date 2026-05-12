@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
+import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/utils/snack_bar_widget.dart';
 import 'package:rental_hub/core/widgets/custom_text_field.dart';
@@ -54,8 +56,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isRtl = Directionality.of(context) == TextDirection.rtl;
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -69,25 +69,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     HeightSpace(48.h),
-
+                    SvgPicture.asset(AppAssets.logo2, width: 225.w),
                     // Header Section
-                    Text.rich(
-                      TextSpan(
-                        style: AppStyles.displayLarge,
-                        children: [
-                          TextSpan(
-                            text: isRtl ? '${context.l10n.rentalHub} ' : '',
-                          ),
-                          TextSpan(text: isRtl ? 'انضم إلى' : 'Join '),
-                          TextSpan(
-                            text: isRtl ? '' : context.l10n.rentalHub,
-                            style: AppStyles.linkText.copyWith(
-                              decoration: TextDecoration.none,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                     HeightSpace(12.h),
                     Text(
                       context.l10n.createAccountSubtitle,

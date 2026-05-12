@@ -727,6 +727,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Facebook sign in is not implemented yet'**
   String get facebookSignInNotImplemented;
+
+  /// No description provided for @latestTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest transactions'**
+  String get latestTransactions;
+
+  /// No description provided for @addYourListing.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your listing'**
+  String get addYourListing;
+
+  /// No description provided for @productMedia.
+  ///
+  /// In en, this message translates to:
+  /// **'Product photos and videos'**
+  String get productMedia;
+
+  /// No description provided for @chooseCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose category'**
+  String get chooseCategory;
+
+  /// No description provided for @location.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get location;
+
+  /// No description provided for @condition.
+  ///
+  /// In en, this message translates to:
+  /// **'Condition'**
+  String get condition;
+
+  /// No description provided for @itemName.
+  ///
+  /// In en, this message translates to:
+  /// **'Item name'**
+  String get itemName;
+
+  /// No description provided for @itemDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Item description'**
+  String get itemDescription;
+
+  /// No description provided for @rentalPricePerDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Rental price/day'**
+  String get rentalPricePerDay;
+
+  /// No description provided for @securityDeposit.
+  ///
+  /// In en, this message translates to:
+  /// **'Security deposit'**
+  String get securityDeposit;
+
+  /// No description provided for @productConditionReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Product condition report'**
+  String get productConditionReport;
+
+  /// No description provided for @uploadPhotosNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload photos or video showing scratches or defects to protect your rights and those of the renter'**
+  String get uploadPhotosNote;
+
+  /// No description provided for @addProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Add product'**
+  String get addProduct;
 }
 
 class _AppLocalizationsDelegate

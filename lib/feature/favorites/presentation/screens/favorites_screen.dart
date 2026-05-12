@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
-import 'package:rental_hub/core/widgets/deals_filter_header_widget.dart';
+import 'package:rental_hub/core/widgets/filter_header_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
+import 'package:rental_hub/feature/home/presentation/widgets/home_recommended_item_card_widget.dart';
 import 'package:rental_hub/feature/home/presentation/widgets/home_recommended_items_list_widget.dart';
-import 'package:rental_hub/feature/favorites/presentation/widgets/favorites_sheets.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
@@ -16,16 +16,7 @@ class FavoritesScreen extends StatefulWidget {
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
   final List<double> _ratings = List<double>.generate(3, (_) => 4.0);
-  int _selectedFilterIndex = 0;
 
-  final List<String> _filters = [
-    'اخر اسبوع',
-    'اخر شهر',
-    'اخر 3 شهور',
-    'اخر 6 شهور',
-    'اخر سنة',
-  ];
-  final TextEditingController _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,79 +32,23 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // right side: title
-                Expanded(
-                  child: Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: Text(
-                      'عناصرك المفضلة',
-                      textAlign: TextAlign.right,
-                      style: AppStyles.hendi500Size20,
-                    ),
-                  ),
-                ),
-                // left side: search + filter
-                FilterHeaderWidget(
-                  title: '',
-                  selectedFilter: _filters[_selectedFilterIndex],
-                  onSearchTap: _openSearchSheet,
-                  onFilterTap: _openFilterSheet,
-                ),
-              ],
+            Padding(
+              padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w),
+              child: FilterHeaderWidget(
+                title: context.l10n.favorites,
+                onFilterTap: () {},
+                onSearchTap: () {},
+                selectedFilter: 'All',
+              ),
             ),
             HeightSpace(14),
-            Expanded(
-              child: HomeRecommendedItemsListWidget(
-                ratings: _ratings,
-                onRatingChanged: (itemIndex, rating) {
-                  setState(() {
-                    _ratings[itemIndex] = rating;
-                  });
-                },
-              ),
+            HomeRecommendedItemCardWidget(
+              onRatingChanged: (value) => setState(() => _ratings[0] = value),
+              rating: _ratings[0],
             ),
           ],
         ),
       ),
     );
-  }
-
-  void _openFilterSheet() {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (context) => FavoritesFilterSheet(
-        filters: _filters,
-        selectedIndex: _selectedFilterIndex,
-        onSelected: (index) {
-          setState(() {
-            _selectedFilterIndex = index;
-          });
-          Navigator.of(context).pop();
-        },
-      ),
-    );
-  }
-
-  void _openSearchSheet() {
-    showModalBottomSheet<void>(
-      isScrollControlled: true,
-      context: context,
-      builder: (context) => FavoritesSearchSheet(
-        controller: _searchController,
-        hintText: context.l10n.searchHint,
-        onSearch: () {
-          Navigator.of(context).pop();
-        },
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
   }
 }

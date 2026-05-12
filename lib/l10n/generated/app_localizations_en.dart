@@ -333,4 +333,44 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get facebookSignInNotImplemented =>
       'Facebook sign in is not implemented yet';
+
+  @override
+  String get latestTransactions => 'Latest transactions';
+
+  @override
+  String get addYourListing => 'Add your listing';
+
+  @override
+  String get productMedia => 'Product photos and videos';
+
+  @override
+  String get chooseCategory => 'Choose category';
+
+  @override
+  String get location => 'Location';
+
+  @override
+  String get condition => 'Condition';
+
+  @override
+  String get itemName => 'Item name';
+
+  @override
+  String get itemDescription => 'Item description';
+
+  @override
+  String get rentalPricePerDay => 'Rental price/day';
+
+  @override
+  String get securityDeposit => 'Security deposit';
+
+  @override
+  String get productConditionReport => 'Product condition report';
+
+  @override
+  String get uploadPhotosNote =>
+      'Upload photos or video showing scratches or defects to protect your rights and those of the renter';
+
+  @override
+  String get addProduct => 'Add product';
 }

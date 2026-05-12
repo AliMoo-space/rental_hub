@@ -113,7 +113,20 @@
   "withdrawableBalance":"رصيد قابل للسحب",
   "rechargeBalance":"شحن رصيد",
   "withdrawBalance":"سحب رصيد",
-    "facebookSignInNotImplemented": "لم يتم تنفيذ تسجيل الدخول عبر فيسبوك حتى الآن"
+  "facebookSignInNotImplemented": "لم يتم تنفيذ تسجيل الدخول عبر فيسبوك حتى الآن",
+  "latestTransactions":"احدث المعاملات",
+  "addYourListing": "إضافة اعلانك",
+  "productMedia": "صور وفيديوهات المنتج",
+  "chooseCategory": "اختيار الفئة",
+  "location": "الموقع",
+  "condition": "الحالة",
+  "itemName": "اسم العنصر",
+  "itemDescription": "وصف العنصر",
+  "rentalPricePerDay": "سعر الإيجار/يوم",
+  "securityDeposit": "سعر التأمين",
+  "productConditionReport": "تقرير حالة المنتج",
+  "uploadPhotosNote": "قم برفع صور او فيديو توضح الخدوش او العيوب لضمان حقك وحق المستأجر",
+  "addProduct": "إضافة المنتج"
 
 }
 

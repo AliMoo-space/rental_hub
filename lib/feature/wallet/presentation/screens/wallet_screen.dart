@@ -4,8 +4,12 @@ import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_shadows.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
+import 'package:rental_hub/core/widgets/filter_header_widget.dart';
 import 'package:rental_hub/core/widgets/primary_button_widget.dart';
 import 'package:rental_hub/core/widgets/primary_outline_button_widget.dart';
+import 'package:rental_hub/core/widgets/spacing_widgets.dart';
+import 'package:rental_hub/feature/deals/presentation/widgets/deals_compact_item_tile.dart';
+import 'package:rental_hub/feature/wallet/presentation/widgets/balance_item_card.dart';
 
 class WalletScreen extends StatelessWidget {
   const WalletScreen({super.key});
@@ -57,87 +61,23 @@ class WalletScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 10.h),
-                  Container(
-                    width: 300.w,
-                    height: 50.h,
-                    decoration: BoxDecoration(
-                      color: AppColors.whiteColor,
-                      borderRadius: BorderRadius.circular(7.r),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          context.l10n.pendingBalance,
-                          style: AppStyles.bodyMedium.copyWith(
-                            color: AppColors.textSecondaryColor,
-                          ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Text(
-                          "250.00 ${context.l10n.currency}",
-                          style: AppStyles.instrumentSans700Size18.copyWith(
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
-                      ],
-                    ),
+                  BalanceItemCard(
+                    title: context.l10n.pendingBalance,
+                    amount: "250.00 ${context.l10n.currency}",
                   ),
 
                   SizedBox(height: 10.h),
-                  Container(
-                    width: 300.w,
-                    height: 50.h,
-                    decoration: BoxDecoration(
-                      color: AppColors.whiteColor,
-                      borderRadius: BorderRadius.circular(7.r),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          context.l10n.availableBalance,
-                          style: AppStyles.bodyMedium.copyWith(
-                            color: AppColors.textSecondaryColor,
-                          ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Text(
-                          "250.00 ${context.l10n.currency}",
-                          style: AppStyles.instrumentSans700Size18.copyWith(
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
-                      ],
-                    ),
+
+                  BalanceItemCard(
+                    title: context.l10n.availableBalance,
+                    amount: "250.00 ${context.l10n.currency}",
                   ),
 
                   SizedBox(height: 10.h),
-                  Container(
-                    width: 300.w,
-                    height: 50.h,
-                    decoration: BoxDecoration(
-                      color: AppColors.whiteColor,
-                      borderRadius: BorderRadius.circular(7.r),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          context.l10n.withdrawableBalance,
-                          style: AppStyles.bodyMedium.copyWith(
-                            color: AppColors.textSecondaryColor,
-                          ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Text(
-                          "250.00 ${context.l10n.currency}",
-                          style: AppStyles.instrumentSans700Size18.copyWith(
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
-                      ],
-                    ),
+
+                  BalanceItemCard(
+                    title: context.l10n.withdrawableBalance,
+                    amount: "250.00 ${context.l10n.currency}",
                   ),
                   SizedBox(height: 10.h),
 
@@ -169,26 +109,45 @@ class WalletScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20),
-            ListTile(
-              leading: const Icon(Icons.account_balance_wallet),
-              title: Text(
-                context.l10n.activeRentals,
-                style: AppStyles.hendi500Size20,
+            Padding(
+              padding: EdgeInsetsDirectional.symmetric(horizontal: 18.w),
+              child: FilterHeaderWidget(
+                title: context.l10n.latestTransactions,
+                selectedFilter: 'All',
+                onSearchTap: () {},
+                onFilterTap: () {},
               ),
-              onTap: () {
-                // Navigate to transaction history screen
-              },
             ),
-            ListTile(
-              leading: const Icon(Icons.add_circle_outline),
-              title: Text(
-                context.l10n.activeRentals,
-                style: AppStyles.hendi500Size20,
+            SizedBox(height: 20),
+
+            DealsCompactItemTile(
+              title: 'كاميرا (Canon)',
+              subtitle: 'أدوات تصوير',
+              price: '150 ج.م/اليوم',
+              onTap: () {},
+            ),
+            DealsCompactItemTile(
+              title: 'كاميرا (Canon)',
+              subtitle: 'أدوات تصوير',
+              price: '150 ج.م/اليوم',
+              onTap: () {},
+            ),
+            Padding(
+              padding: EdgeInsetsDirectional.symmetric(horizontal: 18.w),
+              child: SizedBox(
+                width: double.infinity,
+                child: PrimaryOutlineButtonWidget(
+                  onPressed: () {},
+                  text: context.l10n.viewAll,
+                  textColor: AppColors.secondaryColor,
+                  borderColor: AppColors.secondaryColor,
+                  borderRadius: 14.r,
+                  height: 42.h,
+                  fontSize: 14.sp,
+                ),
               ),
-              onTap: () {
-                // Navigate to add funds screen
-              },
             ),
+            HeightSpace(20),
           ],
         ),
       ),

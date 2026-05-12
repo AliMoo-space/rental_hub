@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rental_hub/core/databases/cache/cache_helper.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
+import 'package:rental_hub/core/utils/service_locator.dart';
 import 'package:rental_hub/core/widgets/primary_outline_button_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
+import 'package:rental_hub/feature/theme/presentation/cubit/theme_cubit.dart';
 
 class DrawerItem {
   final String icon;
@@ -92,13 +96,38 @@ class AppDrawer extends StatelessWidget {
             ),
           ),
 
+          // Theme Toggle
+          BlocBuilder<ThemeCubit, ThemeState>(
+            builder: (context, state) {
+              return ListTile(
+                leading: Icon(
+                  state.themeMode == ThemeMode.dark
+                      ? Icons.light_mode_rounded
+                      : Icons.dark_mode_rounded,
+                  size: 30.sp,
+                ),
+                title: Text(
+                  state.themeMode == ThemeMode.dark
+                      ? 'Light Mode'
+                      : 'Dark Mode',
+                  style: AppStyles.instrumentSans700Size18,
+                ),
+                onTap: () {
+                  context.read<ThemeCubit>().toggleTheme();
+                },
+              );
+            },
+          ),
+
           HeightSpace(26.h),
 
           Padding(
             padding: EdgeInsetsDirectional.symmetric(horizontal: 22.w),
             child: PrimaryOutlineButtonWidget(
-              onPressed: () {
-                Navigator.pop(context);
+              onPressed: () async {
+                await getIt<CacheHelper>().clearSecureData();
+                if (!context.mounted) return;
+                context.pushNamed(AppRoutes.animatedAuthToggle);
                 // logout logic هنا
               },
               text: context.l10n.logout,

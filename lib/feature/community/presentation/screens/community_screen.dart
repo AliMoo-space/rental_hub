@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_shadows.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
-import 'package:rental_hub/core/widgets/deals_filter_header_widget.dart';
+import 'package:rental_hub/core/widgets/filter_header_widget.dart';
 import 'package:rental_hub/feature/home/presentation/widgets/home_header_widget.dart';
 
 class CommunityScreen extends StatefulWidget {

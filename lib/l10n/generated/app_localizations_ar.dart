@@ -332,4 +332,44 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get facebookSignInNotImplemented =>
       'لم يتم تنفيذ تسجيل الدخول عبر فيسبوك حتى الآن';
+
+  @override
+  String get latestTransactions => 'احدث المعاملات';
+
+  @override
+  String get addYourListing => 'إضافة اعلانك';
+
+  @override
+  String get productMedia => 'صور وفيديوهات المنتج';
+
+  @override
+  String get chooseCategory => 'اختيار الفئة';
+
+  @override
+  String get location => 'الموقع';
+
+  @override
+  String get condition => 'الحالة';
+
+  @override
+  String get itemName => 'اسم العنصر';
+
+  @override
+  String get itemDescription => 'وصف العنصر';
+
+  @override
+  String get rentalPricePerDay => 'سعر الإيجار/يوم';
+
+  @override
+  String get securityDeposit => 'سعر التأمين';
+
+  @override
+  String get productConditionReport => 'تقرير حالة المنتج';
+
+  @override
+  String get uploadPhotosNote =>
+      'قم برفع صور او فيديو توضح الخدوش او العيوب لضمان حقك وحق المستأجر';
+
+  @override
+  String get addProduct => 'إضافة المنتج';
 }

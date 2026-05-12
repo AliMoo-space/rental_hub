@@ -3,11 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
-import 'package:rental_hub/core/widgets/deals_filter_header_widget.dart';
+import 'package:rental_hub/core/widgets/filter_header_widget.dart';
 import 'package:rental_hub/core/widgets/primary_outline_button_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
-import 'package:rental_hub/feature/deals/presentation/widgets/deals_widgets.dart';
-import 'package:rental_hub/feature/favorites/presentation/widgets/favorites_sheets.dart';
+import 'package:rental_hub/feature/deals/presentation/widgets/deals_compact_item_tile.dart';
 import 'package:rental_hub/feature/home/presentation/widgets/home_recommended_items_list_widget.dart';
 
 class DealsScreen extends StatefulWidget {
@@ -19,17 +18,6 @@ class DealsScreen extends StatefulWidget {
 
 class _DealsScreenState extends State<DealsScreen> {
   final List<double> _ratings = List<double>.generate(3, (_) => 4.0);
-  final TextEditingController _searchController = TextEditingController();
-
-  final List<String> _filters = [
-    'اخر اسبوع',
-    'اخر شهر',
-    'اخر 3 شهور',
-    'اخر 6 شهور',
-    'اخر سنة',
-  ];
-
-  int _selectedFilterIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +36,9 @@ class _DealsScreenState extends State<DealsScreen> {
             children: [
               FilterHeaderWidget(
                 title: context.l10n.myRentals,
-                selectedFilter: _filters[_selectedFilterIndex],
-                onSearchTap: _openSearchSheet,
-                onFilterTap: _openFilterSheet,
+                onFilterTap: () {},
+                onSearchTap: () {},
+                selectedFilter: 'All',
               ),
 
               HeightSpace(12),
@@ -73,7 +61,6 @@ class _DealsScreenState extends State<DealsScreen> {
                   textColor: AppColors.secondaryColor,
                   borderColor: AppColors.secondaryColor,
                   borderRadius: 14.r,
-                  width: double.infinity,
                   height: 42.h,
                   fontSize: 14.sp,
                 ),
@@ -88,9 +75,9 @@ class _DealsScreenState extends State<DealsScreen> {
               HeightSpace(20),
               FilterHeaderWidget(
                 title: context.l10n.myRentals,
-                selectedFilter: _filters[_selectedFilterIndex],
-                onSearchTap: _openSearchSheet,
-                onFilterTap: _openFilterSheet,
+                onFilterTap: () {},
+                onSearchTap: () {},
+                selectedFilter: 'All',
               ),
 
               HeightSpace(12),
@@ -121,7 +108,6 @@ class _DealsScreenState extends State<DealsScreen> {
                   textColor: AppColors.secondaryColor,
                   borderColor: AppColors.secondaryColor,
                   borderRadius: 14.r,
-                  width: double.infinity,
                   height: 42.h,
                   fontSize: 14.sp,
                 ),
@@ -132,41 +118,5 @@ class _DealsScreenState extends State<DealsScreen> {
         ),
       ),
     );
-  }
-
-  void _openFilterSheet() {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (context) => FavoritesFilterSheet(
-        filters: _filters,
-        selectedIndex: _selectedFilterIndex,
-        onSelected: (index) {
-          setState(() {
-            _selectedFilterIndex = index;
-          });
-          Navigator.of(context).pop();
-        },
-      ),
-    );
-  }
-
-  void _openSearchSheet() {
-    showModalBottomSheet<void>(
-      isScrollControlled: true,
-      context: context,
-      builder: (context) => FavoritesSearchSheet(
-        controller: _searchController,
-        hintText: context.l10n.searchHint,
-        onSearch: () {
-          Navigator.of(context).pop();
-        },
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
   }
 }

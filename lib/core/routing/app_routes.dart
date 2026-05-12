@@ -11,4 +11,5 @@ class AppRoutes {
   static const String favoritesScreen = '/favoritesScreen';
   static const String dealsScreen = '/dealsScreen';
   static const String walletScreen = '/walletScreen';
+  static const String addListingScreen = '/addListingScreen';
 }

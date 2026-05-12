@@ -8,6 +8,7 @@ import 'package:rental_hub/feature/localization/domain/repo/locale_repository.da
 import 'package:rental_hub/feature/localization/domain/usecases/get_saved_locale_use_case.dart';
 import 'package:rental_hub/feature/localization/domain/usecases/save_locale_use_case.dart';
 import 'package:rental_hub/feature/localization/presentation/cubit/locale_cubit.dart';
+import 'package:rental_hub/feature/theme/presentation/cubit/theme_cubit.dart';
 import 'package:rental_hub/feature/auth/data/datasource/login_remote_data_source.dart';
 import 'package:rental_hub/feature/auth/data/datasource/login_remote_data_source_impl.dart';
 import 'package:rental_hub/feature/auth/data/datasource/forgot_password_remote_data_source.dart';
@@ -102,6 +103,7 @@ Future<void> setupServiceLocator() async {
 
   // ========================= CUBITS =========================
 
+  getIt.registerLazySingleton(() => ThemeCubit(getIt()));
   getIt.registerFactory(() => LoginCubit(getIt()));
   getIt.registerFactory(() => ForgotPasswordCubit(getIt()));
   getIt.registerFactory(() => CategoryCubit(getIt()));

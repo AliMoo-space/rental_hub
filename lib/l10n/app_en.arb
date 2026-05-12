@@ -113,5 +113,19 @@
     "withdrawableBalance": "Withdrawable balance",
   "rechargeBalance": "Recharge balance",
   "withdrawBalance": "Withdraw balance",
-  "facebookSignInNotImplemented": "Facebook sign in is not implemented yet"
+  "facebookSignInNotImplemented": "Facebook sign in is not implemented yet",
+    "latestTransactions": "Latest transactions",
+    "addYourListing": "Add your listing",
+    "productMedia": "Product photos and videos",
+    "chooseCategory": "Choose category",
+    "location": "Location",
+    "condition": "Condition",
+    "itemName": "Item name",
+    "itemDescription": "Item description",
+    "rentalPricePerDay": "Rental price/day",
+    "securityDeposit": "Security deposit",
+    "productConditionReport": "Product condition report",
+    "uploadPhotosNote": "Upload photos or video showing scratches or defects to protect your rights and those of the renter",
+    "addProduct": "Add product"
+
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get_it/get_it.dart';
 import 'package:rental_hub/core/databases/cache/cache_helper.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_assets.dart';
@@ -23,7 +24,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int currentIndex = 0;
 
-  final List<Widget> screens = [
+  final screens = [
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => getIt<CategoryCubit>()),

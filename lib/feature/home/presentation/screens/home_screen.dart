@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             final categories = categoryState is CategoryLoaded
                 ? _buildCategoryTitles(categoryState.categories)
-                : <String>['الكل'];
+                : <String>['All'];
 
             return Column(
               children: [
@@ -146,12 +146,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   List<String> _buildCategoryTitles(List<CategoryEntity> categories) {
-    final titles = <String>['الكل'];
-    if (categories.isEmpty) {
-      return titles;
-    }
-
-    titles.addAll(categories.first.items.map((item) => item.name));
-    return titles;
+    return [
+      'All',
+      ...categories.expand(
+        (category) => category.items.map((item) => item.name),
+      ),
+    ];
   }
 }
