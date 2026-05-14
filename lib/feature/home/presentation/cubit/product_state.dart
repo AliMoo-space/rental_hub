@@ -13,10 +13,18 @@ final class ProductLoading extends ProductState {}
 
 final class ProductLoaded extends ProductState {
   final ProductsEntity products;
-  const ProductLoaded(this.products);
+  final Set<int> favoriteLoadingProductIds;
+
+  const ProductLoaded(
+    this.products, {
+    this.favoriteLoadingProductIds = const {},
+  });
+
+  bool isFavoriteLoading(int productId) =>
+      favoriteLoadingProductIds.contains(productId);
 
   @override
-  List<Object> get props => [products];
+  List<Object> get props => [products, favoriteLoadingProductIds];
 }
 
 final class ProductError extends ProductState {

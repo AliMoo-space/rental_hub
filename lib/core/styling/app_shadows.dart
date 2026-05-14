@@ -14,7 +14,7 @@ class AppShadows {
   ];
 
   static BoxShadow get softCard => BoxShadow(
-    color: const Color(0xff1F2C37).withOpacity(0.08),
+    color: const Color(0xff1F2C37).withValues(alpha: 0.08),
     blurRadius: 16.r,
     offset: const Offset(0, 6),
   );

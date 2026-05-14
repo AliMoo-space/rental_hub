@@ -14,10 +14,8 @@ class CategoryRepoImpl implements CategoryRepo {
   Future<Either<Failure, List<CategoryEntity>>> getCategories() async {
     try {
       final categories = await remoteDataSource.getCategories();
-      print('Categories loaded successfully: ${categories.items.length} items');
       return Right([categories]);
     } on ServerException catch (e) {
-      print('ServerException: ${e.errorModel.firstErrorMessage}');
       return Left(
         Failure(
           statusCode: e.errorModel.statusCode,
@@ -25,8 +23,6 @@ class CategoryRepoImpl implements CategoryRepo {
         ),
       );
     } catch (e) {
-      print('General Exception: $e');
-      print('StackTrace: ${e.runtimeType}');
       return Left(Failure(errMessage: 'فشل تحميل التصنيفات: ${e.toString()}'));
     }
   }

@@ -14,8 +14,6 @@ class TermsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        
-
         // Terms and Privacy Text (centered, single-line)
         Expanded(
           child: Text.rich(
@@ -46,7 +44,6 @@ class TermsWidget extends StatelessWidget {
               ],
             ),
             textAlign: TextAlign.center,
-        
           ),
         ),
       ],

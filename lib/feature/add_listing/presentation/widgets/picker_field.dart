@@ -4,7 +4,7 @@ import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 
 class PickerField extends StatelessWidget {
-  const PickerField({required this.hintText});
+  const PickerField({required this.hintText, super.key});
 
   final String hintText;
 

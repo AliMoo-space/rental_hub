@@ -66,6 +66,7 @@ class ProductModel extends ProductEntity {
     required super.totalRentalCount,
     required super.totalPlatformProfit,
     required super.images,
+    required super.isFavorite,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -92,12 +93,15 @@ class ProductModel extends ProductEntity {
       commissionPercentage: _parseNum(json['commissionPercentage']),
       termsConditions: json['termsConditions']?.toString() ?? '',
       status: json['status']?.toString() ?? '',
-      createdAt: DateTime.parse(createdAtValue.toString()),
+      createdAt: createdAtValue != null
+          ? DateTime.parse(createdAtValue.toString())
+          : DateTime.now(),
       averageRating: _parseDouble(json['averageRating']),
       totalReviews: _parseInt(json['totalReviews']),
       totalRentalCount: _parseInt(json['totalRentalCount']),
       totalPlatformProfit: _parseNum(json['totalPlatformProfit']),
       images: imagesValue.map((image) => image.toString()).toList(),
+      isFavorite: _parseBool(json['isFavorite'] ?? json['is_favorite']),
     );
   }
 
@@ -116,5 +120,12 @@ class ProductModel extends ProductEntity {
   static num _parseNum(dynamic value) {
     if (value is num) return value;
     return num.tryParse(value.toString()) ?? 0;
+  }
+
+  static bool _parseBool(dynamic value) {
+    if (value is bool) return value;
+    if (value == null) return false;
+    final normalized = value.toString().toLowerCase();
+    return normalized == 'true' || normalized == '1';
   }
 }

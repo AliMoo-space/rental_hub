@@ -54,10 +54,7 @@ class SocialLoginWidget extends StatelessWidget {
                 buttonText: context.l10n.facebook,
                 fontSize: 12.sp,
                 icon: Padding(
-                  padding: EdgeInsets.only(
-                    right:  8.w ,
-                    left:  8.w ,
-                  ),
+                  padding: EdgeInsets.only(right: 8.w, left: 8.w),
                   child: SvgPicture.asset(
                     AppAssets.facebook,
                     width: 20.w,
@@ -78,10 +75,7 @@ class SocialLoginWidget extends StatelessWidget {
                 buttonText: context.l10n.google,
                 fontSize: 12.sp,
                 icon: Padding(
-                  padding: EdgeInsets.only(
-                    right:  8.w ,
-                    left:  8.w ,
-                  ),
+                  padding: EdgeInsets.only(right: 8.w, left: 8.w),
                   child: SvgPicture.asset(
                     AppAssets.google,
                     width: 20.w,

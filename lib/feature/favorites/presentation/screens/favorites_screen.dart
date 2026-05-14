@@ -5,7 +5,6 @@ import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/filter_header_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 import 'package:rental_hub/feature/home/presentation/widgets/home_recommended_item_card_widget.dart';
-import 'package:rental_hub/feature/home/presentation/widgets/home_recommended_items_list_widget.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});

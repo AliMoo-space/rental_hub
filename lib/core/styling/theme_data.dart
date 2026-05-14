@@ -83,13 +83,13 @@ class AppThemes {
       hintStyle: AppStyles.inputHint,
     ),
     checkboxTheme: CheckboxThemeData(
-      fillColor: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
+      fillColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
           return AppColors.primaryColor;
         }
         return AppColors.whiteColor;
       }),
-      checkColor: MaterialStateProperty.all(AppColors.whiteColor),
+      checkColor: WidgetStateProperty.all(AppColors.whiteColor),
       side: const BorderSide(color: AppColors.borderColor),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
     ),
@@ -197,13 +197,13 @@ class AppThemes {
       hintStyle: AppStyles.inputHint.copyWith(color: const Color(0xFF9AAABF)),
     ),
     checkboxTheme: CheckboxThemeData(
-      fillColor: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
+      fillColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
           return AppColors.primaryColor;
         }
         return const Color(0xFF444444);
       }),
-      checkColor: MaterialStateProperty.all(AppColors.whiteColor),
+      checkColor: WidgetStateProperty.all(AppColors.whiteColor),
       side: const BorderSide(color: Color(0xFF24303D)),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
     ),

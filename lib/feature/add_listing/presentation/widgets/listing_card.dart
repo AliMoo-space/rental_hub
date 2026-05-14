@@ -4,7 +4,7 @@ import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_shadows.dart';
 
 class ListingCard extends StatelessWidget {
-  const ListingCard({required this.child});
+  const ListingCard({required this.child, super.key});
 
   final Widget child;
 

@@ -12,11 +12,15 @@ import 'package:rental_hub/feature/auth/presentation/screens/forgot_password_scr
 import 'package:rental_hub/feature/auth/presentation/screens/otp_verification_screen.dart';
 import 'package:rental_hub/feature/auth/presentation/screens/reset_password_screen.dart';
 import 'package:rental_hub/feature/auth/presentation/widgets/animated_auth_toggle.dart';
-import 'package:rental_hub/feature/community/presentation/screens/community_screen.dart';
+import 'package:rental_hub/feature/booking/presentation/screens/booking_flow_screen.dart';
 import 'package:rental_hub/feature/deals/presentation/screens/deals_screen.dart';
 import 'package:rental_hub/feature/favorites/presentation/screens/favorites_screen.dart';
 import 'package:rental_hub/feature/intro/intro_screen.dart';
 import 'package:rental_hub/feature/main/main_screen.dart';
+import 'package:rental_hub/feature/product_details/presentation/screens/product_details_screen.dart';
+import 'package:rental_hub/feature/profile/presentation/screens/edit_profile_screen.dart';
+import 'package:rental_hub/feature/profile/presentation/screens/settings_screen.dart';
+import 'package:rental_hub/feature/community/presentation/screens/community_screen.dart';
 import 'package:rental_hub/feature/splash/splash_view.dart';
 import 'package:rental_hub/feature/wallet/presentation/screens/wallet_screen.dart';
 
@@ -79,6 +83,31 @@ class RouterGenerationConfig {
         name: AppRoutes.mainScreen,
         path: AppRoutes.mainScreen,
         builder: (context, state) => const MainScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.productDetailsScreen,
+        path: AppRoutes.productDetailsScreen,
+        builder: (context, state) => const ProductDetailsScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.bookingFlowScreen,
+        path: AppRoutes.bookingFlowScreen,
+        builder: (context, state) => const BookingFlowScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.editProfileScreen,
+        path: AppRoutes.editProfileScreen,
+        builder: (context, state) => const EditProfileScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.settingsScreen,
+        path: AppRoutes.settingsScreen,
+        builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.communityScreen,
+        path: AppRoutes.communityScreen,
+        builder: (context, state) => const CommunityScreen(),
       ),
 
       GoRoute(

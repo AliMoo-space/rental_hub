@@ -2,28 +2,21 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:rental_hub/feature/home/domain/entities/category_entity.dart';
-import 'package:rental_hub/feature/home/domain/repo/category_repo.dart';
+import 'package:rental_hub/feature/home/domain/usecases/get_category.dart';
 
 part 'category_state.dart';
 
 class CategoryCubit extends Cubit<CategoryState> {
-  final CategoryRepo _repo;
+  final GetCategory _getCategory;
 
-  CategoryCubit(this._repo) : super(CategoryInitial());
+  CategoryCubit(this._getCategory) : super(CategoryInitial());
 
   Future<void> fetchCategories() async {
     emit(CategoryLoading());
-    final result = await _repo.getCategories();
+    final result = await _getCategory();
     result.fold(
-      (failure) {
-        final errorMsg = failure.errMessage;
-        print('Cubit Error: $errorMsg');
-        emit(CategoryError(message: errorMsg));
-      },
-      (categories) {
-        print('Cubit Loaded: ${categories.length} categories');
-        emit(CategoryLoaded(categories));
-      },
+      (failure) => emit(CategoryError(message: failure.errMessage)),
+      (categories) => emit(CategoryLoaded(categories)),
     );
   }
 }

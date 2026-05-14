@@ -9,24 +9,10 @@ class CategoryRemoteDataSource {
   CategoryRemoteDataSource(this._api);
 
   Future<CategoryModel> getCategories() async {
-    try {
-      print(' Fetching categories from API...');
-      final response = await _api.get(EndPoints.categoriesEndpoint);
-      print(' API Raw Response: $response');
+    final response = await _api.get(EndPoints.categoriesEndpoint);
+    final payload = ResponseParser.extractDataPayload(response.data);
+    final categoryJson = payload.isEmpty ? response.data : payload;
 
-      final payload = ResponseParser.extractDataPayload(response.data);
-      print('Extracted Payload: $payload');
-      print('Payload keys: ${payload.keys.toList()}');
-
-      // الـ API ترجع الـ payload مباشرة أو مع wrapper
-      final categoryJson = payload.isEmpty ? response.data : payload;
-      print('Using JSON: $categoryJson');
-
-      return CategoryModel.fromJson(categoryJson);
-    } catch (e) {
-      print('Error in getCategories: $e');
-      print('Stack: ${StackTrace.current}');
-      rethrow;
-    }
+    return CategoryModel.fromJson(categoryJson);
   }
 }

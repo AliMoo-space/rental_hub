@@ -30,7 +30,9 @@ class AppDrawer extends StatelessWidget {
       DrawerItem(
         icon: AppAssets.uiUser,
         title: context.l10n.manageAccount,
-        onTap: () {},
+        onTap: () {
+          context.pushNamed(AppRoutes.editProfileScreen);
+        },
       ),
       DrawerItem(
         icon: AppAssets.uiWallet,
@@ -66,7 +68,9 @@ class AppDrawer extends StatelessWidget {
       DrawerItem(
         icon: AppAssets.uiSettings,
         title: context.l10n.settings,
-        onTap: () {},
+        onTap: () {
+          context.pushNamed(AppRoutes.settingsScreen);
+        },
       ),
     ];
 

@@ -15,7 +15,7 @@ class CommunityScreen extends StatefulWidget {
 
 class _CommunityScreenState extends State<CommunityScreen> {
   final List<String> _filters = ['All', 'Today', 'This Week', 'This Month'];
-  int _selectedFilterIndex = 0;
+  final int _selectedFilterIndex = 0;
   final TextEditingController _searchController = TextEditingController();
   @override
   void dispose() {

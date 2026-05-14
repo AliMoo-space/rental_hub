@@ -76,7 +76,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             HeightSpace(5),
             PrimaryOutlineButtonWidget(
               text: context.l10n.addQuestion,
-              onPressed: () {},
+              onPressed: () {
+                context.pushNamed(AppRoutes.communityScreen);
+              },
               textColor: AppColors.secondaryColor,
               borderRadius: 30.r,
               borderColor: AppColors.secondaryColor,
@@ -87,7 +89,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             PrimaryOutlineButtonWidget(
               text: context.l10n.editProfile,
-              onPressed: () {},
+              onPressed: () {
+                context.pushNamed(AppRoutes.editProfileScreen);
+              },
               textColor: AppColors.secondaryColor,
               borderRadius: 30.r,
               borderColor: AppColors.secondaryColor,

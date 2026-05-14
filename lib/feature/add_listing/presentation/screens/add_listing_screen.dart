@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
+import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
@@ -241,7 +243,9 @@ class _AddListingScreenState extends State<AddListingScreen> {
             SizedBox(height: 18.h),
             PrimaryButtonWidget(
               buttonText: context.l10n.addProduct,
-              onPress: () {},
+              onPress: () {
+                context.goNamed(AppRoutes.mainScreen);
+              },
               width: 331.w,
               height: 48.h,
               icon: Container(
@@ -268,7 +272,9 @@ class _AddListingScreenState extends State<AddListingScreen> {
             SizedBox(height: 10.h),
             PrimaryOutlineButtonWidget(
               text: 'إلغاء',
-              onPressed: () {},
+              onPressed: () {
+                context.pop();
+              },
               textColor: AppColors.secondaryColor,
               borderColor: AppColors.borderColor,
               borderRadius: 28.r,

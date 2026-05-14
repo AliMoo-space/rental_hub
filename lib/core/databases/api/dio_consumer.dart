@@ -3,14 +3,16 @@ import 'dart:developer' as developer;
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:rental_hub/core/databases/api/auth_interceptor.dart';
 import 'package:rental_hub/core/databases/api/api_consumer.dart';
 import 'package:rental_hub/core/databases/api/end_points.dart';
 import 'package:rental_hub/core/errors/error_handling.dart';
 
 class DioConsumer extends ApiConsumer {
   final Dio dio;
+  final AuthInterceptor authInterceptor;
 
-  DioConsumer({required this.dio}) {
+  DioConsumer({required this.dio, required this.authInterceptor}) {
     dio.options = BaseOptions(
       baseUrl: EndPoints.baseUrl,
       connectTimeout: const Duration(seconds: 10),
@@ -20,6 +22,8 @@ class DioConsumer extends ApiConsumer {
         'Accept': 'application/json',
       },
     );
+
+    dio.interceptors.add(authInterceptor.dioInterceptor);
 
     // Add logging interceptor
     dio.interceptors.add(_NetworkLoggingInterceptor());
@@ -173,26 +177,49 @@ class DioConsumer extends ApiConsumer {
 class _NetworkLoggingInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    final authHeader = options.headers['Authorization'];
     developer.log(
       '🌐 Network Request:\n'
       'URL: ${options.baseUrl}${options.path}\n'
       'Method: ${options.method}\n'
-      'Headers: ${options.headers}\n'
+      'Headers (filtered): Content-Type=${options.headers['Content-Type']}, '
+      'Authorization=${authHeader != null ? _previewHeader(authHeader.toString()) : 'MISSING'}\n'
       'Data: ${options.data}',
+      name: 'Network',
     );
+
+    // CRITICAL: Validate Authorization header format for protected endpoints
+    if (!options.extra.containsKey('skipAuth') ||
+        options.extra['skipAuth'] != true) {
+      if (authHeader != null &&
+          !_isValidAuthorizationHeader(authHeader.toString())) {
+        developer.log(
+          '❌ CRITICAL: Authorization header has INVALID format\n'
+          'Value: ${_previewHeader(authHeader.toString())}\n'
+          'Should be: Bearer <raw_token>\n'
+          'This will cause 401 Unauthorized!',
+          name: 'Network',
+        );
+      }
+    }
+
     super.onRequest(options, handler);
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
+    final requestHeaders = err.requestOptions.headers;
+    final authHeader = requestHeaders['Authorization'];
+
     developer.log(
       '❌ Network Error:\n'
       'URL: ${err.requestOptions.path}\n'
       'Status Code: ${err.response?.statusCode}\n'
       'Error Type: ${err.type}\n'
       'Message: ${err.message}\n'
+      'Authorization Header: ${authHeader != null ? _previewHeader(authHeader.toString()) : "NOT SET"}\n'
       'Response: ${err.response?.data}',
-      name: 'DioError',
+      name: 'Network',
     );
     super.onError(err, handler);
   }
@@ -204,7 +231,37 @@ class _NetworkLoggingInterceptor extends Interceptor {
       'URL: ${response.requestOptions.path}\n'
       'Status: ${response.statusCode}\n'
       'Data: ${response.data}',
+      name: 'Network',
     );
     super.onResponse(response, handler);
   }
+}
+
+bool _isValidAuthorizationHeader(String header) {
+  if (!header.startsWith('Bearer ')) return false;
+
+  final token = header.substring(7).trim();
+  if (token.isEmpty) return false;
+  if (token.startsWith('{') || token.endsWith('}')) return false;
+  if (token.contains('{token:') || token.contains('"token"')) return false;
+  if (token.contains(',') || token.contains(' ')) return false;
+  if (token.contains('refreshToken:') ||
+      token.contains('expiration:') ||
+      token.contains('userId:') ||
+      token.contains('email:') ||
+      token.contains('fullName:') ||
+      token.contains('role:')) {
+    return false;
+  }
+
+  return true;
+}
+
+String _previewHeader(String header) {
+  const prefix = 'Bearer ';
+  if (!header.startsWith(prefix)) return header;
+
+  final token = header.substring(prefix.length);
+  if (token.length <= 24) return header;
+  return '$prefix${token.substring(0, 12)}...${token.substring(token.length - 6)}';
 }

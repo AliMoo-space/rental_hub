@@ -90,27 +90,48 @@ class _HomeScreenState extends State<HomeScreen> {
                         return Text(productState.message);
                       }
 
-                      final allProducts = productState is ProductLoaded
-                          ? productState.products.items
-                          : <ProductEntity>[];
-
                       final selectedCategoryName =
                           _selectedCategory == 0 ||
                               _selectedCategory >= categories.length
                           ? null
                           : categories[_selectedCategory];
 
-                      final filteredProducts = selectedCategoryName == null
-                          ? allProducts
-                          : allProducts
-                                .where(
-                                  (product) =>
-                                      product.categoryName
-                                          .toLowerCase()
-                                          .trim() ==
-                                      selectedCategoryName.toLowerCase().trim(),
-                                )
-                                .toList();
+                      if (selectedCategoryName == null) {
+                        return HomeRecommendedItemsListWidget(
+                          ratings: const [],
+                          pagingController: context
+                              .read<ProductCubit>()
+                              .pagingController,
+                          onFavoritePressed: (product) {
+                            context.read<ProductCubit>().toggleFavorite(
+                              product.id,
+                            );
+                          },
+                          isFavoriteLoading: (product) {
+                            final state = context.read<ProductCubit>().state;
+                            return state is ProductLoaded &&
+                                state.isFavoriteLoading(product.id);
+                          },
+                          onRatingChanged: (product, _, rating) {
+                            if (product == null) return;
+                            setState(() {
+                              _ratingsByProductId[product.id] = rating;
+                            });
+                          },
+                        );
+                      }
+
+                      final allProducts = productState is ProductLoaded
+                          ? productState.products.items
+                          : <ProductEntity>[];
+
+                      final filteredProducts = allProducts
+                          .where(
+                            (product) =>
+                                product.categoryName.toLowerCase().trim() ==
+                                selectedCategoryName.toLowerCase().trim(),
+                          )
+                          .toList();
 
                       if (filteredProducts.isEmpty) {
                         return const Center(
@@ -127,10 +148,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       return HomeRecommendedItemsListWidget(
                         products: filteredProducts,
                         ratings: ratings,
-                        onRatingChanged: (itemIndex, rating) {
-                          final product = filteredProducts[itemIndex];
+                        onFavoritePressed: (product) {
+                          context.read<ProductCubit>().toggleFavorite(
+                            product.id,
+                          );
+                        },
+                        isFavoriteLoading: (product) {
+                          final state = context.read<ProductCubit>().state;
+                          return state is ProductLoaded &&
+                              state.isFavoriteLoading(product.id);
+                        },
+                        onRatingChanged: (product, itemIndex, rating) {
+                          final selectedProduct =
+                              product ?? filteredProducts[itemIndex];
                           setState(() {
-                            _ratingsByProductId[product.id] = rating;
+                            _ratingsByProductId[selectedProduct.id] = rating;
                           });
                         },
                       );

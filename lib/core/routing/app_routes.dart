@@ -8,8 +8,13 @@ class AppRoutes {
   static const String authSuccessScreen = '/authSuccessScreen';
   static const String mainScreen = '/mainScreen';
   static const String homeScreen = '/homeScreen';
+  static const String communityScreen = '/communityScreen';
   static const String favoritesScreen = '/favoritesScreen';
   static const String dealsScreen = '/dealsScreen';
   static const String walletScreen = '/walletScreen';
   static const String addListingScreen = '/addListingScreen';
+  static const String productDetailsScreen = '/productDetailsScreen';
+  static const String bookingFlowScreen = '/bookingFlowScreen';
+  static const String editProfileScreen = '/editProfileScreen';
+  static const String settingsScreen = '/settingsScreen';
 }

@@ -8,6 +8,7 @@ class ConditionToggleButton extends StatelessWidget {
     required this.text,
     required this.isSelected,
     required this.onTap,
+    super.key,
   });
 
   final String text;
@@ -31,7 +32,7 @@ class ConditionToggleButton extends StatelessWidget {
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: AppColors.primaryColor.withOpacity(0.08),
+                    color: AppColors.primaryColor.withValues(alpha: 0.08),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),

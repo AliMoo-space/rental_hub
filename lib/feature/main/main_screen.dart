@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get_it/get_it.dart';
-import 'package:rental_hub/core/databases/cache/cache_helper.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
+import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/utils/service_locator.dart';
@@ -12,6 +12,7 @@ import 'package:rental_hub/feature/community/presentation/screens/community_scre
 import 'package:rental_hub/feature/home/presentation/cubit/category_cubit.dart';
 import 'package:rental_hub/feature/home/presentation/cubit/product_cubit.dart';
 import 'package:rental_hub/feature/home/presentation/screens/home_screen.dart';
+import 'package:rental_hub/feature/deals/presentation/screens/deals_screen.dart';
 import 'package:rental_hub/feature/profile/presentation/screens/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -32,13 +33,17 @@ class _MainScreenState extends State<MainScreen> {
       ],
       child: const HomeScreen(),
     ),
-    Container(color: Colors.blue),
-    Container(color: Colors.red),
+    const DealsScreen(),
+    const SizedBox.shrink(),
     CommunityScreen(),
     ProfileScreen(),
   ];
 
   void onTabTapped(int index) {
+    if (index == 2) {
+      context.pushNamed(AppRoutes.addListingScreen);
+      return;
+    }
     setState(() {
       currentIndex = index;
     });
@@ -65,9 +70,12 @@ class _MainScreenState extends State<MainScreen> {
               icon: SvgPicture.asset(
                 width: 30.w,
                 AppAssets.homeOutline,
-                color: currentIndex == 0
-                    ? AppColors.primaryColor
-                    : AppColors.bottomNavigationInactiveColor,
+                colorFilter: ColorFilter.mode(
+                  currentIndex == 0
+                      ? AppColors.primaryColor
+                      : AppColors.bottomNavigationInactiveColor,
+                  BlendMode.srcIn,
+                ),
               ),
               label: context.l10n.home,
             ),
@@ -75,9 +83,12 @@ class _MainScreenState extends State<MainScreen> {
               icon: SvgPicture.asset(
                 width: 30.w,
                 AppAssets.uilMessage,
-                color: currentIndex == 1
-                    ? AppColors.primaryColor
-                    : AppColors.bottomNavigationInactiveColor,
+                colorFilter: ColorFilter.mode(
+                  currentIndex == 1
+                      ? AppColors.primaryColor
+                      : AppColors.bottomNavigationInactiveColor,
+                  BlendMode.srcIn,
+                ),
               ),
               label: context.l10n.messages,
             ),
@@ -92,7 +103,10 @@ class _MainScreenState extends State<MainScreen> {
                 child: SvgPicture.asset(
                   width: 30.w,
                   AppAssets.uiPlus,
-                  color: AppColors.whiteColor,
+                  colorFilter: const ColorFilter.mode(
+                    AppColors.whiteColor,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
               label: '',
@@ -101,9 +115,12 @@ class _MainScreenState extends State<MainScreen> {
               icon: SvgPicture.asset(
                 width: 30.w,
                 AppAssets.community,
-                color: currentIndex == 3
-                    ? AppColors.primaryColor
-                    : AppColors.bottomNavigationInactiveColor,
+                colorFilter: ColorFilter.mode(
+                  currentIndex == 3
+                      ? AppColors.primaryColor
+                      : AppColors.bottomNavigationInactiveColor,
+                  BlendMode.srcIn,
+                ),
               ),
               label: context.l10n.community,
             ),
@@ -111,9 +128,12 @@ class _MainScreenState extends State<MainScreen> {
               icon: SvgPicture.asset(
                 width: 28.w,
                 AppAssets.profile,
-                color: currentIndex == 4
-                    ? AppColors.primaryColor
-                    : AppColors.bottomNavigationInactiveColor,
+                colorFilter: ColorFilter.mode(
+                  currentIndex == 4
+                      ? AppColors.primaryColor
+                      : AppColors.bottomNavigationInactiveColor,
+                  BlendMode.srcIn,
+                ),
               ),
               label: context.l10n.profile,
             ),

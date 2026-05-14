@@ -26,93 +26,93 @@ class AppStyles {
 
   // ================= DISPLAY =================
   static TextStyle get displayLarge => _style(
-        fontSize: 36,
-        fontWeight: FontWeight.w700,
-        color: AppColors.textPrimary,
-        height: 1.15,
-        letterSpacing: -0.4,
-      );
+    fontSize: 36,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+    height: 1.15,
+    letterSpacing: -0.4,
+  );
 
   static TextStyle get displayMedium => _style(
-        fontSize: 32,
-        fontWeight: FontWeight.w600,
-        color: AppColors.textSecondary,
-        height: 1.2,
-        letterSpacing: -0.2,
-      );
+    fontSize: 32,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textSecondary,
+    height: 1.2,
+    letterSpacing: -0.2,
+  );
 
   // ================= HEADINGS =================
   static TextStyle get headlineMedium => _style(
-        fontSize: 24,
-        fontWeight: FontWeight.w700,
-        color: AppColors.textPrimary,
-        height: 1.2,
-      );
+    fontSize: 24,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+    height: 1.2,
+  );
 
   static TextStyle get headlineSmall => _style(
-        fontSize: 20,
-        fontWeight: FontWeight.w600,
-        color: AppColors.textSecondary,
-      );
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textSecondary,
+  );
 
   static TextStyle get titleMedium => _style(
-        fontSize: 18,
-        fontWeight: FontWeight.w700,
-        color: AppColors.textPrimary,
-        height: 1.25,
-      );
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+    height: 1.25,
+  );
 
   // ================= BODY =================
   static TextStyle get bodyLarge => _style(
-        fontSize: 16,
-        fontWeight: FontWeight.w500,
-        color: AppColors.textPrimary,
-        height: 1.45,
-      );
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textPrimary,
+    height: 1.45,
+  );
 
   static TextStyle get bodyMedium => _style(
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-        color: AppColors.textSecondary,
-        height: 1.45,
-      );
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textSecondary,
+    height: 1.45,
+  );
 
   static TextStyle get bodySmall => _style(
-        fontSize: 12,
-        fontWeight: FontWeight.w500,
-        color: AppColors.textSecondary,
-        height: 1.4,
-      );
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textSecondary,
+    height: 1.4,
+  );
 
   // ================= LABEL =================
   static TextStyle get labelSmall => _style(
-        fontSize: 10,
-        fontWeight: FontWeight.w700,
-        color: AppColors.textPrimary,
-        letterSpacing: 0.2,
-      );
+    fontSize: 10,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+    letterSpacing: 0.2,
+  );
 
   // ================= SPECIAL =================
   static TextStyle get inputHint => bodyMedium.copyWith(
-        color: AppColors.inputHintColor,
-        fontWeight: FontWeight.w300,
-      );
+    color: AppColors.inputHintColor,
+    fontWeight: FontWeight.w300,
+  );
 
   static TextStyle get linkText => bodySmall.copyWith(
-        color: AppColors.primaryColor,
-        fontWeight: FontWeight.w600,
-        decoration: TextDecoration.underline,
-      );
+    color: AppColors.primaryColor,
+    fontWeight: FontWeight.w600,
+    decoration: TextDecoration.underline,
+  );
 
   static TextStyle get buttonLabel => bodyMedium.copyWith(
-        color: AppColors.whiteColor,
-        fontWeight: FontWeight.w600,
-      );
+    color: AppColors.whiteColor,
+    fontWeight: FontWeight.w600,
+  );
 
   static TextStyle get subtitlesStyles => bodyLarge.copyWith(
-        color: AppColors.secondaryColor,
-        fontWeight: FontWeight.w400,
-      );
+    color: AppColors.secondaryColor,
+    fontWeight: FontWeight.w400,
+  );
 
   // ================= LEGACY (MINIMAL ONLY) =================
   static TextStyle get primaryHeadLinesStyle => displayLarge;
@@ -131,23 +131,23 @@ class AppStyles {
 
   // ================= CUSTOM FONTS =================
   static TextStyle get intro16medium => bodyLarge.copyWith(
-        fontFamily: AppFonts.instrumentSans,
-        fontWeight: FontWeight.w400,
-        color: AppColors.smallSecondaryColor,
-      );
+    fontFamily: AppFonts.instrumentSans,
+    fontWeight: FontWeight.w400,
+    color: AppColors.smallSecondaryColor,
+  );
 
   static TextStyle get instrumentSans500Size14 => bodyMedium.copyWith(
-        fontFamily: AppFonts.instrumentSans,
-        color: AppColors.smallSecondaryColor,
-      );
+    fontFamily: AppFonts.instrumentSans,
+    color: AppColors.smallSecondaryColor,
+  );
 
   static TextStyle get instrumentSans700Size18 => titleMedium.copyWith(
-        fontFamily: AppFonts.instrumentSans,
-        color: AppColors.smallSecondaryColor,
-      );
+    fontFamily: AppFonts.instrumentSans,
+    color: AppColors.smallSecondaryColor,
+  );
 
   static TextStyle get instrumentSans700Size24 => headlineMedium.copyWith(
-        fontFamily: AppFonts.instrumentSans,
-        color: AppColors.smallSecondaryColor,
-      );
+    fontFamily: AppFonts.instrumentSans,
+    color: AppColors.smallSecondaryColor,
+  );
 }

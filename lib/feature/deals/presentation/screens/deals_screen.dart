@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
+import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/filter_header_widget.dart';
@@ -36,8 +38,16 @@ class _DealsScreenState extends State<DealsScreen> {
             children: [
               FilterHeaderWidget(
                 title: context.l10n.myRentals,
-                onFilterTap: () {},
-                onSearchTap: () {},
+                onFilterTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Filter tapped')),
+                  );
+                },
+                onSearchTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Search tapped')),
+                  );
+                },
                 selectedFilter: 'All',
               ),
 
@@ -46,9 +56,9 @@ class _DealsScreenState extends State<DealsScreen> {
                 ratings: _ratings,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                onRatingChanged: (itemIndex, rating) {
+                onRatingChanged: (product, index, rating) {
                   setState(() {
-                    _ratings[itemIndex] = rating;
+                    _ratings[index] = rating;
                   });
                 },
               ),
@@ -56,7 +66,9 @@ class _DealsScreenState extends State<DealsScreen> {
               SizedBox(
                 width: double.infinity,
                 child: PrimaryOutlineButtonWidget(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.pushNamed(AppRoutes.productDetailsScreen);
+                  },
                   text: context.l10n.viewAll,
                   textColor: AppColors.secondaryColor,
                   borderColor: AppColors.secondaryColor,
@@ -75,8 +87,16 @@ class _DealsScreenState extends State<DealsScreen> {
               HeightSpace(20),
               FilterHeaderWidget(
                 title: context.l10n.myRentals,
-                onFilterTap: () {},
-                onSearchTap: () {},
+                onFilterTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Filter tapped')),
+                  );
+                },
+                onSearchTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Search tapped')),
+                  );
+                },
                 selectedFilter: 'All',
               ),
 
@@ -85,25 +105,33 @@ class _DealsScreenState extends State<DealsScreen> {
                 title: 'كاميرا (Canon)',
                 subtitle: 'أدوات تصوير',
                 price: '150 ج.م/اليوم',
-                onTap: () {},
+                onTap: () {
+                  context.pushNamed(AppRoutes.productDetailsScreen);
+                },
               ),
               DealsCompactItemTile(
                 title: 'كاميرا احترافية',
                 subtitle: 'أدوات تصوير',
                 price: '200 ج.م/اليوم',
-                onTap: () {},
+                onTap: () {
+                  context.pushNamed(AppRoutes.productDetailsScreen);
+                },
               ),
               DealsCompactItemTile(
                 title: 'عدسة تصوير',
                 subtitle: 'أدوات تصوير',
                 price: '100 ج.م/اليوم',
-                onTap: () {},
+                onTap: () {
+                  context.pushNamed(AppRoutes.productDetailsScreen);
+                },
               ),
               HeightSpace(8),
               SizedBox(
                 width: double.infinity,
                 child: PrimaryOutlineButtonWidget(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.pushNamed(AppRoutes.productDetailsScreen);
+                  },
                   text: context.l10n.viewAll,
                   textColor: AppColors.secondaryColor,
                   borderColor: AppColors.secondaryColor,

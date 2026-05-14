@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
+import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/utils/snack_bar_widget.dart';
@@ -50,7 +52,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     if (isFormValid && isChecked) {
-      // signup logic
+      context.goNamed(AppRoutes.mainScreen);
     }
   }
 

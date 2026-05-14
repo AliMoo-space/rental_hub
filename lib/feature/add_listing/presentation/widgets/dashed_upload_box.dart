@@ -11,6 +11,7 @@ class DashedUploadBox extends StatelessWidget {
     required this.width,
     required this.height,
     required this.onTap,
+    super.key,
   });
 
   final double width;
@@ -28,6 +29,9 @@ class DashedUploadBox extends StatelessWidget {
           painter: _DashedRoundedRectPainter(
             color: AppColors.borderColor,
             radius: 18.r,
+            strokeWidth: 1,
+            dashWidth: 6,
+            gapWidth: 4,
           ),
           child: Center(
             child: Container(
@@ -57,9 +61,9 @@ class _DashedRoundedRectPainter extends CustomPainter {
   _DashedRoundedRectPainter({
     required this.color,
     required this.radius,
-    this.strokeWidth = 1,
-    this.dashWidth = 6,
-    this.gapWidth = 4,
+    required this.strokeWidth,
+    required this.dashWidth,
+    required this.gapWidth,
   });
 
   final Color color;

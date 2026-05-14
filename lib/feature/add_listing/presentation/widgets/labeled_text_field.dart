@@ -9,6 +9,7 @@ class LabeledTextField extends StatelessWidget {
     required this.controller,
     required this.hintText,
     this.maxLines = 1,
+    super.key,
   });
 
   final String label;

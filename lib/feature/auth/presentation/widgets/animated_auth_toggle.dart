@@ -138,7 +138,7 @@ class _AnimatedAuthToggleState extends State<AnimatedAuthToggle>
             ),
           ),
           SizedBox(height: 20.h),
-      
+
           // Page View for Login/Signup Screens
           Expanded(
             child: PageView(
