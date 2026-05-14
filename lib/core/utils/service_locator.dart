@@ -8,7 +8,7 @@ import 'package:rental_hub/core/databases/cache/token_storage_helper.dart';
 import 'package:rental_hub/feature/favorites/data/datasource/favorite_remote_data_source.dart';
 import 'package:rental_hub/feature/favorites/data/repo/favorite_repo_imp.dart';
 import 'package:rental_hub/feature/favorites/domain/repo/favorite_repo.dart';
-import 'package:rental_hub/feature/favorites/domain/usecase/add_to_favorite_useCase.dart';
+import 'package:rental_hub/feature/favorites/domain/usecase/add_to_favorite_usecase.dart';
 import 'package:rental_hub/feature/favorites/domain/usecase/remove_favorite_use_case.dart';
 import 'package:rental_hub/feature/favorites/presentation/cubit/favorite_cubit.dart';
 import 'package:rental_hub/feature/localization/data/repo/locale_repository_impl.dart';
@@ -143,8 +143,9 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory(() => ForgotPasswordCubit(getIt()));
   getIt.registerFactory(() => CategoryCubit(getIt()));
   getIt.registerFactory(() => ProductCubit(getIt(), getIt(), getIt()));
-  getIt.registerFactory(() => FavoriteCubit(getIt()));
-
+  getIt.registerFactory<FavoriteCubit>(
+    () => FavoriteCubit(getFavorites: getIt()),
+  );
   getIt.registerFactoryParam<OtpCubit, String, void>(
     (email, _) => OtpCubit(
       email: email,

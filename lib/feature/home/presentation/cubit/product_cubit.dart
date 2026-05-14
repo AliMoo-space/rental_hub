@@ -1,31 +1,8 @@
-// import 'package:bloc/bloc.dart';
-// import 'package:equatable/equatable.dart';
-// import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
-// import 'package:rental_hub/feature/home/domain/usecases/get_products.dart';
-
-// part 'product_state.dart';
-
-// class ProductCubit extends Cubit<ProductState> {
-//   final GetProducts _getProducts;
-
-//   ProductCubit(this._getProducts) : super(ProductInitial());
-
-//   Future<void> fetchProducts({int pageNumber = 1}) async {
-//     emit(ProductLoading());
-
-//     final result = await _getProducts(pageNumber);
-//     result.fold(
-//       (failure) => emit(ProductError(message: failure.errMessage)),
-//       (products) => emit(ProductLoaded(products)),
-//     );
-//   }
-// }
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-import 'package:rental_hub/feature/favorites/domain/usecase/add_to_favorite_useCase.dart';
+import 'package:rental_hub/feature/favorites/domain/usecase/add_to_favorite_usecase.dart';
 import 'package:rental_hub/feature/favorites/domain/usecase/remove_favorite_use_case.dart';
 import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
 import 'package:rental_hub/feature/home/domain/usecases/get_products.dart';

@@ -14,6 +14,7 @@ import 'package:rental_hub/feature/auth/presentation/screens/reset_password_scre
 import 'package:rental_hub/feature/auth/presentation/widgets/animated_auth_toggle.dart';
 import 'package:rental_hub/feature/booking/presentation/screens/booking_flow_screen.dart';
 import 'package:rental_hub/feature/deals/presentation/screens/deals_screen.dart';
+import 'package:rental_hub/feature/favorites/presentation/cubit/favorite_cubit.dart';
 import 'package:rental_hub/feature/favorites/presentation/screens/favorites_screen.dart';
 import 'package:rental_hub/feature/intro/intro_screen.dart';
 import 'package:rental_hub/feature/main/main_screen.dart';
@@ -113,7 +114,10 @@ class RouterGenerationConfig {
       GoRoute(
         name: AppRoutes.favoritesScreen,
         path: AppRoutes.favoritesScreen,
-        builder: (context, state) => const FavoritesScreen(),
+        builder: (context, state) => BlocProvider(
+          create: (context) => getIt<FavoriteCubit>(),
+          child: const FavoritesScreen(),
+        ),
       ),
       GoRoute(
         name: AppRoutes.dealsScreen,

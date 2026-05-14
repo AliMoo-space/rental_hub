@@ -1,8 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:rental_hub/core/errors/failure.dart';
+import 'package:rental_hub/feature/favorites/data/model/favorites_item_model.dart';
 import 'package:rental_hub/feature/favorites/domain/entities/favorite_entity.dart';
 
 abstract class FavoriteRepo {
+  Future<Either<Failure, FavoriteResponseModel>> getFavorites({
+    required int page,
+  });
   Future<Either<Failure, FavoriteEntity>> addToFavorite({
     required int productId,
   });

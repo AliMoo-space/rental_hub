@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+
 import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/filter_header_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
+
+import 'package:rental_hub/feature/favorites/data/model/favorites_item_model.dart';
+import 'package:rental_hub/feature/favorites/presentation/cubit/favorite_cubit.dart';
+
 import 'package:rental_hub/feature/home/presentation/widgets/home_recommended_item_card_widget.dart';
 
 class FavoritesScreen extends StatefulWidget {
@@ -14,10 +21,17 @@ class FavoritesScreen extends StatefulWidget {
 }
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
-  final List<double> _ratings = List<double>.generate(3, (_) => 4.0);
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<FavoriteCubit>().pagingController.refresh();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.watch<FavoriteCubit>();
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -29,7 +43,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           vertical: 10.h,
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w),
@@ -40,10 +53,34 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 selectedFilter: 'All',
               ),
             ),
+
             HeightSpace(14),
-            HomeRecommendedItemCardWidget(
-              onRatingChanged: (value) => setState(() => _ratings[0] = value),
-              rating: _ratings[0],
+
+            Expanded(
+              child: PagedListView<int, FavoriteItemModel>(
+                state: cubit.pagingController.value,
+
+                fetchNextPage: cubit.pagingController.fetchNextPage,
+
+                builderDelegate: PagedChildBuilderDelegate<FavoriteItemModel>(
+                  itemBuilder: (context, item, index) {
+                    return HomeRecommendedItemCardWidget(
+                      product: item.toProductEntity(),
+                      rating: item.averageRating,
+                      onRatingChanged: (_) {},
+                    );
+                  },
+
+                  firstPageProgressIndicatorBuilder: (_) =>
+                      const Center(child: CircularProgressIndicator()),
+
+                  newPageProgressIndicatorBuilder: (_) =>
+                      const Center(child: CircularProgressIndicator()),
+
+                  noItemsFoundIndicatorBuilder: (_) =>
+                      const Center(child: Text('No favorites yet')),
+                ),
+              ),
             ),
           ],
         ),

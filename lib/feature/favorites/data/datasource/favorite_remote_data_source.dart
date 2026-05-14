@@ -3,9 +3,12 @@ import 'package:rental_hub/core/databases/api/api_consumer.dart';
 import 'package:rental_hub/core/databases/api/end_points.dart';
 import 'package:rental_hub/core/utils/response_parser.dart';
 import 'package:rental_hub/feature/favorites/data/model/favorite_model.dart';
+import 'package:rental_hub/feature/favorites/data/model/favorites_item_model.dart';
 
 abstract class FavoriteRemoteDataSource {
   Future<FavoriteModel> addToFavorite({required int productId});
+  Future<FavoriteResponseModel> getFavorites({required int page});
+
   Future<FavoriteModel> removeFavorite({required int productId});
 }
 
@@ -16,7 +19,7 @@ class FavoriteRemoteDataSourceImp implements FavoriteRemoteDataSource {
   @override
   Future<FavoriteModel> addToFavorite({required int productId}) async {
     developer.log(
-      '❤️ FavoriteRemoteDataSourceImp.addToFavorite: productId=$productId',
+      ' FavoriteRemoteDataSourceImp.addToFavorite: productId=$productId',
       name: 'Favorites',
     );
 
@@ -29,7 +32,7 @@ class FavoriteRemoteDataSourceImp implements FavoriteRemoteDataSource {
     final payload = ResponseParser.extractDataPayload(response.data);
 
     developer.log(
-      '✅ FavoriteRemoteDataSourceImp.addToFavorite: Success\n'
+      'FavoriteRemoteDataSourceImp.addToFavorite: Success\n'
       'Payload: $payload',
       name: 'Favorites',
     );
@@ -40,7 +43,7 @@ class FavoriteRemoteDataSourceImp implements FavoriteRemoteDataSource {
   @override
   Future<FavoriteModel> removeFavorite({required int productId}) async {
     developer.log(
-      '🗑️ FavoriteRemoteDataSourceImp.removeFavorite: productId=$productId',
+      'FavoriteRemoteDataSourceImp.removeFavorite: productId=$productId',
       name: 'Favorites',
     );
 
@@ -58,12 +61,47 @@ class FavoriteRemoteDataSourceImp implements FavoriteRemoteDataSource {
           };
 
     developer.log(
-      '✅ FavoriteRemoteDataSourceImp.removeFavorite: Success\n'
+      'FavoriteRemoteDataSourceImp.removeFavorite: Success\n'
       'Endpoint: $endpoint\n'
       'Payload: $responsePayload',
       name: 'Favorites',
     );
 
     return FavoriteModel.fromJson(responsePayload);
+  }
+
+  @override
+  Future<FavoriteResponseModel> getFavorites({required int page}) async {
+    try {
+      developer.log(
+        'FavoriteRemoteDataSourceImp.getFavorites: Fetching favorites\n'
+        'Page: $page',
+        name: 'Favorites',
+      );
+
+      final response = await _api.get(
+        EndPoints.favoritesEndpoint,
+        queryParameters: {'page': page, 'pageSize': 10},
+      );
+
+      final payload = ResponseParser.extractDataPayload(response.data);
+
+      developer.log(
+        'FavoriteRemoteDataSourceImp.getFavorites: Success\n'
+        'Page: $page\n'
+        'Payload: $payload',
+        name: 'Favorites',
+      );
+
+      return FavoriteResponseModel.fromJson(payload);
+    } catch (e) {
+      developer.log(
+        'FavoriteRemoteDataSourceImp.getFavorites: Error fetching favorites\n'
+        'Page: $page\n'
+        'Error: $e',
+        name: 'Favorites',
+      );
+      rethrow;
+    }
   }
 }

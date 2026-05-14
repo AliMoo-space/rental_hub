@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:rental_hub/core/errors/error_handling.dart';
 import 'package:rental_hub/core/errors/failure.dart';
 import 'package:rental_hub/feature/favorites/data/datasource/favorite_remote_data_source.dart';
+import 'package:rental_hub/feature/favorites/data/model/favorites_item_model.dart';
 import 'package:rental_hub/feature/favorites/domain/entities/favorite_entity.dart';
 import 'package:rental_hub/feature/favorites/domain/repo/favorite_repo.dart';
 
@@ -39,6 +40,25 @@ class FavoriteRepoImp implements FavoriteRepo {
         productId: productId,
       );
       return Right(favorite);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(
+          statusCode: e.errorModel.statusCode,
+          errMessage: e.errorModel.firstErrorMessage,
+        ),
+      );
+    } catch (e) {
+      return Left(Failure(errMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, FavoriteResponseModel>> getFavorites({
+    required int page,
+  }) async {
+    try {
+      final result = await favoriteRemoteDataSource.getFavorites(page: page);
+      return Right(result);
     } on ServerException catch (e) {
       return Left(
         Failure(
