@@ -38,10 +38,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get email => 'البريد الإلكتروني';
 
   @override
+  String get nationalId => 'الرقم القومي';
+
+  @override
+  String get enterTheNationalNumber => 'ادخال الرقم القومي';
+
+  @override
   String get password => 'كلمة المرور';
 
   @override
   String get forgotPassword => 'هل نسيت كلمة المرور؟';
+
+  @override
+  String get personalIDCard => 'البطاقه الشخصيه';
 
   @override
   String get dontHaveAccount => 'ليس لديك حساب؟';

@@ -1,0 +1,71 @@
+import 'package:rental_hub/feature/product_details/domain/entities/product_details_entity.dart';
+
+class ProductDetailsModel extends ProductDetailsEntity {
+  ProductDetailsModel({
+    required super.id,
+    required super.name,
+    required super.description,
+    required super.condition,
+    required super.status,
+    required super.rejectionReason,
+    required super.basePricePerDay,
+    required super.finalPricePerDay,
+    required super.commissionPercentage,
+    required super.locationArea,
+    required super.productType,
+    required super.brand,
+    required super.rentalGuarantee,
+    required super.termsConditions,
+    required super.createdAt,
+    required super.updatedAt,
+    required super.averageRating,
+    required super.totalReviews,
+    required super.totalRentalCount,
+    required super.totalPlatformProfit,
+    required super.ownerId,
+    required super.ownerName,
+    required super.ownerEmail,
+    required super.ownerPhone,
+    required super.categoryId,
+    required super.categoryName,
+    required super.subcategoryId,
+    required super.subcategoryName,
+    required super.images,
+  });
+
+  factory ProductDetailsModel.fromJson(Map<String, dynamic> json) {
+    return ProductDetailsModel(
+      id: json['id'] as int,
+      name: json['name'] as String,
+      description: json['description'] as String,
+      condition: json['condition'] as String,
+      status: json['status'] as String,
+      rejectionReason: json['rejectionReason'] as String?,
+      basePricePerDay: (json['basePricePerDay'] as num).toDouble(),
+      finalPricePerDay: (json['finalPricePerDay'] as num).toDouble(),
+      commissionPercentage: (json['commissionPercentage'] as num).toDouble(),
+      locationArea: json['locationArea'] as String,
+      productType: json['productType'] as String,
+      brand: json['brand'] as String,
+      rentalGuarantee: json['rentalGuarantee'] as String,
+      termsConditions: json['termsConditions'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'] as String)
+          : null,
+      averageRating: (json['averageRating'] as num).toDouble(),
+      totalReviews: json['totalReviews'] as int,
+      totalRentalCount: json['totalRentalCount'] as int,
+      totalPlatformProfit: (json['totalPlatformProfit'] as num).toDouble(),
+      ownerId: json['ownerId'] as String,
+      ownerName: json['ownerName'] as String,
+      ownerEmail: json['ownerEmail'] as String,
+      ownerPhone: json['ownerPhone'] as String,
+      categoryId: json['categoryId'] as int,
+      categoryName: json['categoryName'] as String,
+      subcategoryId: json['subcategoryId'] as int,
+      subcategoryName: json['subcategoryName'] as String,
+      images: List<String>.from(json['images']),
+    );
+  }
+}

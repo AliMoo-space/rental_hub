@@ -100,7 +100,7 @@ class _ReviewCard extends StatelessWidget {
               CircleAvatar(
                 radius: 20.w,
                 backgroundImage: NetworkImage(review.reviewerImage),
-                onBackgroundImageError: (_, __) => const Icon(Icons.person),
+                onBackgroundImageError: (exception, stackTrace) {},
               ),
               horizontalSpacing(12),
               Expanded(

@@ -84,10 +84,10 @@ class _BookingPaymentScreenState extends State<BookingPaymentScreen> {
             Container(
               padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
-                color: AppColors.successColor.withOpacity(0.1),
+                color: AppColors.successColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8.r),
                 border: Border.all(
-                  color: AppColors.successColor.withOpacity(0.3),
+                  color: AppColors.successColor.withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),

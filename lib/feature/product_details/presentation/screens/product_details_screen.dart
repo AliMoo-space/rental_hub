@@ -13,7 +13,6 @@ import 'package:rental_hub/feature/product_details/presentation/widgets/product_
 import 'package:rental_hub/feature/product_details/presentation/widgets/reviews_widget.dart';
 import 'package:rental_hub/feature/product_details/presentation/widgets/seller_profile_widget.dart';
 
-/// Product details screen showing complete product information
 class ProductDetailsScreen extends StatefulWidget {
   final void Function()? onBookNow;
   final void Function()? onChat;

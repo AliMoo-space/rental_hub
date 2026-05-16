@@ -52,14 +52,17 @@ class _CustomTextFieldState extends State<CustomTextField> {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return SizedBox(
-      width: widget.width ?? 331.w,
+      width: widget.width ?? double.infinity,
       child: Padding(
         padding: EdgeInsets.only(bottom: widget.spacing ?? 0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (widget.title != null)
-              Text(widget.title!, style: AppStyles.labelSmall),
+              Align(
+                alignment: AlignmentDirectional.bottomStart,
+
+                child: Text(widget.title!, style: AppStyles.labelSmall),
+              ),
             if (widget.title != null) SizedBox(height: 6.h),
             TextFormField(
               focusNode: _focusNode,

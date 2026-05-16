@@ -24,7 +24,7 @@ class PaymentSummaryWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.primarySoftColor.withOpacity(0.3),
+        color: AppColors.primarySoftColor.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(color: AppColors.borderColor, width: 1),
       ),

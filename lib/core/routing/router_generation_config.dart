@@ -7,6 +7,7 @@ import 'package:rental_hub/feature/auth/presentation/cubit/forgot_password_cubit
 import 'package:rental_hub/feature/auth/presentation/cubit/login_cubit.dart';
 import 'package:rental_hub/feature/auth/presentation/cubit/otp_cubit.dart';
 import 'package:rental_hub/feature/auth/presentation/cubit/reset_password_cubit.dart';
+import 'package:rental_hub/feature/auth/presentation/cubit/sign_up_cubit.dart';
 import 'package:rental_hub/feature/auth/presentation/screens/auth_success_screen.dart';
 import 'package:rental_hub/feature/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:rental_hub/feature/auth/presentation/screens/otp_verification_screen.dart';
@@ -43,8 +44,11 @@ class RouterGenerationConfig {
       GoRoute(
         name: AppRoutes.animatedAuthToggle,
         path: AppRoutes.animatedAuthToggle,
-        builder: (context, state) => BlocProvider(
-          create: (context) => getIt<LoginCubit>(),
+        builder: (context, state) => MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => getIt<LoginCubit>()),
+            BlocProvider(create: (context) => getIt<SignUpCubit>()),
+          ],
           child: const AnimatedAuthToggle(),
         ),
       ),

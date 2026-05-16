@@ -152,6 +152,18 @@ abstract class AppLocalizations {
   /// **'Email'**
   String get email;
 
+  /// No description provided for @nationalId.
+  ///
+  /// In en, this message translates to:
+  /// **'Natinal Id'**
+  String get nationalId;
+
+  /// No description provided for @enterTheNationalNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the national number'**
+  String get enterTheNationalNumber;
+
   /// No description provided for @password.
   ///
   /// In en, this message translates to:
@@ -163,6 +175,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Forgot Password?'**
   String get forgotPassword;
+
+  /// No description provided for @personalIDCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal ID card'**
+  String get personalIDCard;
 
   /// No description provided for @dontHaveAccount.
   ///

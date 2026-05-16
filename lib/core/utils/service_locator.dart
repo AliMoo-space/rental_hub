@@ -11,18 +11,27 @@ import 'package:rental_hub/feature/favorites/domain/repo/favorite_repo.dart';
 import 'package:rental_hub/feature/favorites/domain/usecase/add_to_favorite_usecase.dart';
 import 'package:rental_hub/feature/favorites/domain/usecase/remove_favorite_use_case.dart';
 import 'package:rental_hub/feature/favorites/presentation/cubit/favorite_cubit.dart';
+import 'package:rental_hub/feature/home/data/datasource/product_remote_data_source.dart';
 import 'package:rental_hub/feature/localization/data/repo/locale_repository_impl.dart';
 import 'package:rental_hub/feature/localization/domain/repo/locale_repository.dart';
 import 'package:rental_hub/feature/localization/domain/usecases/get_saved_locale_use_case.dart';
 import 'package:rental_hub/feature/localization/domain/usecases/save_locale_use_case.dart';
 import 'package:rental_hub/feature/localization/presentation/cubit/locale_cubit.dart';
+import 'package:rental_hub/feature/product_details/data/repo/product_details_repo_impl.dart';
+import 'package:rental_hub/feature/product_details/domain/repo/product_details_repo.dart';
+import 'package:rental_hub/feature/product_details/domain/usecases/product_details_use_case.dart';
+import 'package:rental_hub/feature/product_details/presentation/cubit/product_details_cubit.dart';
 import 'package:rental_hub/feature/theme/presentation/cubit/theme_cubit.dart';
+import 'package:rental_hub/feature/auth/data/datasource/auth_remote_data_source.dart';
+import 'package:rental_hub/feature/auth/data/datasource/auth_remote_data_source_impl.dart';
 import 'package:rental_hub/feature/auth/data/datasource/login_remote_data_source.dart';
 import 'package:rental_hub/feature/auth/data/datasource/login_remote_data_source_impl.dart';
+import 'package:rental_hub/feature/auth/data/repo/auth_repository_impl.dart';
 import 'package:rental_hub/feature/auth/data/datasource/forgot_password_remote_data_source.dart';
 import 'package:rental_hub/feature/auth/data/datasource/forgot_password_remote_data_source_impl.dart';
 import 'package:rental_hub/feature/auth/data/datasource/validate_otp_remote_data_source.dart';
 import 'package:rental_hub/feature/auth/data/datasource/validate_otp_remote_data_source_imp.dart';
+import 'package:rental_hub/feature/auth/domain/repo/auth_repository.dart';
 import 'package:rental_hub/feature/auth/domain/repo/login_repo.dart';
 import 'package:rental_hub/feature/auth/data/repo/login_repo_impl.dart';
 import 'package:rental_hub/feature/auth/domain/repo/forgot_password_repo.dart';
@@ -30,10 +39,12 @@ import 'package:rental_hub/feature/auth/data/repo/forgot_password_repo_impl.dart
 import 'package:rental_hub/feature/auth/domain/repo/validate_otp_repo.dart';
 import 'package:rental_hub/feature/auth/data/repo/validate_otp_entity_imp.dart';
 import 'package:rental_hub/feature/auth/domain/usecases/login_use_case.dart';
+import 'package:rental_hub/feature/auth/domain/usecases/sign_up_use_case.dart';
 import 'package:rental_hub/feature/auth/domain/usecases/forgot_password_use_case.dart';
 import 'package:rental_hub/feature/auth/domain/usecases/validate_otp_use_case.dart';
 import 'package:rental_hub/feature/auth/domain/usecases/resend_otp_use_case.dart';
 import 'package:rental_hub/feature/auth/presentation/cubit/login_cubit.dart';
+import 'package:rental_hub/feature/auth/presentation/cubit/sign_up_cubit.dart';
 import 'package:rental_hub/feature/auth/presentation/cubit/forgot_password_cubit.dart';
 import 'package:rental_hub/feature/auth/presentation/cubit/otp_cubit.dart';
 import 'package:rental_hub/feature/home/data/datasource/category_remote_data_source.dart';
@@ -71,8 +82,6 @@ Future<void> setupServiceLocator() async {
     () => LocaleRepositoryImpl(getIt()),
   );
 
-  // Register StorageHelper for secure token access
-
   getIt.registerLazySingleton(() => GetSavedLocaleUseCase(getIt()));
   getIt.registerLazySingleton(() => SaveLocaleUseCase(getIt()));
   getIt.registerLazySingleton(() => LocaleCubit(getIt(), getIt()));
@@ -80,6 +89,9 @@ Future<void> setupServiceLocator() async {
   // ======================= REPOSITORIES =====================
 
   getIt.registerLazySingleton<LoginRepo>(() => LoginRepoImpl(getIt()));
+  getIt.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(getIt()),
+  );
 
   getIt.registerLazySingleton<ForgotPasswordRepo>(
     () => ForgotPasswordRepoImpl(getIt()),
@@ -91,7 +103,7 @@ Future<void> setupServiceLocator() async {
     () => CategoryRemoteDataSource(getIt()),
   );
 
-  getIt.registerLazySingleton<ProductRemoteDataSourceImp>(
+  getIt.registerLazySingleton<ProductRemoteDataSource>(
     () => ProductRemoteDataSourceImp(getIt()),
   );
 
@@ -100,10 +112,14 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<FavoriteRepo>(
     () => FavoriteRepoImp(favoriteRemoteDataSource: getIt()),
   );
+  getIt.registerLazySingleton<ProductDetailsRepo>(
+    () => ProductDetailsRepoImpl(getIt()),
+  );
 
   // ======================= USE CASES ========================
 
   getIt.registerLazySingleton(() => LoginUseCase(getIt()));
+  getIt.registerLazySingleton(() => SignUpUseCase(getIt()));
   getIt.registerLazySingleton(() => ForgotPasswordUseCase(getIt()));
   getIt.registerLazySingleton(() => VerifyOtpUseCase(getIt()));
   getIt.registerLazySingleton(() => ResendOtpUseCase(getIt()));
@@ -116,6 +132,8 @@ Future<void> setupServiceLocator() async {
     () => RemoveFavoriteUseCase(favoriteRepo: getIt()),
   );
 
+  getIt.registerLazySingleton(() => ProductDetailsUseCase(getIt()));
+
   // ===================== DATA SOURCES =======================
 
   getIt.registerLazySingleton<LoginRemoteDataSource>(
@@ -125,6 +143,10 @@ Future<void> setupServiceLocator() async {
     ),
   );
 
+  getIt.registerLazySingleton<AuthRemoteDataSource>(
+    () => AuthRemoteDataSourceImpl(apiConsumer: getIt()),
+  );
+
   getIt.registerLazySingleton<ForgotPasswordRemoteDataSource>(
     () => ForgotPasswordRemoteDataSourceImpl(apiConsumer: getIt()),
   );
@@ -132,6 +154,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<OtpRemoteDataSource>(
     () => OtpRemoteDataSourceImpl(apiConsumer: getIt()),
   );
+
   getIt.registerLazySingleton<FavoriteRemoteDataSource>(
     () => FavoriteRemoteDataSourceImp(getIt()),
   );
@@ -140,11 +163,15 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerLazySingleton(() => ThemeCubit(getIt()));
   getIt.registerFactory(() => LoginCubit(getIt()));
+  getIt.registerFactory(() => SignUpCubit(getIt()));
   getIt.registerFactory(() => ForgotPasswordCubit(getIt()));
   getIt.registerFactory(() => CategoryCubit(getIt()));
   getIt.registerFactory(() => ProductCubit(getIt(), getIt(), getIt()));
   getIt.registerFactory<FavoriteCubit>(
     () => FavoriteCubit(getFavorites: getIt()),
+  );
+  getIt.registerFactory<ProductDetailsCubit>(
+    () => ProductDetailsCubit(getIt()),
   );
   getIt.registerFactoryParam<OtpCubit, String, void>(
     (email, _) => OtpCubit(

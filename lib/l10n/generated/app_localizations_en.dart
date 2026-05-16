@@ -38,10 +38,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get email => 'Email';
 
   @override
+  String get nationalId => 'Natinal Id';
+
+  @override
+  String get enterTheNationalNumber => 'Enter the national number';
+
+  @override
   String get password => 'Password';
 
   @override
   String get forgotPassword => 'Forgot Password?';
+
+  @override
+  String get personalIDCard => 'Personal ID card';
 
   @override
   String get dontHaveAccount => 'Don\'t have an account?';

@@ -14,7 +14,15 @@ class TermsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        // Terms and Privacy Text (centered, single-line)
+        Checkbox(
+          shape: ContinuousRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+          ),
+          side: const BorderSide(color: AppColors.backgroundColor, width: 2),
+          value: value,
+          onChanged: onChanged,
+          activeColor: AppColors.primaryColor,
+        ),
         Expanded(
           child: Text.rich(
             TextSpan(

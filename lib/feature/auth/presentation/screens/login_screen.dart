@@ -79,9 +79,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Form(
                   key: formKey,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SvgPicture.asset(AppAssets.logo2, width: 225.w),
+                      Align(
+                        alignment: AlignmentDirectional.bottomStart,
+                        child: SvgPicture.asset(AppAssets.logo2, width: 225.w),
+                      ),
                       HeightSpace(10.h),
                       Text(
                         context.l10n.welcomeBackLogin,

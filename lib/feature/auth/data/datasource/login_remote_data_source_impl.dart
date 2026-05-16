@@ -31,6 +31,7 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
     final response = await apiConsumer.post(
       EndPoints.loginEndpoint,
       data: {'email': params.email, 'password': params.password},
+      isFormData: false,
     );
 
     developer.log(

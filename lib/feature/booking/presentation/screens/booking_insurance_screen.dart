@@ -129,7 +129,7 @@ class _AgreementSectionState extends State<_AgreementSection> {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.primarySoftColor.withOpacity(0.2),
+        color: AppColors.primarySoftColor.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Column(

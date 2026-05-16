@@ -17,6 +17,7 @@ class PrimaryButtonWidget extends StatelessWidget {
   final Widget? trailingIcon;
   final void Function()? onPress;
   final bool isLoading;
+  final bool enabled;
   const PrimaryButtonWidget({
     super.key,
     this.buttonText,
@@ -30,15 +31,17 @@ class PrimaryButtonWidget extends StatelessWidget {
     this.trailingIcon,
     this.onPress,
     this.isLoading = false,
+    this.enabled = true,
     this.style,
   });
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onPress ?? () {},
+      onPressed: isLoading || !enabled ? null : onPress ?? () {},
       style: ElevatedButton.styleFrom(
         backgroundColor: buttonColor ?? AppColors.primaryColor,
+        disabledBackgroundColor: AppColors.textMutedColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(bordersRadius ?? 24.r),
         ),

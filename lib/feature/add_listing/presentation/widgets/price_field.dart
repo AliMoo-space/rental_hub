@@ -9,6 +9,7 @@ class PriceField extends StatelessWidget {
     required this.controller,
     required this.suffix,
     super.key,
+    required hintText,
   });
 
   final String label;

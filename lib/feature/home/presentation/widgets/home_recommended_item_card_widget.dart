@@ -6,6 +6,7 @@ import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
+import 'package:rental_hub/core/widgets/app_image.dart';
 import 'package:rental_hub/core/widgets/primary_button_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
@@ -47,7 +48,11 @@ class HomeRecommendedItemCardWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(14.r),
         child: Stack(
           children: [
-            SizedBox(width: 375.w, height: 234.h, child: _buildProductImage()),
+            SizedBox(
+              width: 375.w,
+              height: 234.h,
+              child: AppNetworkImage(images: product?.images ?? ['']),
+            ),
             Positioned.fill(
               child: DecoratedBox(
                 decoration: BoxDecoration(
@@ -205,5 +210,34 @@ class HomeRecommendedItemCardWidget extends StatelessWidget {
     }
 
     return Image.asset(AppAssets.modernChair, fit: BoxFit.cover);
+  }
+}
+
+class AppNetworkImage extends StatelessWidget {
+  final List<String> images;
+  final double? width;
+  final double? height;
+  final BoxFit? fit;
+
+  const AppNetworkImage({
+    super.key,
+    required this.images,
+    this.width,
+    this.height,
+    this.fit,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (images.isEmpty) {
+      return AppImage(imageUrl: '');
+    }
+
+    return AppImage(
+      imageUrl: images.first,
+      width: width,
+      height: height,
+      fit: fit,
+    );
   }
 }
