@@ -11,13 +11,13 @@ class DealsCompactItemTile extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.price,
-    required this.onTap,
+    this.onTap,
   });
 
   final String title;
   final String subtitle;
   final String price;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

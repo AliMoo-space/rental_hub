@@ -8,11 +8,11 @@ import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/utils/service_locator.dart';
+import 'package:rental_hub/feature/ai_chat/presentation/screens/ai_chat_screen.dart';
 import 'package:rental_hub/feature/community/presentation/screens/community_screen.dart';
 import 'package:rental_hub/feature/home/presentation/cubit/category_cubit.dart';
 import 'package:rental_hub/feature/home/presentation/cubit/product_cubit.dart';
 import 'package:rental_hub/feature/home/presentation/screens/home_screen.dart';
-import 'package:rental_hub/feature/deals/presentation/screens/deals_screen.dart';
 import 'package:rental_hub/feature/profile/presentation/screens/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -33,7 +33,8 @@ class _MainScreenState extends State<MainScreen> {
       ],
       child: const HomeScreen(),
     ),
-    const DealsScreen(),
+    AiChatScreen(),
+    // const DealsScreen(),
     const SizedBox.shrink(),
     CommunityScreen(),
     ProfileScreen(),

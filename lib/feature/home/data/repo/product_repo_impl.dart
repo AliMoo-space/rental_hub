@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:rental_hub/core/errors/error_handling.dart';
 import 'package:rental_hub/core/errors/failure.dart';
-import 'package:rental_hub/feature/home/data/datasource/product_remote_data_source_imp.dart';
+import 'package:rental_hub/feature/home/data/datasource/product_remote_data_source.dart';
 import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
 import 'package:rental_hub/feature/home/domain/repo/product_repo.dart';
 
 class ProductRepoImpl implements ProductRepo {
-  final ProductRemoteDataSourceImp remoteDataSource;
+  final ProductRemoteDataSource remoteDataSource;
 
   ProductRepoImpl(this.remoteDataSource);
 

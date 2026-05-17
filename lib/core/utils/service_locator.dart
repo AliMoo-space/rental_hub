@@ -17,11 +17,17 @@ import 'package:rental_hub/feature/localization/domain/repo/locale_repository.da
 import 'package:rental_hub/feature/localization/domain/usecases/get_saved_locale_use_case.dart';
 import 'package:rental_hub/feature/localization/domain/usecases/save_locale_use_case.dart';
 import 'package:rental_hub/feature/localization/presentation/cubit/locale_cubit.dart';
+import 'package:rental_hub/feature/product_details/data/datasource/product_details_remote_data_source.dart';
 import 'package:rental_hub/feature/product_details/data/repo/product_details_repo_impl.dart';
 import 'package:rental_hub/feature/product_details/domain/repo/product_details_repo.dart';
 import 'package:rental_hub/feature/product_details/domain/usecases/product_details_use_case.dart';
 import 'package:rental_hub/feature/product_details/presentation/cubit/product_details_cubit.dart';
 import 'package:rental_hub/feature/theme/presentation/cubit/theme_cubit.dart';
+import 'package:rental_hub/feature/ai_chat/data/datasource/ai_remote_data_source.dart';
+import 'package:rental_hub/feature/ai_chat/data/repo/ai_chat_repo_impl.dart';
+import 'package:rental_hub/feature/ai_chat/domain/repo/ai_chat_repo.dart';
+import 'package:rental_hub/feature/ai_chat/domain/usecases/send_message_use_case.dart';
+import 'package:rental_hub/feature/ai_chat/presentation/cubit/ai_chat_cubit.dart';
 import 'package:rental_hub/feature/auth/data/datasource/auth_remote_data_source.dart';
 import 'package:rental_hub/feature/auth/data/datasource/auth_remote_data_source_impl.dart';
 import 'package:rental_hub/feature/auth/data/datasource/login_remote_data_source.dart';
@@ -134,6 +140,15 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerLazySingleton(() => ProductDetailsUseCase(getIt()));
 
+  // ======================= AI CHAT ========================
+  getIt.registerLazySingleton<AiRemoteDataSource>(
+    () => AiRemoteDataSourceImpl(getIt()),
+  );
+
+  getIt.registerLazySingleton<AiChatRepo>(() => AiChatRepoImpl(getIt()));
+
+  getIt.registerLazySingleton(() => SendMessageUseCase(getIt()));
+
   // ===================== DATA SOURCES =======================
 
   getIt.registerLazySingleton<LoginRemoteDataSource>(
@@ -159,6 +174,10 @@ Future<void> setupServiceLocator() async {
     () => FavoriteRemoteDataSourceImp(getIt()),
   );
 
+  getIt.registerLazySingleton<ProductDetailsRemoteDataSource>(
+    () => ProductDetailsRemoteDataSourceImpl(apiConsumer: getIt()),
+  );
+
   // ========================= CUBITS =========================
 
   getIt.registerLazySingleton(() => ThemeCubit(getIt()));
@@ -173,6 +192,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<ProductDetailsCubit>(
     () => ProductDetailsCubit(getIt()),
   );
+  getIt.registerFactory(() => AiChatCubit(getIt()));
   getIt.registerFactoryParam<OtpCubit, String, void>(
     (email, _) => OtpCubit(
       email: email,

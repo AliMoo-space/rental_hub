@@ -51,7 +51,7 @@ class HomeRecommendedItemCardWidget extends StatelessWidget {
             SizedBox(
               width: 375.w,
               height: 234.h,
-              child: AppNetworkImage(images: product?.images ?? ['']),
+              child: AppNetworkImage(images: product?.images ?? const []),
             ),
             Positioned.fill(
               child: DecoratedBox(
@@ -181,8 +181,20 @@ class HomeRecommendedItemCardWidget extends StatelessWidget {
                       bordersRadius: 20.r,
                       onPress:
                           onTap ??
-                          () =>
-                              context.pushNamed(AppRoutes.productDetailsScreen),
+                          () {
+                            final productId = product?.id;
+                            if (productId == null) {
+                              return;
+                            }
+
+                            context.pushNamed(
+                              AppRoutes.productDetailsScreen,
+                              pathParameters:
+                                  AppRoutes.productDetailsPathParameters(
+                                productId,
+                              ),
+                            );
+                          },
                     ),
                   ],
                 ),
@@ -191,53 +203,6 @@ class HomeRecommendedItemCardWidget extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildProductImage() {
-    final imagePath = product?.images.isNotEmpty == true
-        ? product!.images.first
-        : '';
-
-    if (imagePath.startsWith('http')) {
-      return Image.network(
-        imagePath,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Image.asset(AppAssets.modernChair, fit: BoxFit.cover);
-        },
-      );
-    }
-
-    return Image.asset(AppAssets.modernChair, fit: BoxFit.cover);
-  }
-}
-
-class AppNetworkImage extends StatelessWidget {
-  final List<String> images;
-  final double? width;
-  final double? height;
-  final BoxFit? fit;
-
-  const AppNetworkImage({
-    super.key,
-    required this.images,
-    this.width,
-    this.height,
-    this.fit,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (images.isEmpty) {
-      return AppImage(imageUrl: '');
-    }
-
-    return AppImage(
-      imageUrl: images.first,
-      width: width,
-      height: height,
-      fit: fit,
     );
   }
 }

@@ -14,7 +14,16 @@ class AppRoutes {
   static const String walletScreen = '/walletScreen';
   static const String addListingScreen = '/addListingScreen';
   static const String productDetailsScreen = '/productDetailsScreen';
+  static const String productDetailsPath = '/product-details';
+
+  static String productDetailsLocation(int id) => '$productDetailsPath/$id';
+
+  static Map<String, String> productDetailsPathParameters(int id) => {
+    'id': id.toString(),
+  };
+
   static const String bookingFlowScreen = '/bookingFlowScreen';
   static const String editProfileScreen = '/editProfileScreen';
   static const String settingsScreen = '/settingsScreen';
+  static const String aiChatScreen = '/AiChatScreen';
 }

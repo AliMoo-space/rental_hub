@@ -2,40 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
+import 'package:rental_hub/core/widgets/app_image.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
+import 'package:rental_hub/feature/product_details/domain/entities/product_details_entity.dart';
 
-/// Product header with image, location badge, and rating
 class ProductHeaderWidget extends StatelessWidget {
-  final String imageUrl;
-  final String location;
-  final double rating;
-  final int reviewCount;
+  final ProductDetailsEntity productDetails;
 
-  const ProductHeaderWidget({
-    super.key,
-    required this.imageUrl,
-    required this.location,
-    required this.rating,
-    required this.reviewCount,
-  });
+  const ProductHeaderWidget({super.key, required this.productDetails});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Product Image
         Container(
           width: double.infinity,
           height: 300.h,
           decoration: BoxDecoration(color: AppColors.surfaceColor),
-          child: Image.network(
-            imageUrl,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => Container(
-              color: AppColors.surfaceVariantColor,
-              child: const Icon(Icons.image_not_supported),
-            ),
-          ),
+          child: AppNetworkImage(images: productDetails.images),
         ),
         // Location Badge
         Positioned(
@@ -57,7 +41,9 @@ class ProductHeaderWidget extends StatelessWidget {
                 ),
                 horizontalSpacing(4),
                 Text(
-                  location,
+                  (productDetails.locationArea.isEmpty)
+                      ? 'Unknown location'
+                      : productDetails.locationArea,
                   style: AppStyles.bodySmall.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -86,14 +72,14 @@ class ProductHeaderWidget extends StatelessWidget {
                 ),
                 horizontalSpacing(4),
                 Text(
-                  '$rating',
+                  '${productDetails.averageRating}',
                   style: AppStyles.bodySmall.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 horizontalSpacing(4),
                 Text(
-                  '($reviewCount)',
+                  '(${productDetails.totalReviews})',
                   style: AppStyles.bodySmall.copyWith(
                     color: AppColors.textSecondaryColor,
                   ),

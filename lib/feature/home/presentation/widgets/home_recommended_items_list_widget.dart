@@ -44,8 +44,12 @@ class HomeRecommendedItemsListWidget extends StatelessWidget {
                 return HomeRecommendedItemCardWidget(
                   rating: rating,
                   product: item,
-                  onTap: () =>
-                      context.pushNamed(AppRoutes.productDetailsScreen),
+                  onTap: () => context.pushNamed(
+                    AppRoutes.productDetailsScreen,
+                    pathParameters: AppRoutes.productDetailsPathParameters(
+                      item.id,
+                    ),
+                  ),
                   onRatingChanged: (rating) =>
                       onRatingChanged(item, index, rating),
                   onFavoritePressed: onFavoritePressed == null
@@ -74,10 +78,18 @@ class HomeRecommendedItemsListWidget extends StatelessWidget {
       itemBuilder: (context, index) {
         final product = products?[index];
         final rating = index < ratings.length ? ratings[index] : 3.5;
+        final detailsTap = product == null
+            ? null
+            : () => context.pushNamed(
+                AppRoutes.productDetailsScreen,
+                pathParameters: AppRoutes.productDetailsPathParameters(
+                  product.id,
+                ),
+              );
         return HomeRecommendedItemCardWidget(
           rating: rating,
           product: product,
-          onTap: () => context.pushNamed(AppRoutes.productDetailsScreen),
+          onTap: detailsTap,
           onRatingChanged: (rating) => onRatingChanged(product, index, rating),
           onFavoritePressed: product == null || onFavoritePressed == null
               ? null

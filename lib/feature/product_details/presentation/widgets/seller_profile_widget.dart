@@ -2,24 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
+import 'package:rental_hub/core/widgets/app_image.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
+import 'package:rental_hub/feature/product_details/domain/entities/product_details_entity.dart';
 
-/// Seller/Owner profile section
 class SellerProfileWidget extends StatelessWidget {
-  final String sellerName;
-  final double sellerRating;
-  final String sellerLocation;
-  final String sellerImage;
-  final bool isVerified;
+  final ProductDetailsEntity productDetails;
 
-  const SellerProfileWidget({
-    super.key,
-    required this.sellerName,
-    required this.sellerRating,
-    required this.sellerLocation,
-    required this.sellerImage,
-    this.isVerified = true,
-  });
+  const SellerProfileWidget({super.key, required this.productDetails});
 
   @override
   Widget build(BuildContext context) {
@@ -41,16 +31,7 @@ class SellerProfileWidget extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.borderColor, width: 2),
             ),
-            child: ClipOval(
-              child: Image.network(
-                sellerImage,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  color: AppColors.surfaceVariantColor,
-                  child: const Icon(Icons.person),
-                ),
-              ),
-            ),
+            child: ClipOval(child: AppNetworkImage(images: [])),
           ),
           horizontalSpacing(12),
           // Seller Info
@@ -61,19 +42,17 @@ class SellerProfileWidget extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      sellerName,
+                      productDetails.ownerName,
                       style: AppStyles.bodyLarge.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    if (isVerified) ...[
-                      horizontalSpacing(6),
-                      Icon(
-                        Icons.verified,
-                        color: AppColors.successColor,
-                        size: 16.w,
-                      ),
-                    ],
+                    horizontalSpacing(6),
+                    Icon(
+                      Icons.verified,
+                      color: AppColors.successColor,
+                      size: 16.w,
+                    ),
                   ],
                 ),
                 verticalSpacing(4),
@@ -86,7 +65,7 @@ class SellerProfileWidget extends StatelessWidget {
                     ),
                     horizontalSpacing(4),
                     Text(
-                      '$sellerRating',
+                      productDetails.averageRating.toStringAsFixed(1),
                       style: AppStyles.bodySmall.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -103,7 +82,7 @@ class SellerProfileWidget extends StatelessWidget {
                     ),
                     horizontalSpacing(4),
                     Text(
-                      sellerLocation,
+                      productDetails.locationArea,
                       style: AppStyles.bodySmall.copyWith(
                         color: AppColors.textSecondaryColor,
                       ),

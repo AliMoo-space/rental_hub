@@ -18,38 +18,24 @@ class LoginModel extends LoginEntity {
   factory LoginModel.fromJson(Map<String, dynamic> json) {
     final data = ResponseParser.extractDataPayload(json);
 
-    developer.log(
-      '📦 LoginModel.fromJson parsing\n'
-      'Raw data keys: ${data.keys.toList()}\n'
-      'Token field value type: ${data['token'].runtimeType}\n'
-      'Token field value: ${data['token']}',
-      name: 'Auth',
-    );
+    final tokenMap = data['token'] as Map<String, dynamic>;
 
-    final token = _extractTokenString(data['token'], fieldName: 'token');
+    final token = _extractTokenString(tokenMap['token'], fieldName: 'token');
     final refreshToken = _extractTokenString(
-      data['refreshToken'],
+      tokenMap['refreshToken'],
       fieldName: 'refreshToken',
-    );
-
-    developer.log(
-      '✅ LoginModel.fromJson extracted\n'
-      'Token (raw string): $token\n'
-      'RefreshToken (raw string): $refreshToken',
-      name: 'Auth',
     );
 
     return LoginModel(
       token: token,
       refreshToken: refreshToken,
-      userId: data['userId']?.toString() ?? '',
-      email: data['email']?.toString() ?? '',
-      fullName: data['fullName']?.toString() ?? '',
-      role: data['role']?.toString() ?? '',
-      expiration: _parseDateTime(data['expiration']),
+      userId: tokenMap['userId']?.toString() ?? '',
+      email: tokenMap['email']?.toString() ?? '',
+      fullName: tokenMap['fullName']?.toString() ?? '',
+      role: tokenMap['role']?.toString() ?? '',
+      expiration: _parseDateTime(tokenMap['expiration']),
     );
   }
-
   static String _extractTokenString(
     dynamic tokenField, {
     required String fieldName,

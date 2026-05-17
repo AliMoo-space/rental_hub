@@ -2,18 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
+import 'package:rental_hub/core/widgets/app_image.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 
 /// Reviews section showing customer reviews with ratings
 class ReviewsWidget extends StatelessWidget {
-  final List<Review> reviews;
   final VoidCallback? onViewAllReviews;
 
-  const ReviewsWidget({
-    super.key,
-    required this.reviews,
-    this.onViewAllReviews,
-  });
+  const ReviewsWidget({super.key, this.onViewAllReviews});
 
   @override
   Widget build(BuildContext context) {
@@ -31,46 +27,46 @@ class ReviewsWidget extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              if (reviews.isNotEmpty)
-                GestureDetector(
-                  onTap: onViewAllReviews,
-                  child: Text(
-                    'عرض الكل',
-                    style: AppStyles.bodySmall.copyWith(
-                      color: AppColors.primaryColor,
-                      fontWeight: FontWeight.w600,
-                    ),
+              // if (reviews.isNotEmpty)
+              GestureDetector(
+                onTap: onViewAllReviews,
+                child: Text(
+                  'عرض الكل',
+                  style: AppStyles.bodySmall.copyWith(
+                    color: AppColors.primaryColor,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
+              ),
             ],
           ),
           verticalSpacing(12),
-          if (reviews.isEmpty)
-            Container(
-              padding: EdgeInsets.all(24.w),
-              decoration: BoxDecoration(
-                color: AppColors.surfaceColor,
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Center(
-                child: Text(
-                  'لا توجد تعليقات بعد',
-                  style: AppStyles.bodyMedium.copyWith(
-                    color: AppColors.textMutedColor,
-                  ),
-                ),
-              ),
-            )
-          else
-            Column(
-              children: List.generate(
-                reviews.length > 2 ? 2 : reviews.length,
-                (index) => Padding(
-                  padding: EdgeInsets.only(bottom: 12.h),
-                  child: _ReviewCard(review: reviews[index]),
+          // if (reviews.isEmpty)
+          Container(
+            padding: EdgeInsets.all(24.w),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceColor,
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Center(
+              child: Text(
+                'لا توجد تعليقات بعد',
+                style: AppStyles.bodyMedium.copyWith(
+                  color: AppColors.textMutedColor,
                 ),
               ),
             ),
+          ),
+          // else
+          //   Column(
+          //     children: List.generate(
+          //       // reviews.length > 2 ? 2 : reviews.length,
+          //       (index) => Padding(
+          //         padding: EdgeInsets.only(bottom: 12.h),
+          //         child: _ReviewCard(),
+          //       ),
+          //     ),
+          //   ),
         ],
       ),
     );
@@ -78,9 +74,7 @@ class ReviewsWidget extends StatelessWidget {
 }
 
 class _ReviewCard extends StatelessWidget {
-  final Review review;
-
-  const _ReviewCard({required this.review});
+  const _ReviewCard();
 
   @override
   Widget build(BuildContext context) {
@@ -97,10 +91,13 @@ class _ReviewCard extends StatelessWidget {
           // Reviewer header
           Row(
             children: [
-              CircleAvatar(
-                radius: 20.w,
-                backgroundImage: NetworkImage(review.reviewerImage),
-                onBackgroundImageError: (exception, stackTrace) {},
+              ClipOval(
+                child: AppImage(
+                  imageUrl: 'user_avatar.png',
+                  height: 40.w,
+                  width: 40.w,
+                  fit: BoxFit.cover,
+                ),
               ),
               horizontalSpacing(12),
               Expanded(
@@ -108,27 +105,27 @@ class _ReviewCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      review.reviewerName,
+                      'review.reviewerName',
                       style: AppStyles.bodyMedium.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     verticalSpacing(2),
-                    Row(
-                      children: List.generate(
-                        5,
-                        (index) => Padding(
-                          padding: EdgeInsets.only(right: 2.w),
-                          child: Icon(
-                            index < review.rating.toInt()
-                                ? Icons.star_rounded
-                                : Icons.star_outline_rounded,
-                            color: AppColors.primaryColor,
-                            size: 12.w,
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Row(
+                    //   children: List.generate(
+                    //     5,
+                    //     (index) => Padding(
+                    //       padding: EdgeInsets.only(right: 2.w),
+                    //       child: Icon(
+                    //         index < review.rating.toInt()
+                    //             ? Icons.star_rounded
+                    //             : Icons.star_outline_rounded,
+                    //         color: AppColors.primaryColor,
+                    //         size: 12.w,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -137,7 +134,7 @@ class _ReviewCard extends StatelessWidget {
           verticalSpacing(12),
           // Review text
           Text(
-            review.reviewText,
+            'review.reviewText',
             style: AppStyles.bodySmall.copyWith(
               color: AppColors.textSecondaryColor,
               height: 1.5,
@@ -149,18 +146,4 @@ class _ReviewCard extends StatelessWidget {
       ),
     );
   }
-}
-
-class Review {
-  final String reviewerName;
-  final String reviewerImage;
-  final double rating;
-  final String reviewText;
-
-  Review({
-    required this.reviewerName,
-    required this.reviewerImage,
-    required this.rating,
-    required this.reviewText,
-  });
 }

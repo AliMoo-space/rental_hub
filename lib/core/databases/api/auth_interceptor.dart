@@ -33,7 +33,13 @@ class AuthInterceptor {
                 'Authorization header final value: ${_previewHeader(authorizationHeader)}',
                 name: 'Auth',
               );
-              handler.next(options);
+              handler.reject(
+                DioException(
+                  requestOptions: options,
+                  error: 'Invalid auth token',
+                  type: DioExceptionType.cancel,
+                ),
+              );
               return;
             }
 

@@ -3,19 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
+import 'package:rental_hub/feature/product_details/domain/entities/product_details_entity.dart';
 
-/// Product info section with title and pricing details
 class ProductInfoWidget extends StatelessWidget {
-  final String productName;
-  final double rentalPrice;
-  final String rentalPeriod;
+  final ProductDetailsEntity productDetails;
 
-  const ProductInfoWidget({
-    super.key,
-    required this.productName,
-    required this.rentalPrice,
-    this.rentalPeriod = 'per day',
-  });
+  const ProductInfoWidget({super.key, required this.productDetails});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +22,7 @@ class ProductInfoWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  productName,
+                  productDetails.name,
                   style: AppStyles.titleMedium.copyWith(
                     fontWeight: FontWeight.w700,
                     fontSize: 20.sp,
@@ -49,7 +42,7 @@ class ProductInfoWidget extends StatelessWidget {
           Row(
             children: [
               Text(
-                'ج.م ${rentalPrice.toStringAsFixed(0)}',
+                'ج.م ${productDetails.finalPricePerDay.toStringAsFixed(0)}',
                 style: AppStyles.displayMedium.copyWith(
                   color: AppColors.primaryColor,
                   fontSize: 28.sp,
@@ -61,7 +54,7 @@ class ProductInfoWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    rentalPeriod,
+                    'per day',
                     style: AppStyles.bodySmall.copyWith(
                       color: AppColors.textSecondaryColor,
                     ),
@@ -77,7 +70,7 @@ class ProductInfoWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4.r),
                     ),
                     child: Text(
-                      'مستعمل',
+                      productDetails.condition.toUpperCase(),
                       style: AppStyles.labelSmall.copyWith(
                         fontSize: 9.sp,
                         color: AppColors.secondaryColor,

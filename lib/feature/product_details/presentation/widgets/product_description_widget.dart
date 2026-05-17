@@ -3,16 +3,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
+import 'package:rental_hub/feature/product_details/domain/entities/product_details_entity.dart';
 
 /// Product description section with expand/collapse
 class ProductDescriptionWidget extends StatefulWidget {
-  final String description;
+  final ProductDetailsEntity productDetails;
   final int maxLines;
 
   const ProductDescriptionWidget({
     super.key,
-    required this.description,
     this.maxLines = 3,
+    required this.productDetails,
   });
 
   @override
@@ -36,7 +37,7 @@ class _ProductDescriptionWidgetState extends State<ProductDescriptionWidget> {
           ),
           verticalSpacing(12),
           Text(
-            widget.description,
+            ' ${widget.productDetails.description}',
             maxLines: _isExpanded ? null : widget.maxLines,
             overflow: _isExpanded
                 ? TextOverflow.visible
@@ -46,7 +47,8 @@ class _ProductDescriptionWidgetState extends State<ProductDescriptionWidget> {
               height: 1.6,
             ),
           ),
-          if (widget.description.split('\n').length > widget.maxLines) ...[
+          if (widget.productDetails.description.split('\n').length >
+              widget.maxLines) ...[
             verticalSpacing(8),
             GestureDetector(
               onTap: () => setState(() => _isExpanded = !_isExpanded),

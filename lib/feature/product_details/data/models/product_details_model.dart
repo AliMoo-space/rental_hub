@@ -34,38 +34,65 @@ class ProductDetailsModel extends ProductDetailsEntity {
   });
 
   factory ProductDetailsModel.fromJson(Map<String, dynamic> json) {
+    final imagesValue = json['images'] as List? ?? const [];
+
     return ProductDetailsModel(
-      id: json['id'] as int,
-      name: json['name'] as String,
-      description: json['description'] as String,
-      condition: json['condition'] as String,
-      status: json['status'] as String,
-      rejectionReason: json['rejectionReason'] as String?,
-      basePricePerDay: (json['basePricePerDay'] as num).toDouble(),
-      finalPricePerDay: (json['finalPricePerDay'] as num).toDouble(),
-      commissionPercentage: (json['commissionPercentage'] as num).toDouble(),
-      locationArea: json['locationArea'] as String,
-      productType: json['productType'] as String,
-      brand: json['brand'] as String,
-      rentalGuarantee: json['rentalGuarantee'] as String,
-      termsConditions: json['termsConditions'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'] as String)
-          : null,
-      averageRating: (json['averageRating'] as num).toDouble(),
-      totalReviews: json['totalReviews'] as int,
-      totalRentalCount: json['totalRentalCount'] as int,
-      totalPlatformProfit: (json['totalPlatformProfit'] as num).toDouble(),
-      ownerId: json['ownerId'] as String,
-      ownerName: json['ownerName'] as String,
-      ownerEmail: json['ownerEmail'] as String,
-      ownerPhone: json['ownerPhone'] as String,
-      categoryId: json['categoryId'] as int,
-      categoryName: json['categoryName'] as String,
-      subcategoryId: json['subcategoryId'] as int,
-      subcategoryName: json['subcategoryName'] as String,
-      images: List<String>.from(json['images']),
+      id: _parseInt(json['id']),
+      name: json['name']?.toString() ?? '',
+      description: json['description']?.toString() ?? '',
+      condition: json['condition']?.toString() ?? '',
+      status: json['status']?.toString() ?? '',
+      rejectionReason: json['rejectionReason']?.toString(),
+      basePricePerDay: _parseDouble(json['basePricePerDay']),
+      finalPricePerDay: _parseDouble(json['finalPricePerDay']),
+      commissionPercentage: _parseDouble(json['commissionPercentage']),
+      locationArea: json['locationArea']?.toString() ?? '',
+      productType: json['productType']?.toString() ?? '',
+      brand: json['brand']?.toString() ?? '',
+      rentalGuarantee: json['rentalGuarantee']?.toString() ?? '',
+      termsConditions: json['termsConditions']?.toString() ?? '',
+      createdAt: _parseDateTime(json['createdAt']),
+      updatedAt: _parseNullableDateTime(json['updatedAt']),
+      averageRating: _parseDouble(json['averageRating']),
+      totalReviews: _parseInt(json['totalReviews']),
+      totalRentalCount: _parseInt(json['totalRentalCount']),
+      totalPlatformProfit: _parseDouble(json['totalPlatformProfit']),
+      ownerId: json['ownerId']?.toString() ?? '',
+      ownerName: json['ownerName']?.toString() ?? '',
+      ownerEmail: json['ownerEmail']?.toString() ?? '',
+      ownerPhone: json['ownerPhone']?.toString() ?? '',
+      categoryId: _parseInt(json['categoryId']),
+      categoryName: json['categoryName']?.toString() ?? '',
+      subcategoryId: _parseInt(json['subcategoryId']),
+      subcategoryName: json['subcategoryName']?.toString() ?? '',
+      images: imagesValue.map((image) => image.toString()).toList(),
     );
+  }
+
+  static int _parseInt(dynamic value) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    return int.tryParse(value?.toString() ?? '') ?? 0;
+  }
+
+  static double _parseDouble(dynamic value) {
+    if (value is double) return value;
+    if (value is num) return value.toDouble();
+    return double.tryParse(value?.toString() ?? '') ?? 0;
+  }
+
+  static DateTime _parseDateTime(dynamic value) {
+    if (value is DateTime) return value;
+    final text = value?.toString();
+    if (text == null || text.isEmpty) {
+      return DateTime.fromMillisecondsSinceEpoch(0);
+    }
+    return DateTime.parse(text);
+  }
+
+  static DateTime? _parseNullableDateTime(dynamic value) {
+    final text = value?.toString();
+    if (text == null || text.isEmpty) return null;
+    return DateTime.parse(text);
   }
 }

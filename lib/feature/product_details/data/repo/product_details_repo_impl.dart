@@ -23,8 +23,18 @@ class ProductDetailsRepoImpl implements ProductDetailsRepo {
           errMessage: e.errorModel.firstErrorMessage,
         ),
       );
+    } on FormatException catch (e) {
+      return Left(
+        Failure(
+          errMessage: 'Invalid product details response format: ${e.message}',
+        ),
+      );
+    } on TypeError catch (e) {
+      return Left(
+        Failure(errMessage: 'Invalid product details data types: $e'),
+      );
     } catch (e) {
-      return Left(Failure(errMessage: 'Failed to fetch product details'));
+      return Left(Failure(errMessage: 'Failed to fetch product details: $e'));
     }
   }
 }
