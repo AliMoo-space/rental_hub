@@ -129,6 +129,10 @@
     "securityDeposit": "Security deposit",
     "productConditionReport": "Product condition report",
     "uploadPhotosNote": "Upload photos or video showing scratches or defects to protect your rights and those of the renter",
-    "addProduct": "Add product"
+    "addProduct": "Add product",
+      "addProduct": "إضافة المنتج",
+  "noSubscription": "لم تحصل على اشتراك بعد !",
+  "subscriptionPromo": "تابع احدث باقات الاشتراكات واحصل على اول شهر مجاناَ",
+  "subscribeNow": "اشترك الان !"
 
   }

@@ -27,7 +27,7 @@ class HomeSearchSectionWidget extends StatelessWidget {
             style: AppStyles.intro32semiBold.copyWith(fontSize: 20.sp),
           ),
         ),
-        HeightSpace(9),
+        HeightSpace(12),
         CustomTextField(
           width: 364.w,
           hintText: searchHint,

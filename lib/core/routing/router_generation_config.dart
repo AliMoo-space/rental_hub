@@ -27,6 +27,7 @@ import 'package:rental_hub/feature/profile/presentation/screens/edit_profile_scr
 import 'package:rental_hub/feature/profile/presentation/screens/settings_screen.dart';
 import 'package:rental_hub/feature/community/presentation/screens/community_screen.dart';
 import 'package:rental_hub/feature/splash/splash_view.dart';
+import 'package:rental_hub/feature/subscription/presentation/screens/subscription_screen.dart';
 import 'package:rental_hub/feature/wallet/presentation/screens/wallet_screen.dart';
 
 class RouterGenerationConfig {
@@ -153,6 +154,11 @@ class RouterGenerationConfig {
         name: AppRoutes.aiChatScreen,
         path: AppRoutes.aiChatScreen,
         builder: (context, state) => const AiChatScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.subscriptionScreen,
+        path: AppRoutes.subscriptionScreen,
+        builder: (context, state) => const SubscriptionScreen(),
       ),
     ],
   );

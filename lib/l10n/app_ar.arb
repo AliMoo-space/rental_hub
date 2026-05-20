@@ -129,7 +129,10 @@
   "securityDeposit": "سعر التأمين",
   "productConditionReport": "تقرير حالة المنتج",
   "uploadPhotosNote": "قم برفع صور او فيديو توضح الخدوش او العيوب لضمان حقك وحق المستأجر",
-  "addProduct": "إضافة المنتج"
+  "addProduct": "إضافة المنتج",
+  "noSubscription": "لم تحصل على اشتراك بعد !",
+  "subscriptionPromo": "تابع احدث باقات الاشتراكات واحصل على اول شهر مجاناَ",
+  "subscribeNow": "اشترك الان !"
 
 }
 

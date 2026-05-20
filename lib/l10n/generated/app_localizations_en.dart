@@ -381,5 +381,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'Upload photos or video showing scratches or defects to protect your rights and those of the renter';
 
   @override
-  String get addProduct => 'Add product';
+  String get addProduct => 'إضافة المنتج';
+
+  @override
+  String get noSubscription => 'لم تحصل على اشتراك بعد !';
+
+  @override
+  String get subscriptionPromo =>
+      'تابع احدث باقات الاشتراكات واحصل على اول شهر مجاناَ';
+
+  @override
+  String get subscribeNow => 'اشترك الان !';
 }

@@ -821,8 +821,26 @@ abstract class AppLocalizations {
   /// No description provided for @addProduct.
   ///
   /// In en, this message translates to:
-  /// **'Add product'**
+  /// **'إضافة المنتج'**
   String get addProduct;
+
+  /// No description provided for @noSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'لم تحصل على اشتراك بعد !'**
+  String get noSubscription;
+
+  /// No description provided for @subscriptionPromo.
+  ///
+  /// In en, this message translates to:
+  /// **'تابع احدث باقات الاشتراكات واحصل على اول شهر مجاناَ'**
+  String get subscriptionPromo;
+
+  /// No description provided for @subscribeNow.
+  ///
+  /// In en, this message translates to:
+  /// **'اشترك الان !'**
+  String get subscribeNow;
 }
 
 class _AppLocalizationsDelegate

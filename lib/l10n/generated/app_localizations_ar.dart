@@ -381,4 +381,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get addProduct => 'إضافة المنتج';
+
+  @override
+  String get noSubscription => 'لم تحصل على اشتراك بعد !';
+
+  @override
+  String get subscriptionPromo =>
+      'تابع احدث باقات الاشتراكات واحصل على اول شهر مجاناَ';
+
+  @override
+  String get subscribeNow => 'اشترك الان !';
 }

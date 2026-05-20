@@ -10,4 +10,5 @@ class EndPoints {
   static const String categoriesEndpoint = "/api/Categories";
   static const String productsEndpoint = "/api/Product";
   static const String favoritesEndpoint = "/api/Favorite";
+  static const String subscriptionEndpoint = "/api/Subscription";
 }

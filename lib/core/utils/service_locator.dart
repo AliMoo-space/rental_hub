@@ -17,6 +17,11 @@ import 'package:rental_hub/feature/localization/domain/repo/locale_repository.da
 import 'package:rental_hub/feature/localization/domain/usecases/get_saved_locale_use_case.dart';
 import 'package:rental_hub/feature/localization/domain/usecases/save_locale_use_case.dart';
 import 'package:rental_hub/feature/localization/presentation/cubit/locale_cubit.dart';
+import 'package:rental_hub/feature/subscription/data/datasource/subscription_remote_data_source.dart';
+import 'package:rental_hub/feature/subscription/data/repo/subscription_repo_impl.dart';
+import 'package:rental_hub/feature/subscription/domain/repo/subscription_repo.dart';
+import 'package:rental_hub/feature/subscription/domain/usecases/get_subscriptions_usecase.dart';
+import 'package:rental_hub/feature/subscription/presentation/cubit/subscription_cubit.dart';
 import 'package:rental_hub/feature/product_details/data/datasource/product_details_remote_data_source.dart';
 import 'package:rental_hub/feature/product_details/data/repo/product_details_repo_impl.dart';
 import 'package:rental_hub/feature/product_details/domain/repo/product_details_repo.dart';
@@ -118,6 +123,9 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<FavoriteRepo>(
     () => FavoriteRepoImp(favoriteRemoteDataSource: getIt()),
   );
+  getIt.registerLazySingleton<SubscriptionRepo>(
+    () => SubscriptionRepoImpl(remoteDataSource: getIt()),
+  );
   getIt.registerLazySingleton<ProductDetailsRepo>(
     () => ProductDetailsRepoImpl(getIt()),
   );
@@ -138,6 +146,7 @@ Future<void> setupServiceLocator() async {
     () => RemoveFavoriteUseCase(favoriteRepo: getIt()),
   );
 
+  getIt.registerLazySingleton(() => GetSubscriptionsUseCase(getIt()));
   getIt.registerLazySingleton(() => ProductDetailsUseCase(getIt()));
 
   // ======================= AI CHAT ========================
@@ -174,6 +183,10 @@ Future<void> setupServiceLocator() async {
     () => FavoriteRemoteDataSourceImp(getIt()),
   );
 
+  getIt.registerLazySingleton<SubscriptionRemoteDataSource>(
+    () => SubscriptionRemoteDataSourceImpl(getIt()),
+  );
+
   getIt.registerLazySingleton<ProductDetailsRemoteDataSource>(
     () => ProductDetailsRemoteDataSourceImpl(apiConsumer: getIt()),
   );
@@ -189,6 +202,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<FavoriteCubit>(
     () => FavoriteCubit(getFavorites: getIt()),
   );
+  getIt.registerFactory(() => SubscriptionCubit(getIt()));
   getIt.registerFactory<ProductDetailsCubit>(
     () => ProductDetailsCubit(getIt()),
   );

@@ -29,6 +29,7 @@ class AppAssets {
   static const String modernChair = '${_imagesPath}modernChair.png';
   static const String person = '${_imagesPath}person.png';
   static const String bot = '${_imagesPath}bot.png';
+  static const String transparent = '${_imagesPath}transparent.png';
 
   //lotties
   static const String loadingLottie = '${_lottiePath}loading.json';
