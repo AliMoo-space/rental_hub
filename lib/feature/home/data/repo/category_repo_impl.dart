@@ -26,4 +26,25 @@ class CategoryRepoImpl implements CategoryRepo {
       return Left(Failure(errMessage: 'فشل تحميل التصنيفات: ${e.toString()}'));
     }
   }
+
+  @override
+  Future<Either<Failure, List<SubCategoryEntity>>> getSubcategories(
+    int categoryId,
+  ) async {
+    try {
+      final subcategories = await remoteDataSource.getSubcategories(categoryId);
+      return Right(subcategories);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(
+          statusCode: e.errorModel.statusCode,
+          errMessage: e.errorModel.firstErrorMessage,
+        ),
+      );
+    } catch (e) {
+      return Left(
+        Failure(errMessage: 'فشل تحميل الأنواع الفرعية: ${e.toString()}'),
+      );
+    }
+  }
 }

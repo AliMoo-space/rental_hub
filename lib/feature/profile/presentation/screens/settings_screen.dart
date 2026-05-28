@@ -24,10 +24,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       backgroundColor: const Color(0xffF5F6FA),
       appBar: AppBar(
         title: Text(context.l10n.settings, style: AppStyles.titleMedium),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new),
-          onPressed: () => Navigator.pop(context),
-        ),
       ),
       body: SingleChildScrollView(
         child: Column(

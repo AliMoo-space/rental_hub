@@ -4,12 +4,12 @@ import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/app_image.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
-import 'package:rental_hub/feature/product_details/domain/entities/product_details_entity.dart';
+import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
 
 class ProductHeaderWidget extends StatelessWidget {
-  final ProductDetailsEntity productDetails;
+  final ProductEntity product;
 
-  const ProductHeaderWidget({super.key, required this.productDetails});
+  const ProductHeaderWidget({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class ProductHeaderWidget extends StatelessWidget {
           width: double.infinity,
           height: 300.h,
           decoration: BoxDecoration(color: AppColors.surfaceColor),
-          child: AppNetworkImage(images: productDetails.images),
+          child: AppNetworkImage(images: product.images),
         ),
         // Location Badge
         Positioned(
@@ -41,9 +41,9 @@ class ProductHeaderWidget extends StatelessWidget {
                 ),
                 horizontalSpacing(4),
                 Text(
-                  (productDetails.locationArea.isEmpty)
+                  (product.locationArea.isEmpty)
                       ? 'Unknown location'
-                      : productDetails.locationArea,
+                      : product.locationArea,
                   style: AppStyles.bodySmall.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -72,14 +72,14 @@ class ProductHeaderWidget extends StatelessWidget {
                 ),
                 horizontalSpacing(4),
                 Text(
-                  '${productDetails.averageRating}',
+                  '${product.averageRating}',
                   style: AppStyles.bodySmall.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 horizontalSpacing(4),
                 Text(
-                  '(${productDetails.totalReviews})',
+                  '(${product.totalReviews})',
                   style: AppStyles.bodySmall.copyWith(
                     color: AppColors.textSecondaryColor,
                   ),

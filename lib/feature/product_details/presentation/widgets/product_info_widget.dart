@@ -3,12 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
-import 'package:rental_hub/feature/product_details/domain/entities/product_details_entity.dart';
+import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
 
 class ProductInfoWidget extends StatelessWidget {
-  final ProductDetailsEntity productDetails;
+  final ProductEntity product;
 
-  const ProductInfoWidget({super.key, required this.productDetails});
+  const ProductInfoWidget({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class ProductInfoWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  productDetails.name,
+                  product.name,
                   style: AppStyles.titleMedium.copyWith(
                     fontWeight: FontWeight.w700,
                     fontSize: 20.sp,
@@ -42,7 +42,7 @@ class ProductInfoWidget extends StatelessWidget {
           Row(
             children: [
               Text(
-                'ج.م ${productDetails.finalPricePerDay.toStringAsFixed(0)}',
+                'ج.م ${product.finalPricePerDay.toStringAsFixed(0)}',
                 style: AppStyles.displayMedium.copyWith(
                   color: AppColors.primaryColor,
                   fontSize: 28.sp,
@@ -70,7 +70,7 @@ class ProductInfoWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4.r),
                     ),
                     child: Text(
-                      productDetails.condition.toUpperCase(),
+                      product.condition.toUpperCase(),
                       style: AppStyles.labelSmall.copyWith(
                         fontSize: 9.sp,
                         color: AppColors.secondaryColor,

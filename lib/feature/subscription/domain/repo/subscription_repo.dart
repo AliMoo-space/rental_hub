@@ -4,4 +4,9 @@ import 'package:rental_hub/feature/subscription/domain/entities/subscription_ent
 
 abstract class SubscriptionRepo {
   Future<Either<Failure, SubscriptionResponseEntity>> getSubscriptions();
+
+  Future<Either<Failure, SubscriptionActionResultEntity>> subscribe({
+    required int subscriptionId,
+  });
+  Future<Either<Failure, SubscriptionActiveEntity>> getActiveSubscription();
 }

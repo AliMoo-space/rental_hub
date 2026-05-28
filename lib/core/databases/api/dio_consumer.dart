@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:rental_hub/core/databases/api/auth_interceptor.dart';
 import 'package:rental_hub/core/databases/api/api_consumer.dart';
 import 'package:rental_hub/core/databases/api/end_points.dart';
@@ -25,26 +24,17 @@ class DioConsumer extends ApiConsumer {
 
     dio.interceptors.add(authInterceptor.dioInterceptor);
 
-    dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) {
-          log('🌐 ${options.method} ${options.uri}');
-          handler.next(options);
-        },
-        onResponse: (response, handler) {
-          log('✅ ${response.statusCode} ${response.requestOptions.path}');
-          handler.next(response);
-        },
-        onError: (error, handler) {
-          log('❌ ${error.response?.statusCode} ${error.message}');
-          handler.next(error);
-        },
-      ),
-    );
-
     if (!kReleaseMode) {
       dio.interceptors.add(
-        LogInterceptor(requestBody: true, responseBody: true, error: true),
+        PrettyDioLogger(
+          requestHeader: true,
+          requestBody: true,
+          responseHeader: false,
+          responseBody: true,
+          error: true,
+          compact: true,
+          maxWidth: 120,
+        ),
       );
     }
   }
@@ -55,6 +45,7 @@ class DioConsumer extends ApiConsumer {
     dynamic data,
     Map<String, dynamic>? queryParameters,
     bool isFormData = false,
+    bool skipAuth = false,
   }) async {
     try {
       final body = _prepareBody(data, isFormData);
@@ -63,8 +54,10 @@ class DioConsumer extends ApiConsumer {
         path,
         data: body,
         queryParameters: queryParameters,
+        options: Options(extra: {'skipAuth': skipAuth}),
       );
 
+      _throwIfErrorStatus(response);
       return response;
     } on DioException catch (e) {
       handleDioException(e);
@@ -77,10 +70,16 @@ class DioConsumer extends ApiConsumer {
     String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
+    bool skipAuth = false,
   }) async {
     try {
-      final response = await dio.get(path, queryParameters: queryParameters);
+      final response = await dio.get(
+        path,
+        queryParameters: queryParameters,
+        options: Options(extra: {'skipAuth': skipAuth}),
+      );
 
+      _throwIfErrorStatus(response);
       return response;
     } on DioException catch (e) {
       handleDioException(e);
@@ -93,14 +92,17 @@ class DioConsumer extends ApiConsumer {
     String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
+    bool skipAuth = false,
   }) async {
     try {
       final response = await dio.delete(
         path,
         data: data,
         queryParameters: queryParameters,
+        options: Options(extra: {'skipAuth': skipAuth}),
       );
 
+      _throwIfErrorStatus(response);
       return response;
     } on DioException catch (e) {
       handleDioException(e);
@@ -114,6 +116,7 @@ class DioConsumer extends ApiConsumer {
     dynamic data,
     Map<String, dynamic>? queryParameters,
     bool isFormData = false,
+    bool skipAuth = false,
   }) async {
     try {
       final body = _prepareBody(data, isFormData);
@@ -122,8 +125,10 @@ class DioConsumer extends ApiConsumer {
         path,
         data: body,
         queryParameters: queryParameters,
+        options: Options(extra: {'skipAuth': skipAuth}),
       );
 
+      _throwIfErrorStatus(response);
       return response;
     } on DioException catch (e) {
       handleDioException(e);
@@ -136,14 +141,17 @@ class DioConsumer extends ApiConsumer {
     String path, {
     dynamic data,
     Map<String, dynamic>? queryParameters,
+    bool skipAuth = false,
   }) async {
     try {
       final response = await dio.put(
         path,
         data: data,
         queryParameters: queryParameters,
+        options: Options(extra: {'skipAuth': skipAuth}),
       );
 
+      _throwIfErrorStatus(response);
       return response;
     } on DioException catch (e) {
       handleDioException(e);
@@ -162,5 +170,17 @@ class DioConsumer extends ApiConsumer {
     }
 
     return data;
+  }
+
+  void _throwIfErrorStatus(Response<dynamic> response) {
+    final statusCode = response.statusCode ?? 0;
+    if (statusCode >= 400) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        type: DioExceptionType.badResponse,
+        message: 'Request failed with status code $statusCode',
+      );
+    }
   }
 }

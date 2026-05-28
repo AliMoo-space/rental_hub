@@ -17,25 +17,51 @@ class LoginModel extends LoginEntity {
 
   factory LoginModel.fromJson(Map<String, dynamic> json) {
     final data = ResponseParser.extractDataPayload(json);
+    final tokenPayload = _extractTokenPayload(data['token']);
 
-    final tokenMap = data['token'] as Map<String, dynamic>;
-
-    final token = _extractTokenString(tokenMap['token'], fieldName: 'token');
-    final refreshToken = _extractTokenString(
-      tokenMap['refreshToken'],
-      fieldName: 'refreshToken',
+    final token = _extractTokenString(
+      tokenPayload['token'] ??
+          tokenPayload['accessToken'] ??
+          tokenPayload['access_token'] ??
+          data['token'],
+      fieldName: 'token',
+    );
+    final refreshToken = _extractRefreshToken(
+      tokenPayload['refreshToken'] ??
+          tokenPayload['refresh_token'] ??
+          data['refreshToken'],
     );
 
     return LoginModel(
       token: token,
       refreshToken: refreshToken,
-      userId: tokenMap['userId']?.toString() ?? '',
-      email: tokenMap['email']?.toString() ?? '',
-      fullName: tokenMap['fullName']?.toString() ?? '',
-      role: tokenMap['role']?.toString() ?? '',
-      expiration: _parseDateTime(tokenMap['expiration']),
+      userId:
+          tokenPayload['userId']?.toString() ??
+          data['userId']?.toString() ??
+          '',
+      email:
+          tokenPayload['email']?.toString() ?? data['email']?.toString() ?? '',
+      fullName:
+          tokenPayload['fullName']?.toString() ??
+          data['fullName']?.toString() ??
+          '',
+      role: tokenPayload['role']?.toString() ?? data['role']?.toString() ?? '',
+      expiration: _parseDateTime(
+        tokenPayload['expiration'] ?? data['expiration'],
+      ),
     );
   }
+
+  static Map<String, dynamic> _extractTokenPayload(dynamic tokenResponse) {
+    if (tokenResponse is Map) {
+      return Map<String, dynamic>.from(
+        ResponseParser.extractDataPayload(tokenResponse),
+      );
+    }
+
+    return <String, dynamic>{};
+  }
+
   static String _extractTokenString(
     dynamic tokenField, {
     required String fieldName,
@@ -69,6 +95,22 @@ class LoginModel extends LoginEntity {
         'Reason: ${error.message}',
         name: 'Auth',
       );
+      return '';
+    }
+  }
+
+  static String _extractRefreshToken(dynamic tokenField) {
+    if (tokenField == null) {
+      return '';
+    }
+
+    if (tokenField is String && tokenField.trim().isEmpty) {
+      return '';
+    }
+
+    try {
+      return _extractTokenString(tokenField, fieldName: 'refreshToken');
+    } on FormatException {
       return '';
     }
   }

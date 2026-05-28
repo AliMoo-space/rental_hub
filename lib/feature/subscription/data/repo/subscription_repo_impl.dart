@@ -26,4 +26,43 @@ class SubscriptionRepoImpl implements SubscriptionRepo {
       return Left(Failure(errMessage: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, SubscriptionActionResultEntity>> subscribe({
+    required int subscriptionId,
+  }) async {
+    try {
+      final response = await remoteDataSource.subscribe(
+        subscriptionId: subscriptionId,
+      );
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(
+          statusCode: e.errorModel.statusCode,
+          errMessage: e.errorModel.firstErrorMessage,
+        ),
+      );
+    } catch (e) {
+      return Left(Failure(errMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, SubscriptionActiveEntity>>
+  getActiveSubscription() async {
+    try {
+      final response = await remoteDataSource.getActiveSubscription();
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(
+          statusCode: e.errorModel.statusCode,
+          errMessage: e.errorModel.firstErrorMessage,
+        ),
+      );
+    } catch (e) {
+      return Left(Failure(errMessage: e.toString()));
+    }
+  }
 }

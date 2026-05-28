@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
@@ -9,7 +10,6 @@ class PriceField extends StatelessWidget {
     required this.controller,
     required this.suffix,
     super.key,
-    required hintText,
   });
 
   final String label;
@@ -31,29 +31,33 @@ class PriceField extends StatelessWidget {
         SizedBox(height: 8.h),
         TextFormField(
           controller: controller,
-          keyboardType: TextInputType.number,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          textAlignVertical: TextAlignVertical.center,
+          textDirection: TextDirection.ltr,
+          showCursor: true,
           cursorColor: AppColors.primaryColor,
-          textAlign: TextAlign.start,
+          textAlign: TextAlign.center,
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+          ],
+          style: AppStyles.bodyMedium.copyWith(
+            color: AppColors.secondaryColor,
+            fontWeight: FontWeight.w600,
+            fontSize: 16.sp,
+          ),
           decoration: InputDecoration(
             isDense: true,
             filled: true,
             fillColor: const Color(0xffEEEFFF),
             contentPadding: EdgeInsetsDirectional.symmetric(
               horizontal: 12.w,
-              vertical: 14.h,
+              vertical: 20.h,
             ),
-            suffixIconConstraints: BoxConstraints(minWidth: 52.w, minHeight: 0),
-            suffixIcon: Container(
-              margin: EdgeInsetsDirectional.only(end: 8.w),
-              alignment: Alignment.center,
-              child: Text(
-                suffix,
-                style: AppStyles.bodySmall.copyWith(
-                  color: AppColors.primaryColor,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 12.sp,
-                ),
-              ),
+            suffixText: suffix,
+            suffixStyle: AppStyles.bodySmall.copyWith(
+              color: AppColors.primaryColor,
+              fontWeight: FontWeight.w700,
+              fontSize: 13.sp,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
@@ -65,7 +69,10 @@ class PriceField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: const BorderSide(color: AppColors.primaryColor),
+              borderSide: const BorderSide(
+                color: AppColors.primaryColor,
+                width: 2.0,
+              ),
             ),
           ),
         ),

@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/utils/service_locator.dart';
 import 'package:rental_hub/feature/add_listing/presentation/screens/add_listing_screen.dart';
-import 'package:rental_hub/feature/ai_chat/presentation/cubit/ai_chat_cubit.dart';
 import 'package:rental_hub/feature/auth/presentation/cubit/forgot_password_cubit.dart';
 import 'package:rental_hub/feature/auth/presentation/cubit/login_cubit.dart';
 import 'package:rental_hub/feature/auth/presentation/cubit/otp_cubit.dart';
@@ -19,16 +19,23 @@ import 'package:rental_hub/feature/ai_chat/presentation/screens/ai_chat_screen.d
 import 'package:rental_hub/feature/deals/presentation/screens/deals_screen.dart';
 import 'package:rental_hub/feature/favorites/presentation/cubit/favorite_cubit.dart';
 import 'package:rental_hub/feature/favorites/presentation/screens/favorites_screen.dart';
+import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
 import 'package:rental_hub/feature/intro/intro_screen.dart';
 import 'package:rental_hub/feature/main/main_screen.dart';
-import 'package:rental_hub/feature/product_details/presentation/cubit/product_details_cubit.dart';
 import 'package:rental_hub/feature/product_details/presentation/screens/product_details_screen.dart';
-import 'package:rental_hub/feature/profile/presentation/screens/edit_profile_screen.dart';
+import 'package:rental_hub/feature/product_reviews/presentation/cubit/product_review_cubit.dart';
+import 'package:rental_hub/feature/product_reviews/presentation/screens/product_reviews_screen.dart';
 import 'package:rental_hub/feature/profile/presentation/screens/settings_screen.dart';
 import 'package:rental_hub/feature/community/presentation/screens/community_screen.dart';
+import 'package:rental_hub/feature/profile/presentation/screens/user_profile_screen.dart';
 import 'package:rental_hub/feature/splash/splash_view.dart';
+import 'package:rental_hub/feature/subscription/presentation/cubit/subscription_cubit.dart';
 import 'package:rental_hub/feature/subscription/presentation/screens/subscription_screen.dart';
+import 'package:rental_hub/feature/wallet/presentation/cubit/wallet_cubit.dart';
 import 'package:rental_hub/feature/wallet/presentation/screens/wallet_screen.dart';
+import 'package:rental_hub/feature/profile/presentation/cubit/user_profile_cubit.dart';
+import 'package:rental_hub/feature/search/presentation/screens/search_screen.dart';
+import 'package:rental_hub/feature/search/presentation/cubit/search_cubit.dart';
 
 class RouterGenerationConfig {
   static GoRouter goRouter = GoRouter(
@@ -91,18 +98,38 @@ class RouterGenerationConfig {
       GoRoute(
         name: AppRoutes.mainScreen,
         path: AppRoutes.mainScreen,
-        builder: (context, state) => const MainScreen(),
+        builder: (context, state) => BlocProvider.value(
+          value: getIt<UserProfileCubit>()..loadProfile(),
+          child: const MainScreen(),
+        ),
       ),
       GoRoute(
         name: AppRoutes.productDetailsScreen,
         path: '${AppRoutes.productDetailsPath}/:id',
         builder: (context, state) {
+          final product = state.extra is ProductEntity
+              ? state.extra as ProductEntity
+              : null;
+
+          if (product == null) {
+            return const Scaffold(
+              body: Center(child: Text('Missing product data')),
+            );
+          }
+
+          return ProductDetailsScreen(product: product);
+        },
+      ),
+      GoRoute(
+        name: AppRoutes.productReviewsScreen,
+        path: '${AppRoutes.productReviewsPath}/:productId',
+        builder: (context, state) {
+          final productId =
+              int.tryParse(state.pathParameters['productId'] ?? '') ?? 0;
           return BlocProvider(
-            create: (context) {
-              final id = int.parse(state.pathParameters['id'] ?? '');
-              return getIt<ProductDetailsCubit>()..fetchProductDetails(id);
-            },
-            child: const ProductDetailsScreen(),
+            create: (context) =>
+                getIt<ProductReviewCubit>()..loadProductReviews(productId),
+            child: ProductReviewsScreen(productId: productId),
           );
         },
       ),
@@ -112,9 +139,12 @@ class RouterGenerationConfig {
         builder: (context, state) => const BookingFlowScreen(),
       ),
       GoRoute(
-        name: AppRoutes.editProfileScreen,
-        path: AppRoutes.editProfileScreen,
-        builder: (context, state) => const EditProfileScreen(),
+        name: AppRoutes.userProfileScreen,
+        path: AppRoutes.userProfileScreen,
+        builder: (context, state) => BlocProvider.value(
+          value: getIt<UserProfileCubit>()..loadProfile(),
+          child: const UserProfileScreen(),
+        ),
       ),
       GoRoute(
         name: AppRoutes.settingsScreen,
@@ -143,7 +173,10 @@ class RouterGenerationConfig {
       GoRoute(
         name: AppRoutes.walletScreen,
         path: AppRoutes.walletScreen,
-        builder: (context, state) => const WalletScreen(),
+        builder: (context, state) => BlocProvider(
+          create: (context) => getIt<WalletCubit>(),
+          child: const WalletScreen(),
+        ),
       ),
       GoRoute(
         name: AppRoutes.addListingScreen,
@@ -156,9 +189,25 @@ class RouterGenerationConfig {
         builder: (context, state) => const AiChatScreen(),
       ),
       GoRoute(
+        name: AppRoutes.searchScreen,
+        path: AppRoutes.searchScreen,
+        builder: (context, state) {
+          final initialQuery = (state.extra is String)
+              ? state.extra as String
+              : null;
+          return BlocProvider(
+            create: (context) => getIt<SearchCubit>(),
+            child: SearchScreen(initialQuery: initialQuery),
+          );
+        },
+      ),
+      GoRoute(
         name: AppRoutes.subscriptionScreen,
         path: AppRoutes.subscriptionScreen,
-        builder: (context, state) => const SubscriptionScreen(),
+        builder: (context, state) => BlocProvider(
+          create: (context) => getIt<SubscriptionCubit>()..fetchSubscriptions(),
+          child: const SubscriptionScreen(),
+        ),
       ),
     ],
   );

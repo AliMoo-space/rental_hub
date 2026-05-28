@@ -57,3 +57,25 @@ class SubscriptionResponseModel extends SubscriptionResponseEntity {
     );
   }
 }
+
+class SubscriptionActionResultModel extends SubscriptionActionResultEntity {
+  const SubscriptionActionResultModel({required super.message});
+
+  factory SubscriptionActionResultModel.fromJson(Map<String, dynamic> json) {
+    return SubscriptionActionResultModel(
+      message: json['message']?.toString() ?? 'Success',
+    );
+  }
+}
+
+class SubscriptionActiveModel extends SubscriptionActiveEntity {
+  const SubscriptionActiveModel({required super.hasActiveSubscription});
+
+  factory SubscriptionActiveModel.fromJson(Map<String, dynamic> json) {
+    return SubscriptionActiveModel(
+      hasActiveSubscription: (json['hasActiveSubscription'] is bool)
+          ? json['hasActiveSubscription'] as bool
+          : (json['hasActiveSubscription']?.toString().toLowerCase() == 'true'),
+    );
+  }
+}

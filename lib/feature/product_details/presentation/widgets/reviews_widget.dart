@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
-import 'package:rental_hub/core/widgets/app_image.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
+import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
 
-/// Reviews section showing customer reviews with ratings
+/// Compact reviews summary entry point for product details.
 class ReviewsWidget extends StatelessWidget {
+  final ProductEntity product;
   final VoidCallback? onViewAllReviews;
 
-  const ReviewsWidget({super.key, this.onViewAllReviews});
+  const ReviewsWidget({
+    super.key,
+    required this.product,
+    this.onViewAllReviews,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,106 +46,62 @@ class ReviewsWidget extends StatelessWidget {
             ],
           ),
           verticalSpacing(12),
-          // if (reviews.isEmpty)
           Container(
-            padding: EdgeInsets.all(24.w),
+            padding: EdgeInsets.all(20.w),
             decoration: BoxDecoration(
-              color: AppColors.surfaceColor,
-              borderRadius: BorderRadius.circular(12.r),
+              color: AppColors.whiteColor,
+              borderRadius: BorderRadius.circular(20.r),
+              border: Border.all(color: AppColors.borderColor),
             ),
-            child: Center(
-              child: Text(
-                'لا توجد تعليقات بعد',
-                style: AppStyles.bodyMedium.copyWith(
-                  color: AppColors.textMutedColor,
-                ),
-              ),
-            ),
-          ),
-          // else
-          //   Column(
-          //     children: List.generate(
-          //       // reviews.length > 2 ? 2 : reviews.length,
-          //       (index) => Padding(
-          //         padding: EdgeInsets.only(bottom: 12.h),
-          //         child: _ReviewCard(),
-          //       ),
-          //     ),
-          //   ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ReviewCard extends StatelessWidget {
-  const _ReviewCard();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: AppColors.borderColor, width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Reviewer header
-          Row(
-            children: [
-              ClipOval(
-                child: AppImage(
-                  imageUrl: 'user_avatar.png',
-                  height: 40.w,
-                  width: 40.w,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              horizontalSpacing(12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'review.reviewerName',
-                      style: AppStyles.bodyMedium.copyWith(
-                        fontWeight: FontWeight.w600,
+            child: Row(
+              children: [
+                Container(
+                  width: 72.w,
+                  height: 72.w,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor.withValues(alpha: 0.08),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(
+                      product.averageRating.toStringAsFixed(1),
+                      style: AppStyles.titleMedium.copyWith(
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
-                    verticalSpacing(2),
-                    // Row(
-                    //   children: List.generate(
-                    //     5,
-                    //     (index) => Padding(
-                    //       padding: EdgeInsets.only(right: 2.w),
-                    //       child: Icon(
-                    //         index < review.rating.toInt()
-                    //             ? Icons.star_rounded
-                    //             : Icons.star_outline_rounded,
-                    //         color: AppColors.primaryColor,
-                    //         size: 12.w,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          verticalSpacing(12),
-          // Review text
-          Text(
-            'review.reviewText',
-            style: AppStyles.bodySmall.copyWith(
-              color: AppColors.textSecondaryColor,
-              height: 1.5,
+                horizontalSpacing(16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        product.totalReviews == 0
+                            ? 'لا توجد تقييمات بعد'
+                            : 'متوسط ${product.averageRating.toStringAsFixed(1)} من 5',
+                        style: AppStyles.bodyLarge.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      verticalSpacing(4),
+                      Text(
+                        '${product.totalReviews} تقييم',
+                        style: AppStyles.bodyMedium.copyWith(
+                          color: AppColors.textSecondaryColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: AppColors.primaryColor,
+                  size: 16.w,
+                ),
+              ],
             ),
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

@@ -49,6 +49,7 @@ class HomeRecommendedItemsListWidget extends StatelessWidget {
                     pathParameters: AppRoutes.productDetailsPathParameters(
                       item.id,
                     ),
+                    extra: item,
                   ),
                   onRatingChanged: (rating) =>
                       onRatingChanged(item, index, rating),
@@ -85,6 +86,7 @@ class HomeRecommendedItemsListWidget extends StatelessWidget {
                 pathParameters: AppRoutes.productDetailsPathParameters(
                   product.id,
                 ),
+                extra: product,
               );
         return HomeRecommendedItemCardWidget(
           rating: rating,

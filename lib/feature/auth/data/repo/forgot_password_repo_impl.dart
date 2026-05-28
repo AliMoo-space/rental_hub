@@ -18,6 +18,9 @@ class ForgotPasswordRepoImpl implements ForgotPasswordRepo {
       final result = await forgotPasswordRemoteDataSource.forgotPassword(email);
       return Right(result);
     } on ServerException catch (e) {
+      if (isNetworkUnavailableException(e)) {
+        return Left(Failure(errMessage: friendlyNetworkErrorMessage()));
+      }
       return Left(
         Failure(
           errMessage: e.errorModel.firstErrorMessage,

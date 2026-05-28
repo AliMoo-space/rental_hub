@@ -35,8 +35,9 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    email = TextEditingController(text: 'mhmdfouad093@gmail.com');
-    password = TextEditingController(text: 'Fouad@2463187');
+
+    email = TextEditingController(text: 'alilomo836@gmail.com');
+    password = TextEditingController(text: '123@Ali');
   }
 
   @override
@@ -188,10 +189,10 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          bottomNavigationBar: Padding(
-            padding: EdgeInsets.only(bottom: 20.h),
-            child: TermsWidget(value: false, onChanged: (value) {}),
-          ),
+          // bottomNavigationBar: Padding(
+          //   padding: EdgeInsets.only(bottom: 20.h),
+          //   child: TermsWidget(value: false, onChanged: (value) {}),
+          // ),
         );
       },
     );

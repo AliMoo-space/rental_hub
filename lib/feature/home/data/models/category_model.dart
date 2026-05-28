@@ -23,11 +23,14 @@ class SubCategoryModel extends SubCategoryEntity {
     final id = json['id'];
     final name = json['name'];
     final createdAtStr = json['createdAt'] ?? json['created_at'];
+    final parsedCreatedAt =
+        DateTime.tryParse(createdAtStr?.toString() ?? '') ??
+        DateTime.fromMillisecondsSinceEpoch(0);
 
     return SubCategoryModel(
       id: id is int ? id : int.parse(id.toString()),
       name: name.toString(),
-      createdAt: DateTime.parse(createdAtStr.toString()),
+      createdAt: parsedCreatedAt,
     );
   }
 }

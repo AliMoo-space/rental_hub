@@ -17,6 +17,9 @@ class AuthRepositoryImpl implements AuthRepository {
       final entity = await authRemoteDataSource.signUp(params);
       return Right(entity);
     } on ServerException catch (e) {
+      if (isNetworkUnavailableException(e)) {
+        return Left(Failure(errMessage: friendlyNetworkErrorMessage()));
+      }
       return Left(
         Failure(
           statusCode: e.errorModel.statusCode,

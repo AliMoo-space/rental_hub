@@ -12,7 +12,7 @@ class BalanceItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300.w,
+      width: double.infinity,
       height: 50.h,
       decoration: BoxDecoration(
         color: AppColors.whiteColor,

@@ -23,8 +23,14 @@ class AppRoutes {
   };
 
   static const String bookingFlowScreen = '/bookingFlowScreen';
-  static const String editProfileScreen = '/editProfileScreen';
+  static const String userProfileScreen = '/userprofileScreen';
   static const String settingsScreen = '/settingsScreen';
   static const String aiChatScreen = '/AiChatScreen';
   static const String subscriptionScreen = '/subscriptionScreen';
+  static const String searchScreen = '/searchScreen';
+  static const String productReviewsScreen = '/productReviewsScreen';
+  static const String productReviewsPath = '/product-reviews';
+
+  static String productReviewsLocation(int productId) =>
+      '$productReviewsPath/$productId';
 }

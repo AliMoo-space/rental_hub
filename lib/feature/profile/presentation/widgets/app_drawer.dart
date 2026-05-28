@@ -11,6 +11,9 @@ import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/utils/service_locator.dart';
 import 'package:rental_hub/core/widgets/primary_outline_button_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
+import 'package:rental_hub/feature/profile/domain/entities/user_profile_entity.dart';
+import 'package:rental_hub/feature/profile/presentation/cubit/user_profile_cubit.dart';
+import 'package:rental_hub/feature/profile/presentation/cubit/user_profile_state.dart';
 import 'package:rental_hub/feature/theme/presentation/cubit/theme_cubit.dart';
 
 class DrawerItem {
@@ -31,7 +34,7 @@ class AppDrawer extends StatelessWidget {
         icon: AppAssets.uiUser,
         title: context.l10n.manageAccount,
         onTap: () {
-          context.pushNamed(AppRoutes.editProfileScreen);
+          context.pushNamed(AppRoutes.userProfileScreen);
         },
       ),
       DrawerItem(
@@ -58,7 +61,9 @@ class AppDrawer extends StatelessWidget {
       DrawerItem(
         icon: AppAssets.mdiRobot,
         title: context.l10n.robot,
-        onTap: () {},
+        onTap: () {
+          context.pushNamed(AppRoutes.aiChatScreen);
+        },
       ),
       DrawerItem(
         icon: AppAssets.uiChat,
@@ -78,7 +83,14 @@ class AppDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          const _DrawerHeader(),
+          BlocBuilder<UserProfileCubit, UserProfileState>(
+            builder: (context, state) {
+              return _DrawerHeader(
+                profile: state.userProfile ?? const UserProfileEntity(),
+                isLoading: state is UserProfileLoading,
+              );
+            },
+          ),
           ...items.map(
             (item) => ListTile(
               leading: SvgPicture.asset(item.icon, width: 30.w),
@@ -132,22 +144,57 @@ class AppDrawer extends StatelessWidget {
 }
 
 class _DrawerHeader extends StatelessWidget {
-  const _DrawerHeader();
+  final UserProfileEntity profile;
+  final bool isLoading;
+
+  const _DrawerHeader({required this.profile, required this.isLoading});
 
   @override
   Widget build(BuildContext context) {
     return DrawerHeader(
       child: Row(
         children: [
-          Image.asset(AppAssets.person, width: 95.w, height: 93.h),
+          CircleAvatar(
+            radius: 52.r,
+            backgroundColor: Colors.black87.withValues(alpha: 0.12),
+
+            child: ClipOval(
+              child: profile.profileImage.isNotEmpty
+                  ? Image.network(
+                      profile.profileImage,
+                      width: 95.w,
+                      height: 93.h,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Image.asset(
+                        AppAssets.person,
+                        width: 95.w,
+                        height: 93.h,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : Image.asset(
+                      AppAssets.person,
+                      width: 95.w,
+                      height: 93.h,
+                      fit: BoxFit.cover,
+                    ),
+            ),
+          ),
           SizedBox(width: 12.w),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("علي محمد", style: AppStyles.instrumentSans700Size24),
               Text(
-                "ali.mohammed@example.com",
+                isLoading && profile.fullName.isEmpty
+                    ? 'جارٍ تحميل الملف'
+                    : (profile.fullName.isNotEmpty
+                          ? profile.fullName
+                          : 'علي محمد'),
+                style: AppStyles.instrumentSans700Size24,
+              ),
+              Text(
+                profile.phoneNumber.isNotEmpty ? profile.phoneNumber : ' ',
                 style: AppStyles.instrumentSans500Size14,
               ),
             ],

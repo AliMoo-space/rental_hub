@@ -32,7 +32,13 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
       EndPoints.loginEndpoint,
       data: {'email': params.email, 'password': params.password},
       isFormData: false,
+      skipAuth: true,
     );
+
+    final redirectedResponse = await _retryRedirectIfNeeded(response, params);
+    if (redirectedResponse != null) {
+      return redirectedResponse;
+    }
 
     developer.log(
       '✅ LoginRemoteDataSourceImpl: Received login response\n'
@@ -77,7 +83,9 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
     // Save tokens
     developer.log('💾 LoginRemoteDataSourceImpl: Saving tokens', name: 'Auth');
     await tokenStorageHelper.saveAccessToken(loginModel.token);
-    await tokenStorageHelper.saveRefreshToken(loginModel.refreshToken);
+    if (loginModel.refreshToken.trim().isNotEmpty) {
+      await tokenStorageHelper.saveRefreshToken(loginModel.refreshToken);
+    }
 
     // Verify tokens were saved correctly
     final savedToken = await tokenStorageHelper.getAccessToken();
@@ -93,6 +101,65 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
         '✅ LoginRemoteDataSourceImpl: Token saved and verified correctly',
         name: 'Auth',
       );
+    }
+
+    return loginModel;
+  }
+
+  Future<LoginEntity?> _retryRedirectIfNeeded(
+    dynamic response,
+    LoginParams params,
+  ) async {
+    final statusCode = response.statusCode ?? 0;
+    if (statusCode != 307 && statusCode != 308) {
+      return null;
+    }
+
+    final location = response.headers.value('location')?.trim();
+    if (location == null || location.isEmpty) {
+      developer.log(
+        'LoginRemoteDataSourceImpl: Redirect response received without a Location header',
+        name: 'Auth',
+      );
+      return null;
+    }
+
+    developer.log(
+      ' LoginRemoteDataSourceImpl: Following redirect to $location',
+      name: 'Auth',
+    );
+
+    final redirectedResponse = await apiConsumer.post(
+      location,
+      data: {'email': params.email, 'password': params.password},
+      isFormData: false,
+      skipAuth: true,
+    );
+
+    developer.log(
+      '✅ LoginRemoteDataSourceImpl: Received redirected login response\n'
+      'Status: ${redirectedResponse.statusCode}\n'
+      'Response type: ${redirectedResponse.data.runtimeType}',
+      name: 'Auth',
+    );
+
+    final loginModel = LoginModel.fromJson(
+      _extractPayload(redirectedResponse.data),
+    );
+
+    if (loginModel.token.isEmpty) {
+      throw ServerException(
+        ErrorModel(
+          statusCode: 500,
+          message: 'Login token is empty',
+          errors: {},
+        ),
+      );
+    }
+
+    await tokenStorageHelper.saveAccessToken(loginModel.token);
+    if (loginModel.refreshToken.trim().isNotEmpty) {
+      await tokenStorageHelper.saveRefreshToken(loginModel.refreshToken);
     }
 
     return loginModel;

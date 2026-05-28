@@ -26,6 +26,14 @@ class TokenStorageHelper {
   }
 
   Future<void> saveRefreshToken(String token) async {
+    if (token.trim().isEmpty) {
+      developer.log(
+        'ℹ️ TokenStorageHelper: Skipping empty refresh token',
+        name: 'Auth',
+      );
+      return;
+    }
+
     final cleanToken = normalizeTokenValue(token, fieldName: 'refreshToken');
     developer.log(
       '💾 TokenStorageHelper: Saving refresh token\n'
@@ -116,6 +124,52 @@ class TokenStorageHelper {
     developer.log('🗑️ TokenStorageHelper: Clearing all tokens', name: 'Auth');
     await _cacheHelper.removeSecureData(key: accessTokenKey);
     await _cacheHelper.removeSecureData(key: refreshTokenKey);
+  }
+
+  Future<String?> getCurrentUserId() async {
+    final token = await getAccessToken();
+    if (token == null || token.trim().isEmpty) {
+      return null;
+    }
+
+    return extractUserIdFromJwt(token);
+  }
+
+  static String? extractUserIdFromJwt(String token) {
+    final parts = token.split('.');
+    if (parts.length < 2) {
+      return null;
+    }
+
+    try {
+      final payload = base64Url.normalize(parts[1]);
+      final decoded = utf8.decode(base64Url.decode(payload));
+      final payloadJson = jsonDecode(decoded);
+
+      if (payloadJson is Map) {
+        final map = Map<String, dynamic>.from(payloadJson);
+        for (final key in const [
+          'userId',
+          'sub',
+          'nameid',
+          'uid',
+          'id',
+          'user_id',
+        ]) {
+          final value = map[key];
+          if (value != null && value.toString().trim().isNotEmpty) {
+            return value.toString();
+          }
+        }
+      }
+    } catch (error) {
+      developer.log(
+        'TokenStorageHelper: failed to decode current user id: $error',
+        name: 'Auth',
+      );
+    }
+
+    return null;
   }
 
   /// Returns a raw token string from API/storage values.

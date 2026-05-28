@@ -16,6 +16,9 @@ class OtpRepositoryImpl implements OtpRepository {
       final result = await otpRemoteDataSource.verifyOtp(params);
       return Right(result);
     } on ServerException catch (e) {
+      if (isNetworkUnavailableException(e)) {
+        return Left(Failure(errMessage: friendlyNetworkErrorMessage()));
+      }
       return Left(
         Failure(
           errMessage: e.errorModel.firstErrorMessage,
@@ -33,6 +36,9 @@ class OtpRepositoryImpl implements OtpRepository {
       final result = await otpRemoteDataSource.resendOtp(email);
       return Right(result);
     } on ServerException catch (e) {
+      if (isNetworkUnavailableException(e)) {
+        return Left(Failure(errMessage: friendlyNetworkErrorMessage()));
+      }
       return Left(
         Failure(
           errMessage: e.errorModel.firstErrorMessage,

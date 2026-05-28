@@ -10,12 +10,14 @@ class SubscriptionCtaButton extends StatelessWidget {
     required this.label,
     required this.styleType,
     this.onPressed,
+    this.isBusy = false,
     super.key,
   });
 
   final String label;
   final SubscriptionButtonStyle styleType;
   final VoidCallback? onPressed;
+  final bool isBusy;
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +48,19 @@ class SubscriptionCtaButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(999.r),
           ),
         ),
-        child: Text(
-          label,
-          style: AppStyles.buttonLabel.copyWith(color: foregroundColor),
-        ),
+        child: isBusy
+            ? SizedBox(
+                width: 18.w,
+                height: 18.w,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(foregroundColor),
+                ),
+              )
+            : Text(
+                label,
+                style: AppStyles.buttonLabel.copyWith(color: foregroundColor),
+              ),
       ),
     );
   }

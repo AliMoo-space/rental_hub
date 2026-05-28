@@ -14,6 +14,7 @@ class SubscriptionFeatureCard extends StatelessWidget {
     required this.buttonLabel,
     required this.buttonStyle,
     this.onPressed,
+    this.isBusy = false,
     this.isHighlighted = false,
     super.key,
   });
@@ -23,6 +24,7 @@ class SubscriptionFeatureCard extends StatelessWidget {
   final String buttonLabel;
   final SubscriptionButtonStyle buttonStyle;
   final VoidCallback? onPressed;
+  final bool isBusy;
   final bool isHighlighted;
 
   String _formatPrice(double price) {
@@ -146,6 +148,7 @@ class SubscriptionFeatureCard extends StatelessWidget {
             label: buttonLabel,
             styleType: buttonStyle,
             onPressed: onPressed,
+            isBusy: isBusy,
           ),
         ],
       ),

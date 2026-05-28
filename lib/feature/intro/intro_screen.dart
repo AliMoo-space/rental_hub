@@ -192,10 +192,10 @@ class _IntroScreenState extends State<IntroScreen>
               ),
             ],
           ),
-          bottomNavigationBar: Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: TermsWidget(value: false, onChanged: (value) {}),
-          ),
+          // bottomNavigationBar: Padding(
+          //   padding: const EdgeInsets.only(bottom: 20),
+          //   child: TermsWidget(value: false, onChanged: (value) {}),
+          // ),
         );
       },
     );

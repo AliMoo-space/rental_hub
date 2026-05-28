@@ -4,12 +4,12 @@ import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/app_image.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
-import 'package:rental_hub/feature/product_details/domain/entities/product_details_entity.dart';
+import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
 
 class SellerProfileWidget extends StatelessWidget {
-  final ProductDetailsEntity productDetails;
+  final ProductEntity product;
 
-  const SellerProfileWidget({super.key, required this.productDetails});
+  const SellerProfileWidget({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class SellerProfileWidget extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      productDetails.ownerName,
+                      product.userFullName,
                       style: AppStyles.bodyLarge.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
@@ -65,7 +65,7 @@ class SellerProfileWidget extends StatelessWidget {
                     ),
                     horizontalSpacing(4),
                     Text(
-                      productDetails.averageRating.toStringAsFixed(1),
+                      product.averageRating.toStringAsFixed(1),
                       style: AppStyles.bodySmall.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -82,7 +82,7 @@ class SellerProfileWidget extends StatelessWidget {
                     ),
                     horizontalSpacing(4),
                     Text(
-                      productDetails.locationArea,
+                      product.locationArea,
                       style: AppStyles.bodySmall.copyWith(
                         color: AppColors.textSecondaryColor,
                       ),

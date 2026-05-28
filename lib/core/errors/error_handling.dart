@@ -61,6 +61,17 @@ class UnknownException extends ServerException {
   UnknownException(super.errorModel);
 }
 
+bool isNetworkUnavailableException(Object error) {
+  return error is ConnectionErrorException ||
+      error is ConnectionTimeoutException ||
+      error is ReceiveTimeoutException ||
+      error is UnknownException;
+}
+
+String friendlyNetworkErrorMessage() {
+  return 'الخدمة غير متاحة حالياً. تحقق من اتصال الإنترنت وحاول مرة أخرى.';
+}
+
 ErrorModel _buildErrorModel(DioException e) {
   final data = e.response?.data;
   if (data is Map<String, dynamic>) {

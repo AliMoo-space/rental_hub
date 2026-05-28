@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rental_hub/feature/profile/presentation/cubit/user_profile_cubit.dart';
+import 'package:rental_hub/feature/profile/presentation/cubit/user_profile_state.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rental_hub/core/routing/app_routes.dart';
@@ -31,9 +34,23 @@ class HomeHeaderWidget extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
             SizedBox(width: 16.w),
-            GestureDetector(
-              onTap: () => context.pushNamed(AppRoutes.editProfileScreen),
-              child: Image.asset(AppAssets.person, width: 36.w),
+            BlocBuilder<UserProfileCubit, UserProfileState>(
+              builder: (context, state) {
+                final imageUrl = state.userProfile?.profileImage ?? '';
+                return GestureDetector(
+                  onTap: () => context.pushNamed(AppRoutes.userProfileScreen),
+                  child: CircleAvatar(
+                    radius: 18.r,
+                    backgroundColor: AppColors.backgroundColor,
+                    backgroundImage: imageUrl.isNotEmpty
+                        ? NetworkImage(imageUrl)
+                        : null,
+                    child: imageUrl.isEmpty
+                        ? Image.asset(AppAssets.person, width: 36.w)
+                        : null,
+                  ),
+                );
+              },
             ),
             SizedBox(width: 16.w),
           ],

@@ -31,6 +31,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       EndPoints.registerEndpoint,
       data: await request.toMap(),
       isFormData: true,
+      skipAuth: true,
     );
 
     if (response.data is! Map<String, dynamic>) {

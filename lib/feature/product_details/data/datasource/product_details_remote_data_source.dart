@@ -14,9 +14,7 @@ class ProductDetailsRemoteDataSourceImpl
   ProductDetailsRemoteDataSourceImpl({required this.apiConsumer});
   @override
   Future<ProductDetailsModel> getProductDetails(int id) async {
-    final response = await apiConsumer.get(
-      '${EndPoints.productsEndpoint}/admin/$id/details',
-    );
+    final response = await apiConsumer.get('${EndPoints.productsEndpoint}/$id');
     final payLoad = ResponseParser.extractDataPayload(response.data);
     return ProductDetailsModel.fromJson(payLoad);
   }

@@ -17,6 +17,9 @@ class LoginRepoImpl implements LoginRepo {
       final loginEntity = await loginRemoteDataSource.login(params);
       return Right(loginEntity);
     } on ServerException catch (e) {
+      if (isNetworkUnavailableException(e)) {
+        return Left(Failure(errMessage: friendlyNetworkErrorMessage()));
+      }
       return Left(
         Failure(
           statusCode: e.errorModel.statusCode,

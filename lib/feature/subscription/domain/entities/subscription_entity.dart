@@ -37,3 +37,15 @@ class SubscriptionResponseEntity {
     required this.hasNext,
   });
 }
+
+class SubscriptionActionResultEntity {
+  final String message;
+
+  const SubscriptionActionResultEntity({required this.message});
+}
+
+class SubscriptionActiveEntity {
+  final bool hasActiveSubscription;
+
+  const SubscriptionActiveEntity({required this.hasActiveSubscription});
+}

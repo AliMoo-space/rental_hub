@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
@@ -10,12 +11,15 @@ class CustomTextField extends StatefulWidget {
   final Widget? suffixIcon;
   final double? width;
   final bool? isPassword;
+  final List<TextInputFormatter>? inputFormatters;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final Function(String)? onChanged;
   final TextInputType? keyboardType;
   final bool enabled;
   final bool readOnly;
+  final bool autofocus;
+  final void Function(String)? onFieldSubmitted;
 
   const CustomTextField({
     super.key,
@@ -23,6 +27,7 @@ class CustomTextField extends StatefulWidget {
     this.suffixIcon,
     this.width,
     this.isPassword,
+    this.inputFormatters,
     this.controller,
     this.validator,
     this.onChanged,
@@ -31,6 +36,8 @@ class CustomTextField extends StatefulWidget {
     this.keyboardType,
     this.enabled = true,
     this.readOnly = false,
+    this.autofocus = false,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -60,7 +67,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
             if (widget.title != null)
               Align(
                 alignment: AlignmentDirectional.bottomStart,
-
                 child: Text(widget.title!, style: AppStyles.labelSmall),
               ),
             if (widget.title != null) SizedBox(height: 6.h),
@@ -72,13 +78,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
               controller: widget.controller,
               validator: widget.validator,
               keyboardType: widget.keyboardType,
+              inputFormatters: widget.inputFormatters,
               enabled: widget.enabled,
               readOnly: widget.readOnly,
-              autofocus: false,
+              autofocus: widget.autofocus,
+              onFieldSubmitted: widget.onFieldSubmitted,
               obscureText: widget.isPassword == true ? _obscureText : false,
               cursorColor: AppColors.primaryColor,
               decoration: InputDecoration(
-                hintText: widget.hintText ?? "",
+                hintText: widget.hintText ?? '',
                 hintStyle: AppStyles.inputHint.copyWith(
                   color: isDarkMode
                       ? AppColors.textMutedColor

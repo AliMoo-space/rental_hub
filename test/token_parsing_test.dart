@@ -22,14 +22,16 @@ void main() {
 
     test('login model stores only raw token string', () {
       final loginModel = LoginModel.fromJson({
-        'token':
-            '{token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.payload.signature}',
-        'refreshToken': {'token': 'refresh-token-value'},
-        'userId': '1',
-        'email': 'user@example.com',
-        'fullName': 'Test User',
-        'role': 'User',
-        'expiration': '2026-05-14T00:00:00.000Z',
+        'token': {
+          'token':
+              '{token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.payload.signature}',
+          'refreshToken': {'token': 'refresh-token-value'},
+          'userId': '1',
+          'email': 'user@example.com',
+          'fullName': 'Test User',
+          'role': 'User',
+          'expiration': '2026-05-14T00:00:00.000Z',
+        },
       });
 
       expect(
@@ -37,6 +39,26 @@ void main() {
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.payload.signature',
       );
       expect(loginModel.refreshToken, 'refresh-token-value');
+    });
+
+    test('allows empty refresh token from nested token response', () {
+      final loginModel = LoginModel.fromJson({
+        'token': {
+          'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.payload.signature',
+          'refreshToken': '',
+          'userId': '1',
+          'email': 'user@example.com',
+          'fullName': 'Test User',
+          'role': 'User',
+          'expiration': '2026-05-14T00:00:00.000Z',
+        },
+      });
+
+      expect(
+        loginModel.token,
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.payload.signature',
+      );
+      expect(loginModel.refreshToken, isEmpty);
     });
 
     test('extracts jwt when login object fields are appended', () {

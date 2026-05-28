@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
-import 'package:rental_hub/core/utils/service_locator.dart';
 import 'package:rental_hub/feature/subscription/presentation/cubit/subscription_cubit.dart';
 import 'package:rental_hub/feature/subscription/presentation/widgets/subscription_cta_button.dart';
 import 'package:rental_hub/feature/subscription/presentation/widgets/subscription_feature_card.dart';
@@ -16,120 +15,184 @@ class SubscriptionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt<SubscriptionCubit>()..fetchSubscriptions(),
-      child: BlocConsumer<SubscriptionCubit, SubscriptionState>(
-        listener: (context, state) {
-          if (state is SubscriptionError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
+    return BlocConsumer<SubscriptionCubit, SubscriptionState>(
+      listener: (context, state) {
+        if (state is SubscriptionError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+          return;
+        }
+
+        if (state is SubscriptionLoaded) {
+          final messenger = ScaffoldMessenger.of(context);
+
+          if (state.actionMessage != null) {
+            messenger.showSnackBar(
+              SnackBar(
+                content: Text(state.actionMessage!),
+                backgroundColor: Colors.green.shade700,
+              ),
+            );
+            context.read<SubscriptionCubit>().clearFeedback();
+          } else if (state.errorMessage != null) {
+            messenger.showSnackBar(
+              SnackBar(content: Text(state.errorMessage!)),
+            );
+            context.read<SubscriptionCubit>().clearFeedback();
           }
-        },
-        builder: (context, state) {
-          final isLoading =
-              state is SubscriptionInitial || state is SubscriptionLoading;
-          final response = state is SubscriptionLoaded ? state.response : null;
-          final plans = response?.items ?? const [];
+        }
+      },
+      builder: (context, state) {
+        final isLoading =
+            state is SubscriptionInitial || state is SubscriptionLoading;
+        final response = state is SubscriptionLoaded ? state.response : null;
+        final isSubmitting = state is SubscriptionLoaded
+            ? state.isSubmitting
+            : false;
+        final plans = response?.items ?? const [];
 
-          return Scaffold(
-            backgroundColor: const Color(0xFFF8F7FF),
-            appBar: AppBar(
-              centerTitle: true,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              surfaceTintColor: Colors.transparent,
-              foregroundColor: AppColors.textPrimaryColor,
-              title: Text('خطط الاشتراك', style: AppStyles.titleMedium),
-            ),
-            body: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 250),
-              child: isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : state is SubscriptionError
-                  ? _SubscriptionErrorView(
-                      message: state.message,
-                      onRetry: () => context
-                          .read<SubscriptionCubit>()
-                          .fetchSubscriptions(),
-                    )
-                  : SingleChildScrollView(
-                      key: const ValueKey('subscription-content'),
-                      padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 24.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          SubscriptionHeaderCard(
-                            totalPlans: response?.totalCount ?? plans.length,
-                            pageNumber: response?.pageNumber ?? 1,
-                            totalPages: response?.totalPages ?? 1,
+        return Scaffold(
+          backgroundColor: const Color(0xFFF8F7FF),
+          appBar: AppBar(
+            centerTitle: true,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            surfaceTintColor: Colors.transparent,
+            foregroundColor: AppColors.textPrimaryColor,
+            title: Text('خطط الاشتراك', style: AppStyles.titleMedium),
+          ),
+          body: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 250),
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : state is SubscriptionError
+                ? _SubscriptionErrorView(
+                    message: state.message,
+                    onRetry: () =>
+                        context.read<SubscriptionCubit>().fetchSubscriptions(),
+                  )
+                : SingleChildScrollView(
+                    key: const ValueKey('subscription-content'),
+                    padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 24.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SubscriptionHeaderCard(
+                          totalPlans: response?.totalCount ?? plans.length,
+                          pageNumber: response?.pageNumber ?? 1,
+                          totalPages: response?.totalPages ?? 1,
+                        ),
+                        SizedBox(height: 16.h),
+                        Text(
+                          'اختر خطتك المثالية',
+                          textAlign: TextAlign.center,
+                          style: AppStyles.headlineMedium.copyWith(
+                            color: AppColors.primaryColor,
                           ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            'اختر خطتك المثالية',
-                            textAlign: TextAlign.center,
-                            style: AppStyles.headlineMedium.copyWith(
-                              color: AppColors.primaryColor,
-                            ),
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          'استمتع بتجربة تأجير مرنة تناسب احتياجاتك، مع مزايا واضحة وتدرج بسيط في الاشتراكات.',
+                          textAlign: TextAlign.center,
+                          style: AppStyles.bodySmall.copyWith(
+                            color: AppColors.textSecondaryColor,
+                            height: 1.6,
                           ),
-                          SizedBox(height: 8.h),
-                          Text(
-                            'استمتع بتجربة تأجير مرنة تناسب احتياجاتك، مع مزايا واضحة وتدرج بسيط في الاشتراكات.',
-                            textAlign: TextAlign.center,
-                            style: AppStyles.bodySmall.copyWith(
-                              color: AppColors.textSecondaryColor,
-                              height: 1.6,
-                            ),
-                          ),
-                          SizedBox(height: 18.h),
-                          if (plans.isEmpty)
-                            _SubscriptionEmptyView(
-                              onRefresh: () => context
-                                  .read<SubscriptionCubit>()
-                                  .fetchSubscriptions(),
-                            )
-                          else
-                            ...plans.asMap().entries.map((entry) {
-                              final index = entry.key;
-                              final plan = entry.value;
-                              final accentColors = [
-                                AppColors.primaryColor,
-                                const Color(0xff7B7AF8),
-                                const Color(0xffB4A7FF),
-                              ];
-                              final color =
-                                  accentColors[index % accentColors.length];
+                        ),
+                        SizedBox(height: 18.h),
+                        if (plans.isEmpty)
+                          _SubscriptionEmptyView(
+                            onRefresh: () => context
+                                .read<SubscriptionCubit>()
+                                .fetchSubscriptions(),
+                          )
+                        else
+                          ...plans.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final plan = entry.value;
+                            final accentColors = [
+                              AppColors.primaryColor,
+                              const Color(0xff7B7AF8),
+                              const Color(0xffB4A7FF),
+                            ];
+                            final color =
+                                accentColors[index % accentColors.length];
 
-                              return Padding(
-                                padding: EdgeInsets.only(bottom: 16.h),
-                                child: SubscriptionFeatureCard(
-                                  plan: plan,
-                                  accentColor: color,
-                                  buttonLabel: index == 0
-                                      ? 'ابدأ الآن'
-                                      : 'اشترك الآن',
-                                  buttonStyle: index == 0
-                                      ? SubscriptionButtonStyle.primary
-                                      : index == 1
-                                      ? SubscriptionButtonStyle.secondary
-                                      : SubscriptionButtonStyle.ghost,
-                                  isHighlighted: index == 0,
-                                  onPressed: () {},
-                                ),
-                              );
-                            }),
-                          SizedBox(height: 16.h),
-                          SubscriptionUpgradeCard(
-                            imageAsset: AppAssets.modernChair,
-                            totalPlans: response?.totalCount ?? plans.length,
-                          ),
-                        ],
-                      ),
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: 16.h),
+                              child: SubscriptionFeatureCard(
+                                plan: plan,
+                                accentColor: color,
+                                buttonLabel: index == 0
+                                    ? 'ابدأ الآن'
+                                    : 'اشترك الآن',
+                                buttonStyle: index == 0
+                                    ? SubscriptionButtonStyle.primary
+                                    : index == 1
+                                    ? SubscriptionButtonStyle.secondary
+                                    : SubscriptionButtonStyle.ghost,
+                                isHighlighted: index == 0,
+                                isBusy: isSubmitting,
+                                onPressed: isSubmitting
+                                    ? null
+                                    : () async {
+                                        final shouldSubscribe =
+                                            await showDialog<bool>(
+                                              context: context,
+                                              builder: (dialogContext) {
+                                                return AlertDialog(
+                                                  title: const Text(
+                                                    'تأكيد الاشتراك',
+                                                  ),
+                                                  content: Text(
+                                                    'هل تريد الاشتراك في باقة ${plan.name} مقابل ${plan.price.toStringAsFixed(0)} ج.م؟',
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.of(
+                                                            dialogContext,
+                                                          ).pop(false),
+                                                      child: const Text(
+                                                        'إلغاء',
+                                                      ),
+                                                    ),
+                                                    ElevatedButton(
+                                                      onPressed: () =>
+                                                          Navigator.of(
+                                                            dialogContext,
+                                                          ).pop(true),
+                                                      child: const Text(
+                                                        'اشتراك',
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+
+                                        if (shouldSubscribe == true &&
+                                            context.mounted) {
+                                          await context
+                                              .read<SubscriptionCubit>()
+                                              .subscribeToPlan(plan.id);
+                                        }
+                                      },
+                              ),
+                            );
+                          }),
+                        SizedBox(height: 16.h),
+                        SubscriptionUpgradeCard(
+                          imageAsset: AppAssets.modernChair,
+                          totalPlans: response?.totalCount ?? plans.length,
+                        ),
+                      ],
                     ),
-            ),
-          );
-        },
-      ),
+                  ),
+          ),
+        );
+      },
     );
   }
 }
