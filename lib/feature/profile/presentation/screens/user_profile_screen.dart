@@ -12,7 +12,7 @@ import 'package:rental_hub/core/widgets/primary_button_widget.dart';
 import 'package:rental_hub/feature/profile/domain/entities/user_profile_entity.dart';
 import 'package:rental_hub/feature/profile/presentation/cubit/user_profile_cubit.dart';
 import 'package:rental_hub/feature/profile/presentation/cubit/user_profile_state.dart';
-import 'package:rental_hub/feature/profile/presentation/widgets/app_drawer.dart';
+// Removed unused app_drawer import (not used in this screen)
 import 'package:rental_hub/feature/profile/presentation/widgets/change_password_form.dart';
 import 'package:rental_hub/feature/profile/presentation/widgets/location_form.dart';
 import 'package:rental_hub/feature/profile/presentation/widgets/personal_info_form.dart';
