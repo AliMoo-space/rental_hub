@@ -18,7 +18,7 @@ import 'package:rental_hub/feature/auth/domain/entities/login_params.dart';
 import 'package:rental_hub/feature/auth/presentation/cubit/login_cubit.dart';
 import 'package:rental_hub/feature/auth/presentation/cubit/login_state.dart';
 import 'package:rental_hub/feature/auth/presentation/widgets/social_login_widget.dart';
-import 'package:rental_hub/feature/auth/presentation/widgets/terms_widget.dart';
+// Removed unused TermsWidget import (not used in this screen)
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

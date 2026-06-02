@@ -51,6 +51,7 @@ import 'package:rental_hub/feature/ai_chat/data/repo/ai_chat_repo_impl.dart';
 import 'package:rental_hub/feature/ai_chat/domain/repo/ai_chat_repo.dart';
 import 'package:rental_hub/feature/ai_chat/domain/usecases/send_message_use_case.dart';
 import 'package:rental_hub/feature/ai_chat/presentation/cubit/ai_chat_cubit.dart';
+
 import 'package:rental_hub/feature/auth/data/datasource/auth_remote_data_source.dart';
 import 'package:rental_hub/feature/auth/data/datasource/auth_remote_data_source_impl.dart';
 import 'package:rental_hub/feature/auth/data/datasource/login_remote_data_source.dart';
@@ -232,6 +233,25 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton(() => UploadImageUseCase(getIt()));
   getIt.registerLazySingleton(() => ChangePasswordUseCase(getIt()));
 
+  // // Community usecases & cubits
+  // getIt.registerLazySingleton(() => GetCommunityRequestsUseCase(getIt()));
+  // getIt.registerLazySingleton(() => GetCommunityRequestDetailsUseCase(getIt()));
+  // getIt.registerLazySingleton(() => CreateCommunityRequestUseCase(getIt()));
+  // getIt.registerLazySingleton(() => CreateCommunityOfferUseCase(getIt()));
+  // getIt.registerLazySingleton(() => GetMyRequestsOffersUseCase(getIt()));
+  // getIt.registerLazySingleton(() => GetMyOffersUseCase(getIt()));
+  // getIt.registerLazySingleton(() => GetMyRequestsUseCase(getIt()));
+  // getIt.registerLazySingleton(() => AcceptOfferUseCase(getIt()));
+  // getIt.registerLazySingleton(() => RejectOfferUseCase(getIt()));
+
+  // getIt.registerFactory(
+  //   () => CommunityRequestsCubit(getIt(), getIt(), getIt()),
+  // );
+  // getIt.registerFactory(
+  //   () => CommunityOffersCubit(getIt(), getIt(), getIt(), getIt(), getIt()),
+  // );
+  // getIt.registerFactory(() => RequestDetailsCubit(getIt(), getIt()));
+
   // ======================= AI CHAT ========================
   getIt.registerLazySingleton<AiRemoteDataSource>(
     () => AiRemoteDataSourceImpl(getIt()),
@@ -306,6 +326,14 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<WalletRemoteDataSource>(
     () => WalletRemoteDataSourceImpl(getIt()),
   );
+  // Community
+  // getIt.registerLazySingleton<CommunityRemoteDataSource>(
+  //   () => CommunityRemoteDataSource(getIt()),
+  // );
+
+  // getIt.registerLazySingleton<CommunityRepository>(
+  //   () => CommunityRepositoryImpl(getIt()),
+  // );
 
   // ========================= CUBITS =========================
 
@@ -333,6 +361,7 @@ Future<void> setupServiceLocator() async {
     ),
   );
   getIt.registerFactory(() => AiChatCubit(getIt()));
+
   getIt.registerFactory(
     () => WalletCubit(getIt(), getIt(), getIt(), getIt(), getIt()),
   );

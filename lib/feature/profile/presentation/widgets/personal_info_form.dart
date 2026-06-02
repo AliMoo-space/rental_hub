@@ -82,7 +82,7 @@ class PersonalInfoForm extends StatelessWidget {
         ),
         SizedBox(height: 8.h),
         DropdownButtonFormField<String>(
-          value: _sexOptions.contains(sex) ? sex : null,
+          initialValue: _sexOptions.contains(sex) ? sex : null,
           items: _sexOptions
               .map(
                 (value) =>

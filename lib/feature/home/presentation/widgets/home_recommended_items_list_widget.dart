@@ -37,6 +37,7 @@ class HomeRecommendedItemsListWidget extends StatelessWidget {
         builder: (context, state, _) {
           return PagedListView<int, ProductEntity>(
             state: state,
+
             fetchNextPage: () => pagingController!.fetchNextPage(),
             builderDelegate: PagedChildBuilderDelegate<ProductEntity>(
               itemBuilder: (context, item, index) {
@@ -74,7 +75,8 @@ class HomeRecommendedItemsListWidget extends StatelessWidget {
     // Fallback to regular ListView
     return ListView.builder(
       shrinkWrap: shrinkWrap,
-      physics: physics,
+
+      physics: NeverScrollableScrollPhysics(),
       itemCount: products?.length ?? ratings.length,
       itemBuilder: (context, index) {
         final product = products?[index];

@@ -1,8 +1,11 @@
 class EndPoints {
-  static const String baseUrl = "http://rentalplatform.runasp.net";
+  static const String baseUrl = "https://rentalplatform.runasp.net";
   static const String aiBaseUrl =
       "https://remunerative-alita-nonfluent.ngrok-free.dev";
-  static const String chatEndpoint = "/chat";
+  static const String aichatEndpoint = "/chat";
+  // static const String conversations = '/api/Chat/conversations';
+  // static String messages(String id) => '/api/Chat/messages/$id';
+  // static String reportMessage(String id) => '/api/Chat/report/$id';
   static const String loginEndpoint = "/api/Account/login";
   static const String registerEndpoint = "/api/Account/register";
   static const String forgotPasswordEndpoint = "/api/auth/forgot-password";
@@ -28,4 +31,15 @@ class EndPoints {
       "/api/UserProfile/upload-image";
   static const String userProfileChangePasswordEndpoint =
       "/api/UserProfile/change-password";
+  // Community endpoints
+  static const String communityRequests = '/api/Community/requests';
+  static const String communityRequestsById =
+      '/api/Community/requests'; // append /{id}
+  static const String communityOffers = '/api/Community/offers';
+  static const String communityMyRequests = '/api/Community/my-requests';
+  static const String communityMyOffers = '/api/Community/my-offers';
+  static const String communityMyRequestsOffers =
+      '/api/Community/my-requests/offers';
+  static String communityOfferAction(int offerId, String action) =>
+      '/api/Community/offers/$offerId/$action';
 }
