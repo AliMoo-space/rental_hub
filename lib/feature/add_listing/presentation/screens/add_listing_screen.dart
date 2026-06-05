@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,18 +14,21 @@ import 'package:rental_hub/core/utils/service_locator.dart';
 import 'package:rental_hub/core/utils/snack_bar_widget.dart';
 import 'package:rental_hub/core/widgets/primary_button_widget.dart';
 import 'package:rental_hub/feature/add_listing/data/models/create_product_request.dart';
+import 'package:rental_hub/feature/add_listing/data/models/update_product_request.dart';
 import 'package:rental_hub/feature/add_listing/presentation/cubit/add_listing_cubit.dart';
 import 'package:rental_hub/feature/add_listing/presentation/cubit/add_listing_state.dart';
 import 'package:rental_hub/feature/add_listing/presentation/widgets/condition_toggle_button.dart';
-import 'package:rental_hub/feature/add_listing/presentation/widgets/image_picker_grid.dart';
 import 'package:rental_hub/feature/add_listing/presentation/widgets/labeled_text_field.dart';
 import 'package:rental_hub/feature/add_listing/presentation/widgets/listing_card.dart';
 import 'package:rental_hub/feature/add_listing/presentation/widgets/picker_field.dart';
 import 'package:rental_hub/feature/add_listing/presentation/widgets/price_field.dart';
 import 'package:rental_hub/feature/home/domain/entities/category_entity.dart';
+import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
 
 class AddListingScreen extends StatefulWidget {
-  const AddListingScreen({super.key});
+  final ProductEntity? productToEdit;
+
+  const AddListingScreen({super.key, this.productToEdit});
 
   @override
   State<AddListingScreen> createState() => _AddListingScreenState();
@@ -76,6 +80,36 @@ class _AddListingScreenState extends State<AddListingScreen> {
   final List<XFile> _productImages = [];
   final List<XFile> _conditionImages = [];
 
+  // Edit Mode Image Trackers
+  final List<String> _existingImages = [];
+  final List<int> _deletedImageIds = [];
+
+  bool get _isEditMode => widget.productToEdit != null;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_isEditMode) {
+      final p = widget.productToEdit!;
+      _itemNameController.text = p.name;
+      _itemDescriptionController.text = p.description;
+      _dailyPriceController.text = p.basePricePerDay.toString();
+      _securityDepositController.text = p.rentalGuarantee;
+      _productTypeController.text = p.productType;
+      _brandController.text = p.brand;
+      _termsConditionsController.text = p.termsConditions;
+      _selectedCategoryId = p.categoryId;
+      _selectedCategoryLabel = p.categoryName;
+      _selectedSubcategoryId = p.subcategoryId;
+      _selectedSubcategoryLabel = p.subcategoryName;
+      _selectedCity = p.locationArea.isNotEmpty ? p.locationArea : 'القاهرة';
+      _selectedGovernorate = p.locationArea.isNotEmpty ? p.locationArea : 'القاهرة';
+      _selectedLocationArea = p.locationArea.isNotEmpty ? p.locationArea : 'مدينة نصر';
+      _isNewCondition = p.condition.toLowerCase() == 'new';
+      _existingImages.addAll(p.images);
+    }
+  }
+
   @override
   void dispose() {
     _itemNameController.dispose();
@@ -88,8 +122,19 @@ class _AddListingScreenState extends State<AddListingScreen> {
     super.dispose();
   }
 
-  int get _productImagesCount => _productImages.length;
+  int get _productImagesCount => _existingImages.length + _productImages.length;
   int get _conditionImagesCount => _conditionImages.length;
+
+  int? _parseImageId(String url) {
+    try {
+      final fileName = url.split('/').last;
+      final numberMatch = RegExp(r'\d+').stringMatch(fileName);
+      if (numberMatch != null) {
+        return int.tryParse(numberMatch);
+      }
+    } catch (_) {}
+    return null;
+  }
 
   List<_SelectionOption<int>> _mapCategoryOptions(
     List<SubCategoryEntity> categories,
@@ -116,7 +161,13 @@ class _AddListingScreenState extends State<AddListingScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<AddListingCubit>()..loadCategories(),
+      create: (_) {
+        final cubit = getIt<AddListingCubit>()..loadCategories();
+        if (_isEditMode) {
+          cubit.loadSubcategories(widget.productToEdit!.categoryId);
+        }
+        return cubit;
+      },
       child: BlocConsumer<AddListingCubit, AddListingState>(
         listener: (context, state) {
           if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
@@ -140,14 +191,14 @@ class _AddListingScreenState extends State<AddListingScreen> {
             backgroundColor: const Color(0xffF5F6FA),
             appBar: AppBar(
               title: Text(
-                context.l10n.addListing,
+                _isEditMode ? 'تعديل المنتج' : context.l10n.addListing,
                 style: AppStyles.hendi500Size20,
               ),
             ),
             bottomNavigationBar: SafeArea(
               minimum: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
               child: PrimaryButtonWidget(
-                buttonText: 'إضافة المنتج',
+                buttonText: _isEditMode ? 'حفظ التعديلات' : 'إضافة المنتج',
                 isLoading: state.isSubmitting,
                 enabled: !state.isSubmitting,
                 onPress: () => _submitListing(context),
@@ -161,7 +212,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                     shape: BoxShape.circle,
                   ),
                   child: SvgPicture.asset(
-                    AppAssets.uiPlus,
+                    _isEditMode ? AppAssets.profile : AppAssets.uiPlus,
                     fit: BoxFit.scaleDown,
                     colorFilter: const ColorFilter.mode(
                       AppColors.primaryColor,
@@ -215,16 +266,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                           ],
                         ),
                         SizedBox(height: 18.h),
-                        ImagePickerGrid(
-                          images: _productImages,
-                          maxImages: 10,
-                          onAdd: () => _pickImages(_productImages),
-                          onRemove: (index) {
-                            setState(() {
-                              _productImages.removeAt(index);
-                            });
-                          },
-                        ),
+                        _buildCombinedImageGrid(),
                       ],
                     ),
                   ),
@@ -481,67 +523,60 @@ class _AddListingScreenState extends State<AddListingScreen> {
                     ),
                   ),
                   SizedBox(height: 14.h),
-                  ListingCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.shield_outlined,
-                                        color: AppColors.primaryColor,
-                                        size: 20.sp,
-                                      ),
-                                      SizedBox(width: 8.w),
-                                      Text(
-                                        'تقرير حالة المنتج',
-                                        style: AppStyles.titleMedium.copyWith(
-                                          color: AppColors.secondaryColor,
-                                          fontSize: 16.sp,
+                  if (!_isEditMode) ...[
+                    ListingCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.shield_outlined,
+                                          color: AppColors.primaryColor,
+                                          size: 20.sp,
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 6.h),
-                                  Text(
-                                    'قم برفع صور او فيديو لتوضيح العيوب...',
-                                    style: AppStyles.bodySmall.copyWith(
-                                      color: AppColors.smallSecondaryColor,
-                                      height: 1.5,
+                                        SizedBox(width: 8.w),
+                                        Text(
+                                          'تقرير حالة المنتج',
+                                          style: AppStyles.titleMedium.copyWith(
+                                            color: AppColors.secondaryColor,
+                                            fontSize: 16.sp,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(height: 6.h),
+                                    Text(
+                                      'قم برفع صور او فيديو لتوضيح العيوب...',
+                                      style: AppStyles.bodySmall.copyWith(
+                                        color: AppColors.smallSecondaryColor,
+                                        height: 1.5,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            Text(
-                              '$_conditionImagesCount/10',
-                              style: AppStyles.bodySmall.copyWith(
-                                color: AppColors.smallSecondaryColor,
+                              Text(
+                                '$_conditionImagesCount/10',
+                                style: AppStyles.bodySmall.copyWith(
+                                  color: AppColors.smallSecondaryColor,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 16.h),
-                        ImagePickerGrid(
-                          images: _conditionImages,
-                          maxImages: 10,
-                          onAdd: () => _pickImages(_conditionImages),
-                          onRemove: (index) {
-                            setState(() {
-                              _conditionImages.removeAt(index);
-                            });
-                          },
-                        ),
-                      ],
+                            ],
+                          ),
+                          SizedBox(height: 16.h),
+                          _buildConditionImageGrid(),
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
                   SizedBox(height: 110.h),
                 ],
               ),
@@ -552,6 +587,209 @@ class _AddListingScreenState extends State<AddListingScreen> {
     );
   }
 
+  Widget _buildCombinedImageGrid() {
+    final canAddMore = _productImagesCount < 10;
+    final gridItemCount = canAddMore ? _productImagesCount + 1 : _productImagesCount;
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: gridItemCount,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        mainAxisSpacing: 10.h,
+        crossAxisSpacing: 10.w,
+        childAspectRatio: 1,
+      ),
+      itemBuilder: (context, index) {
+        if (canAddMore && index == 0) {
+          return InkWell(
+            onTap: () => _pickImages(_productImages),
+            borderRadius: BorderRadius.circular(18.r),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18.r),
+                border: Border.all(color: AppColors.borderColor, width: 1),
+              ),
+              child: Center(
+                child: Container(
+                  width: 34.w,
+                  height: 34.w,
+                  decoration: const BoxDecoration(
+                    color: AppColors.primaryColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.add, color: Colors.white),
+                ),
+              ),
+            ),
+          );
+        }
+
+        final imageIndex = canAddMore ? index - 1 : index;
+
+        // Check if this index belongs to existing images or new local images
+        if (imageIndex < _existingImages.length) {
+          final imageUrl = _existingImages[imageIndex];
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(18.r),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.network(imageUrl, fit: BoxFit.cover),
+                PositionedDirectional(
+                  top: 6.h,
+                  end: 6.w,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        final id = _parseImageId(imageUrl);
+                        if (id != null) {
+                          _deletedImageIds.add(id);
+                        }
+                        _existingImages.removeAt(imageIndex);
+                      });
+                    },
+                    child: Container(
+                      width: 24.w,
+                      height: 24.w,
+                      decoration: const BoxDecoration(
+                        color: Colors.black54,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 14,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          final newImgIndex = imageIndex - _existingImages.length;
+          final image = _productImages[newImgIndex];
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(18.r),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.file(File(image.path), fit: BoxFit.cover),
+                PositionedDirectional(
+                  top: 6.h,
+                  end: 6.w,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _productImages.removeAt(newImgIndex);
+                      });
+                    },
+                    child: Container(
+                      width: 24.w,
+                      height: 24.w,
+                      decoration: const BoxDecoration(
+                        color: Colors.black54,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 14,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildConditionImageGrid() {
+    final canAddMore = _conditionImagesCount < 10;
+    final gridItemCount = canAddMore ? _conditionImagesCount + 1 : _conditionImagesCount;
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: gridItemCount,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        mainAxisSpacing: 10.h,
+        crossAxisSpacing: 10.w,
+        childAspectRatio: 1,
+      ),
+      itemBuilder: (context, index) {
+        if (canAddMore && index == 0) {
+          return InkWell(
+            onTap: () => _pickImages(_conditionImages),
+            borderRadius: BorderRadius.circular(18.r),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18.r),
+                border: Border.all(color: AppColors.borderColor, width: 1),
+              ),
+              child: Center(
+                child: Container(
+                  width: 34.w,
+                  height: 34.w,
+                  decoration: const BoxDecoration(
+                    color: AppColors.primaryColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.add, color: Colors.white),
+                ),
+              ),
+            ),
+          );
+        }
+
+        final imageIndex = canAddMore ? index - 1 : index;
+        final image = _conditionImages[imageIndex];
+
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(18.r),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.file(File(image.path), fit: BoxFit.cover),
+              PositionedDirectional(
+                top: 6.h,
+                end: 6.w,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _conditionImages.removeAt(imageIndex);
+                    });
+                  },
+                  child: Container(
+                    width: 24.w,
+                    height: 24.w,
+                    decoration: const BoxDecoration(
+                      color: Colors.black54,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 14,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _pickImages(List<XFile> targetImages) async {
     final selectedImages = await _imagePicker.pickMultiImage(imageQuality: 85);
     if (selectedImages.isEmpty || !mounted) {
@@ -559,7 +797,8 @@ class _AddListingScreenState extends State<AddListingScreen> {
     }
 
     setState(() {
-      final remainingSlots = 10 - targetImages.length;
+      final currentTotal = targetImages == _productImages ? _productImagesCount : targetImages.length;
+      final remainingSlots = 10 - currentTotal;
       if (remainingSlots <= 0) {
         return;
       }
@@ -604,11 +843,16 @@ class _AddListingScreenState extends State<AddListingScreen> {
                   ),
                 ),
                 SizedBox(height: 12.h),
-                ...options.map(
-                  (option) => ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(option.label),
-                    onTap: () => Navigator.of(sheetContext).pop(option),
+                Expanded(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: options.map(
+                      (option) => ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(option.label),
+                        onTap: () => Navigator.of(sheetContext).pop(option),
+                      ),
+                    ).toList(),
                   ),
                 ),
               ],
@@ -668,10 +912,10 @@ class _AddListingScreenState extends State<AddListingScreen> {
     if (_termsConditionsController.text.trim().isEmpty) {
       return 'شروط الاستخدام مطلوبة';
     }
-    if (_productImages.isEmpty) {
+    if (_productImages.isEmpty && _existingImages.isEmpty) {
       return 'أضف صورة واحدة على الأقل للمنتج';
     }
-    if (_conditionImages.isEmpty) {
+    if (!_isEditMode && _conditionImages.isEmpty) {
       return 'أضف صورة واحدة على الأقل لتقرير الحالة';
     }
 
@@ -688,24 +932,47 @@ class _AddListingScreenState extends State<AddListingScreen> {
     }
     final parsedBasePrice = num.parse(_dailyPriceController.text.trim());
 
-    final request = CreateProductRequest(
-      city: _selectedCity!,
-      governorate: _selectedGovernorate!,
-      categoryId: _selectedCategoryId!,
-      subcategoryId: _selectedSubcategoryId!,
-      locationArea: _selectedLocationArea!,
-      condition: _isNewCondition ? 'New' : 'Used',
-      productType: _productTypeController.text,
-      brand: _brandController.text,
-      rentalGuarantee: _securityDepositController.text,
-      name: _itemNameController.text,
-      description: _itemDescriptionController.text,
-      basePricePerDay: parsedBasePrice,
-      termsConditions: _termsConditionsController.text,
-      images: [..._productImages, ..._conditionImages],
-    );
+    if (_isEditMode) {
+      final request = UpdateProductRequest(
+        categoryId: _selectedCategoryId!,
+        subcategoryId: _selectedSubcategoryId!,
+        locationArea: _selectedLocationArea!,
+        condition: _isNewCondition ? 'New' : 'Used',
+        productType: _productTypeController.text,
+        brand: _brandController.text,
+        rentalGuarantee: _securityDepositController.text,
+        name: _itemNameController.text,
+        description: _itemDescriptionController.text,
+        basePricePerDay: parsedBasePrice,
+        termsConditions: _termsConditionsController.text,
+        city: _selectedCity!,
+        governorate: _selectedGovernorate!,
+        newImages: _productImages,
+        deletedImageIds: _deletedImageIds,
+        primaryImageId: null,
+      );
 
-    context.read<AddListingCubit>().submitListing(request);
+      context.read<AddListingCubit>().updateListing(widget.productToEdit!.id, request);
+    } else {
+      final request = CreateProductRequest(
+        city: _selectedCity!,
+        governorate: _selectedGovernorate!,
+        categoryId: _selectedCategoryId!,
+        subcategoryId: _selectedSubcategoryId!,
+        locationArea: _selectedLocationArea!,
+        condition: _isNewCondition ? 'New' : 'Used',
+        productType: _productTypeController.text,
+        brand: _brandController.text,
+        rentalGuarantee: _securityDepositController.text,
+        name: _itemNameController.text,
+        description: _itemDescriptionController.text,
+        basePricePerDay: parsedBasePrice,
+        termsConditions: _termsConditionsController.text,
+        images: [..._productImages, ..._conditionImages],
+      );
+
+      context.read<AddListingCubit>().submitListing(request);
+    }
   }
 }
 

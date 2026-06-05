@@ -35,4 +35,18 @@ class AppRoutes {
 
   static String productReviewsLocation(int productId) =>
       '$productReviewsPath/$productId';
+
+  static const String myProductsScreen = '/myProductsScreen';
+  static const String ownerStatsScreen = '/ownerStatsScreen';
+  static const String productTransactionsScreen = '/productTransactionsScreen';
+  static const String productRentalRequestsScreen = '/productRentalRequestsScreen';
+  static const String productStatsScreen = '/productStatsScreen';
+
+  static String productTransactionsLocation(int productId) =>
+      '$productTransactionsScreen/$productId';
+  static String productRentalRequestsLocation(int productId) =>
+      '$productRentalRequestsScreen/$productId';
+  static String productStatsLocation(int productId) =>
+      '$productStatsScreen/$productId';
 }
+

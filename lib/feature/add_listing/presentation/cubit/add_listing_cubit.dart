@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:rental_hub/feature/add_listing/data/models/create_product_request.dart';
+import 'package:rental_hub/feature/add_listing/data/models/update_product_request.dart';
 import 'package:rental_hub/feature/add_listing/domain/usecases/add_listing_use_case.dart';
+import 'package:rental_hub/feature/add_listing/domain/usecases/update_listing_use_case.dart';
 import 'package:rental_hub/feature/home/domain/entities/category_entity.dart';
 import 'package:rental_hub/feature/home/domain/usecases/get_category.dart';
 import 'package:rental_hub/feature/home/domain/usecases/get_subcategories_usecase.dart';
@@ -9,14 +11,17 @@ import 'add_listing_state.dart';
 
 class AddListingCubit extends Cubit<AddListingState> {
   final AddListingUseCase addListingUseCase;
+  final UpdateListingUseCase updateListingUseCase;
   final GetCategory getCategoryUseCase;
   final GetSubcategoriesUseCase getSubcategoriesUseCase;
 
   AddListingCubit(
     this.addListingUseCase,
+    this.updateListingUseCase,
     this.getCategoryUseCase,
     this.getSubcategoriesUseCase,
   ) : super(const AddListingState());
+
 
   Future<void> loadCategories() async {
     emit(
@@ -101,6 +106,28 @@ class AddListingCubit extends Cubit<AddListingState> {
     );
   }
 
+  Future<void> updateListing(int id, UpdateProductRequest request) async {
+    if (state.isSubmitting) return;
+
+    emit(
+      state.copyWith(
+        isSubmitting: true,
+        successMessage: null,
+        errorMessage: null,
+      ),
+    );
+
+    final result = await updateListingUseCase(id, request);
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(isSubmitting: false, errorMessage: failure.errMessage),
+      ),
+      (message) =>
+          emit(state.copyWith(isSubmitting: false, successMessage: message)),
+    );
+  }
+
   void clearFeedback() {
     emit(
       state.copyWith(
@@ -111,3 +138,4 @@ class AddListingCubit extends Cubit<AddListingState> {
     );
   }
 }
+

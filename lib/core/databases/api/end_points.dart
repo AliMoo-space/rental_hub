@@ -44,4 +44,17 @@ class EndPoints {
       '/api/Community/my-requests/offers';
   static String communityOfferAction(int offerId, String action) =>
       '/api/Community/offers/$offerId/$action';
+
+  // Product endpoints
+  static const String productCommission = '/api/Product/settings/commission';
+  static const String myProducts = '/api/Product/my-products';
+  static String deleteProduct(int id) => '/api/Product/$id';
+  static String suspendProduct(int id) => '/api/Product/$id/suspend';
+  static String activateProduct(int id) => '/api/Product/$id/activate';
+  static const String ownerStats = '/api/Product/stats/owner';
+  static String productUserList(String userId) => '/api/Product/user/$userId';
+  static String productTransactions(int productId) => '/api/Product/$productId/transactions';
+  static String productRentalRequests(int productId) => '/api/Product/$productId/rental-requests';
+  static String productStats(int productId) => '/api/Product/$productId/stats';
 }
+
