@@ -3,9 +3,12 @@ class EndPoints {
   static const String aiBaseUrl =
       "https://remunerative-alita-nonfluent.ngrok-free.dev";
   static const String aichatEndpoint = "/chat";
-  // static const String conversations = '/api/Chat/conversations';
-  // static String messages(String id) => '/api/Chat/messages/$id';
-  // static String reportMessage(String id) => '/api/Chat/report/$id';
+  static const String chatConversationsEndpoint = '/api/Chat/conversations';
+  static String chatMessagesEndpoint(int conversationId) =>
+      '/api/Chat/messages/$conversationId';
+  static String chatReportMessageEndpoint(int messageId) =>
+      '/api/Chat/report/$messageId';
+  static const String chatHubEndpoint = '/chatHub';
   static const String loginEndpoint = "/api/Account/login";
   static const String registerEndpoint = "/api/Account/register";
   static const String forgotPasswordEndpoint = "/api/auth/forgot-password";
@@ -33,8 +36,7 @@ class EndPoints {
       "/api/UserProfile/change-password";
   // Community endpoints
   static const String communityRequests = '/api/Community/requests';
-  static const String communityRequestsById =
-      '/api/Community/requests'; // append /{id}
+  static String communityRequestById(int id) => '$communityRequests/$id';
   static const String communityOffers = '/api/Community/offers';
   static const String communityMyRequests = '/api/Community/my-requests';
   static const String communityMyOffers = '/api/Community/my-offers';

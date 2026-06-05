@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,7 +5,6 @@ import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/feature/chat/presentation/cubit/chat_cubit.dart';
-import 'package:rental_hub/feature/chat/presentation/cubit/chat_state.dart';
 import 'package:rental_hub/feature/chat/presentation/models/chat_route_args.dart';
 import 'package:rental_hub/feature/chat/presentation/widgets/chat_bubble_widget.dart';
 import 'package:rental_hub/feature/chat/presentation/widgets/chat_input_bar_widget.dart';
@@ -85,7 +82,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ? widget.routeArgs.sellerName
             : context.l10n.chat;
         final title = hasSellerName
-            ? conversation!.sellerName
+            ? conversation.sellerName
             : fallbackSellerName;
 
         return Scaffold(

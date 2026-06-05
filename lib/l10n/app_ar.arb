@@ -132,8 +132,20 @@
   "addProduct": "إضافة المنتج",
   "noSubscription": "لم تحصل على اشتراك بعد !",
   "subscriptionPromo": "تابع احدث باقات الاشتراكات واحصل على اول شهر مجاناَ",
-  "subscribeNow": "اشترك الان !"
-
+  "subscribeNow": "اشترك الان !",
+  "contactSeller": "تواصل مع البائع",
+  "conversations": "المحادثات",
+  "noConversationsYet": "لا توجد محادثات بعد",
+  "startConversationHint": "تواصل مع البائع من صفحة المنتج لبدء المحادثة",
+  "failedToLoadConversations": "تعذر تحميل المحادثات",
+  "chat": "محادثة",
+  "startConversation": "ابدأ المحادثة",
+  "online": "متصل",
+  "noMessagesYet": "لا توجد رسائل بعد",
+  "typingIndicator": "يكتب...",
+  "send": "إرسال",
+  "typeMessage": "اكتب رسالة",
+  "openingChat": "جاري فتح المحادثة..."
 }
 
 

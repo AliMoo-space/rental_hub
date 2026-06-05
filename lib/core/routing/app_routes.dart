@@ -26,6 +26,8 @@ class AppRoutes {
   static const String userProfileScreen = '/userprofileScreen';
   static const String settingsScreen = '/settingsScreen';
   static const String aiChatScreen = '/AiChatScreen';
+  static const String conversationsScreen = '/conversationsScreen';
+  static const String chatScreen = '/chatScreen';
   static const String subscriptionScreen = '/subscriptionScreen';
   static const String searchScreen = '/searchScreen';
   static const String productReviewsScreen = '/productReviewsScreen';

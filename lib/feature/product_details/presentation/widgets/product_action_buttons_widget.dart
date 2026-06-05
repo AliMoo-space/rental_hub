@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
@@ -29,7 +30,7 @@ class ProductActionButtonsWidget extends StatelessWidget {
               Expanded(
                 child: _ActionButton(
                   icon: Icons.chat_outlined,
-                  label: 'تواصل مع البائع',
+                  label: context.l10n.contactSeller,
                   onPressed: onChat,
                   isPrimary: false,
                 ),

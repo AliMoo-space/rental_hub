@@ -51,6 +51,22 @@ import 'package:rental_hub/feature/ai_chat/data/repo/ai_chat_repo_impl.dart';
 import 'package:rental_hub/feature/ai_chat/domain/repo/ai_chat_repo.dart';
 import 'package:rental_hub/feature/ai_chat/domain/usecases/send_message_use_case.dart';
 import 'package:rental_hub/feature/ai_chat/presentation/cubit/ai_chat_cubit.dart';
+import 'package:rental_hub/feature/chat/data/datasources/chat_remote_data_source.dart';
+import 'package:rental_hub/feature/chat/data/datasources/chat_signalr_data_source.dart';
+import 'package:rental_hub/feature/chat/data/repo/chat_repository_impl.dart';
+import 'package:rental_hub/feature/chat/domain/repo/chat_repository.dart';
+import 'package:rental_hub/feature/chat/domain/usecases/connect_to_chat_usecase.dart';
+import 'package:rental_hub/feature/chat/domain/usecases/create_or_get_conversation_usecase.dart';
+import 'package:rental_hub/feature/chat/domain/usecases/get_conversations_usecase.dart';
+import 'package:rental_hub/feature/chat/domain/usecases/get_messages_usecase.dart';
+import 'package:rental_hub/feature/chat/domain/usecases/listen_to_messages_usecase.dart';
+import 'package:rental_hub/feature/chat/domain/usecases/report_message_usecase.dart';
+import 'package:rental_hub/feature/chat/domain/usecases/send_message_usecase.dart'
+    as seller_chat;
+import 'package:rental_hub/feature/chat/domain/usecases/send_read_receipt_usecase.dart';
+import 'package:rental_hub/feature/chat/domain/usecases/send_typing_indicator_usecase.dart';
+import 'package:rental_hub/feature/chat/presentation/cubit/chat_cubit.dart';
+import 'package:rental_hub/feature/chat/presentation/cubit/conversations_cubit.dart';
 
 import 'package:rental_hub/feature/auth/data/datasource/auth_remote_data_source.dart';
 import 'package:rental_hub/feature/auth/data/datasource/auth_remote_data_source_impl.dart';
@@ -97,6 +113,20 @@ import 'package:rental_hub/feature/wallet/domain/usecases/get_wallet_transaction
 import 'package:rental_hub/feature/wallet/domain/usecases/get_withdraw_requests_use_case.dart';
 import 'package:rental_hub/feature/wallet/domain/usecases/request_wallet_withdraw_use_case.dart';
 import 'package:rental_hub/feature/wallet/presentation/cubit/wallet_cubit.dart';
+import 'package:rental_hub/feature/community/data/datasource/community_remote_data_source.dart';
+import 'package:rental_hub/feature/community/data/repo/community_repo_impl.dart';
+import 'package:rental_hub/feature/community/domain/repo/community_repo.dart';
+import 'package:rental_hub/feature/community/domain/usecases/accept_offer_use_case.dart';
+import 'package:rental_hub/feature/community/domain/usecases/create_community_offer_use_case.dart';
+import 'package:rental_hub/feature/community/domain/usecases/create_community_request_use_case.dart';
+import 'package:rental_hub/feature/community/domain/usecases/get_community_request_details_use_case.dart';
+import 'package:rental_hub/feature/community/domain/usecases/get_community_requests_use_case.dart';
+import 'package:rental_hub/feature/community/domain/usecases/get_my_offers_use_case.dart';
+import 'package:rental_hub/feature/community/domain/usecases/get_my_requests_offers_use_case.dart';
+import 'package:rental_hub/feature/community/domain/usecases/get_my_requests_use_case.dart';
+import 'package:rental_hub/feature/community/domain/usecases/reject_offer_use_case.dart';
+import 'package:rental_hub/feature/community/presentation/cubit/community_offers_cubit.dart';
+import 'package:rental_hub/feature/community/presentation/cubit/community_requests_cubit.dart';
 import 'package:rental_hub/feature/profile/data/datasources/user_profile_remote_data_source.dart';
 import 'package:rental_hub/feature/search/data/datasources/ai_search_remote_data_source.dart';
 import 'package:rental_hub/feature/search/data/datasources/search_remote_data_source.dart';
@@ -233,24 +263,22 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton(() => UploadImageUseCase(getIt()));
   getIt.registerLazySingleton(() => ChangePasswordUseCase(getIt()));
 
-  // // Community usecases & cubits
-  // getIt.registerLazySingleton(() => GetCommunityRequestsUseCase(getIt()));
-  // getIt.registerLazySingleton(() => GetCommunityRequestDetailsUseCase(getIt()));
-  // getIt.registerLazySingleton(() => CreateCommunityRequestUseCase(getIt()));
-  // getIt.registerLazySingleton(() => CreateCommunityOfferUseCase(getIt()));
-  // getIt.registerLazySingleton(() => GetMyRequestsOffersUseCase(getIt()));
-  // getIt.registerLazySingleton(() => GetMyOffersUseCase(getIt()));
-  // getIt.registerLazySingleton(() => GetMyRequestsUseCase(getIt()));
-  // getIt.registerLazySingleton(() => AcceptOfferUseCase(getIt()));
-  // getIt.registerLazySingleton(() => RejectOfferUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetCommunityRequestsUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetCommunityRequestDetailsUseCase(getIt()));
+  getIt.registerLazySingleton(() => CreateCommunityRequestUseCase(getIt()));
+  getIt.registerLazySingleton(() => CreateCommunityOfferUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetMyRequestsOffersUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetMyOffersUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetMyRequestsUseCase(getIt()));
+  getIt.registerLazySingleton(() => AcceptOfferUseCase(getIt()));
+  getIt.registerLazySingleton(() => RejectOfferUseCase(getIt()));
 
-  // getIt.registerFactory(
-  //   () => CommunityRequestsCubit(getIt(), getIt(), getIt()),
-  // );
-  // getIt.registerFactory(
-  //   () => CommunityOffersCubit(getIt(), getIt(), getIt(), getIt(), getIt()),
-  // );
-  // getIt.registerFactory(() => RequestDetailsCubit(getIt(), getIt()));
+  getIt.registerFactory(
+    () => CommunityRequestsCubit(getIt(), getIt(), getIt(), getIt()),
+  );
+  getIt.registerFactory(
+    () => CommunityOffersCubit(getIt(), getIt(), getIt(), getIt(), getIt()),
+  );
 
   // ======================= AI CHAT ========================
   getIt.registerLazySingleton<AiRemoteDataSource>(
@@ -260,6 +288,44 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<AiChatRepo>(() => AiChatRepoImpl(getIt()));
 
   getIt.registerLazySingleton(() => SendMessageUseCase(getIt()));
+
+  // ======================= SELLER CHAT =======================
+  getIt.registerLazySingleton<ChatRemoteDataSource>(
+    () => ChatRemoteDataSourceImpl(getIt()),
+  );
+  getIt.registerLazySingleton<ChatSignalRDataSource>(
+    () => ChatSignalRDataSourceImpl(),
+  );
+  getIt.registerLazySingleton<ChatRepository>(
+    () => ChatRepositoryImpl(
+      remoteDataSource: getIt(),
+      signalRDataSource: getIt(),
+      tokenStorageHelper: getIt(),
+    ),
+  );
+  getIt.registerLazySingleton(() => GetConversationsUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetMessagesUseCase(getIt()));
+  getIt.registerLazySingleton(() => CreateOrGetConversationUseCase(getIt()));
+  getIt.registerLazySingleton(() => seller_chat.SendChatMessageUseCase(getIt()));
+  getIt.registerLazySingleton(() => ReportMessageUseCase(getIt()));
+  getIt.registerLazySingleton(() => ConnectToChatUseCase(getIt()));
+  getIt.registerLazySingleton(() => ListenToMessagesUseCase(getIt()));
+  getIt.registerLazySingleton(() => SendTypingIndicatorUseCase(getIt()));
+  getIt.registerLazySingleton(() => SendReadReceiptUseCase(getIt()));
+  getIt.registerFactory(
+    () => ChatCubit(
+      getIt(),
+      getIt(),
+      getIt(),
+      getIt(),
+      getIt(),
+      getIt(),
+      getIt(),
+      getIt(),
+      getIt(),
+    ),
+  );
+  getIt.registerFactory(() => ConversationsCubit(getIt()));
 
   // ======================= SEARCH FEATURE ==================
   getIt.registerLazySingleton<SearchRemoteDataSource>(
@@ -326,14 +392,13 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<WalletRemoteDataSource>(
     () => WalletRemoteDataSourceImpl(getIt()),
   );
-  // Community
-  // getIt.registerLazySingleton<CommunityRemoteDataSource>(
-  //   () => CommunityRemoteDataSource(getIt()),
-  // );
+  getIt.registerLazySingleton<CommunityRemoteDataSource>(
+    () => CommunityRemoteDataSourceImpl(getIt()),
+  );
 
-  // getIt.registerLazySingleton<CommunityRepository>(
-  //   () => CommunityRepositoryImpl(getIt()),
-  // );
+  getIt.registerLazySingleton<CommunityRepository>(
+    () => CommunityRepositoryImpl(getIt()),
+  );
 
   // ========================= CUBITS =========================
 

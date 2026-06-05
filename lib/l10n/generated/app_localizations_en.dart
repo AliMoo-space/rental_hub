@@ -391,5 +391,45 @@ class AppLocalizationsEn extends AppLocalizations {
       'تابع احدث باقات الاشتراكات واحصل على اول شهر مجاناَ';
 
   @override
-  String get subscribeNow => 'اشترك الان !';
+  String get subscribeNow => 'Subscribe now!';
+
+  @override
+  String get contactSeller => 'Contact Seller';
+
+  @override
+  String get conversations => 'Conversations';
+
+  @override
+  String get noConversationsYet => 'No conversations yet';
+
+  @override
+  String get startConversationHint =>
+      'Contact a seller from a product to start chatting';
+
+  @override
+  String get failedToLoadConversations => 'Failed to load conversations';
+
+  @override
+  String get chat => 'Chat';
+
+  @override
+  String get startConversation => 'Start a conversation';
+
+  @override
+  String get online => 'Online';
+
+  @override
+  String get noMessagesYet => 'No messages yet';
+
+  @override
+  String get typingIndicator => 'is typing...';
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String get typeMessage => 'Type a message';
+
+  @override
+  String get openingChat => 'Opening chat...';
 }

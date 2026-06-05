@@ -8,12 +8,15 @@ import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/utils/service_locator.dart';
+import 'package:rental_hub/feature/community/presentation/cubit/community_offers_cubit.dart';
+import 'package:rental_hub/feature/community/presentation/cubit/community_requests_cubit.dart';
 import 'package:rental_hub/feature/community/presentation/screens/community_screen.dart';
 
 import 'package:rental_hub/feature/home/presentation/cubit/category_cubit.dart';
 import 'package:rental_hub/feature/home/presentation/cubit/product_cubit.dart';
 import 'package:rental_hub/feature/home/presentation/screens/home_screen.dart';
-import 'package:rental_hub/feature/messages/presentation/screens/messages_screen.dart';
+import 'package:rental_hub/feature/chat/presentation/cubit/conversations_cubit.dart';
+import 'package:rental_hub/feature/chat/presentation/screens/conversations_screen.dart';
 import 'package:rental_hub/feature/profile/presentation/screens/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -34,10 +37,27 @@ class _MainScreenState extends State<MainScreen> {
       ],
       child: const HomeScreen(),
     ),
-    MessagesScreen(),
+    BlocProvider(
+      create: (context) => getIt<ConversationsCubit>()..loadConversations(),
+      child: const ConversationsScreen(),
+    ),
     // const DealsScreen(),
     const SizedBox.shrink(),
-    const CommunityScreen(),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => getIt<CommunityRequestsCubit>()
+            ..loadRequests(refresh: true)
+            ..loadMyRequests(),
+        ),
+        BlocProvider(
+          create: (context) => getIt<CommunityOffersCubit>()
+            ..loadIncomingOffers()
+            ..loadMyOffers(),
+        ),
+      ],
+      child: const CommunityScreen(),
+    ),
     ProfileScreen(),
   ];
 

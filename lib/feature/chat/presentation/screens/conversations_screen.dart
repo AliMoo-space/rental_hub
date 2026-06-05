@@ -7,7 +7,6 @@ import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/feature/chat/presentation/cubit/conversations_cubit.dart';
-import 'package:rental_hub/feature/chat/presentation/cubit/conversations_state.dart';
 import 'package:rental_hub/feature/chat/presentation/models/chat_route_args.dart';
 import 'package:rental_hub/feature/chat/presentation/widgets/conversation_tile_widget.dart';
 

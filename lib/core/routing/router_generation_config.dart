@@ -16,6 +16,11 @@ import 'package:rental_hub/feature/auth/presentation/screens/reset_password_scre
 import 'package:rental_hub/feature/auth/presentation/widgets/animated_auth_toggle.dart';
 import 'package:rental_hub/feature/booking/presentation/screens/booking_flow_screen.dart';
 import 'package:rental_hub/feature/ai_chat/presentation/screens/ai_chat_screen.dart';
+import 'package:rental_hub/feature/chat/presentation/cubit/chat_cubit.dart';
+import 'package:rental_hub/feature/chat/presentation/cubit/conversations_cubit.dart';
+import 'package:rental_hub/feature/chat/presentation/models/chat_route_args.dart';
+import 'package:rental_hub/feature/chat/presentation/screens/chat_screen.dart';
+import 'package:rental_hub/feature/chat/presentation/screens/conversations_screen.dart';
 import 'package:rental_hub/feature/deals/presentation/screens/deals_screen.dart';
 import 'package:rental_hub/feature/favorites/presentation/cubit/favorite_cubit.dart';
 import 'package:rental_hub/feature/favorites/presentation/screens/favorites_screen.dart';
@@ -26,6 +31,8 @@ import 'package:rental_hub/feature/product_details/presentation/screens/product_
 import 'package:rental_hub/feature/product_reviews/presentation/cubit/product_review_cubit.dart';
 import 'package:rental_hub/feature/product_reviews/presentation/screens/product_reviews_screen.dart';
 import 'package:rental_hub/feature/profile/presentation/screens/settings_screen.dart';
+import 'package:rental_hub/feature/community/presentation/cubit/community_offers_cubit.dart';
+import 'package:rental_hub/feature/community/presentation/cubit/community_requests_cubit.dart';
 import 'package:rental_hub/feature/community/presentation/screens/community_screen.dart';
 import 'package:rental_hub/feature/profile/presentation/screens/user_profile_screen.dart';
 import 'package:rental_hub/feature/splash/splash_view.dart';
@@ -154,7 +161,21 @@ class RouterGenerationConfig {
       GoRoute(
         name: AppRoutes.communityScreen,
         path: AppRoutes.communityScreen,
-        builder: (context, state) => const CommunityScreen(),
+        builder: (context, state) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => getIt<CommunityRequestsCubit>()
+                ..loadRequests(refresh: true)
+                ..loadMyRequests(),
+            ),
+            BlocProvider(
+              create: (context) => getIt<CommunityOffersCubit>()
+                ..loadIncomingOffers()
+                ..loadMyOffers(),
+            ),
+          ],
+          child: const CommunityScreen(),
+        ),
       ),
 
       GoRoute(
@@ -187,6 +208,28 @@ class RouterGenerationConfig {
         name: AppRoutes.aiChatScreen,
         path: AppRoutes.aiChatScreen,
         builder: (context, state) => const AiChatScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.conversationsScreen,
+        path: AppRoutes.conversationsScreen,
+        builder: (context, state) => BlocProvider(
+          create: (context) => getIt<ConversationsCubit>()..loadConversations(),
+          child: const ConversationsScreen(),
+        ),
+      ),
+      GoRoute(
+        name: AppRoutes.chatScreen,
+        path: AppRoutes.chatScreen,
+        builder: (context, state) {
+          final routeArgs = state.extra is ChatRouteArgs
+              ? state.extra! as ChatRouteArgs
+              : const ChatRouteArgs();
+
+          return BlocProvider(
+            create: (context) => getIt<ChatCubit>(),
+            child: ChatScreen(routeArgs: routeArgs),
+          );
+        },
       ),
       GoRoute(
         name: AppRoutes.searchScreen,

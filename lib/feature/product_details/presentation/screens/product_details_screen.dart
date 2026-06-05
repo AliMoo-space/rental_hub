@@ -11,6 +11,7 @@ import 'package:rental_hub/feature/product_details/presentation/widgets/product_
 import 'package:rental_hub/feature/product_details/presentation/widgets/product_header_widget.dart';
 import 'package:rental_hub/feature/product_details/presentation/widgets/product_info_widget.dart';
 import 'package:rental_hub/feature/product_details/presentation/widgets/reviews_widget.dart';
+import 'package:rental_hub/feature/chat/presentation/models/chat_route_args.dart';
 import 'package:rental_hub/feature/product_details/presentation/widgets/seller_profile_widget.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
@@ -66,16 +67,7 @@ class ProductDetailsScreen extends StatelessWidget {
 
             /// ACTION BUTTONS
             ProductActionButtonsWidget(
-              onChat:
-                  onChat ??
-                  () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Opening chat...'),
-                        duration: Duration(seconds: 1),
-                      ),
-                    );
-                  },
+              onChat: onChat ?? () => _openSellerChat(context),
               onReview:
                   onReview ??
                   () {
@@ -99,6 +91,18 @@ class ProductDetailsScreen extends StatelessWidget {
             verticalSpacing(16),
           ],
         ),
+      ),
+    );
+  }
+
+  void _openSellerChat(BuildContext context) {
+    context.pushNamed(
+      AppRoutes.chatScreen,
+      extra: ChatRouteArgs(
+        sellerId: product.userId,
+        sellerName: product.userFullName,
+        productId: product.id,
+        productName: product.name,
       ),
     );
   }

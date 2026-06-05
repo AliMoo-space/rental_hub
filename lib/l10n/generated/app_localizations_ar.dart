@@ -391,4 +391,44 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get subscribeNow => 'اشترك الان !';
+
+  @override
+  String get contactSeller => 'تواصل مع البائع';
+
+  @override
+  String get conversations => 'المحادثات';
+
+  @override
+  String get noConversationsYet => 'لا توجد محادثات بعد';
+
+  @override
+  String get startConversationHint =>
+      'تواصل مع البائع من صفحة المنتج لبدء المحادثة';
+
+  @override
+  String get failedToLoadConversations => 'تعذر تحميل المحادثات';
+
+  @override
+  String get chat => 'محادثة';
+
+  @override
+  String get startConversation => 'ابدأ المحادثة';
+
+  @override
+  String get online => 'متصل';
+
+  @override
+  String get noMessagesYet => 'لا توجد رسائل بعد';
+
+  @override
+  String get typingIndicator => 'يكتب...';
+
+  @override
+  String get send => 'إرسال';
+
+  @override
+  String get typeMessage => 'اكتب رسالة';
+
+  @override
+  String get openingChat => 'جاري فتح المحادثة...';
 }

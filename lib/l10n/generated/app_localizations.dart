@@ -839,8 +839,86 @@ abstract class AppLocalizations {
   /// No description provided for @subscribeNow.
   ///
   /// In en, this message translates to:
-  /// **'اشترك الان !'**
+  /// **'Subscribe now!'**
   String get subscribeNow;
+
+  /// No description provided for @contactSeller.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Seller'**
+  String get contactSeller;
+
+  /// No description provided for @conversations.
+  ///
+  /// In en, this message translates to:
+  /// **'Conversations'**
+  String get conversations;
+
+  /// No description provided for @noConversationsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No conversations yet'**
+  String get noConversationsYet;
+
+  /// No description provided for @startConversationHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact a seller from a product to start chatting'**
+  String get startConversationHint;
+
+  /// No description provided for @failedToLoadConversations.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load conversations'**
+  String get failedToLoadConversations;
+
+  /// No description provided for @chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat'**
+  String get chat;
+
+  /// No description provided for @startConversation.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a conversation'**
+  String get startConversation;
+
+  /// No description provided for @online.
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get online;
+
+  /// No description provided for @noMessagesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No messages yet'**
+  String get noMessagesYet;
+
+  /// No description provided for @typingIndicator.
+  ///
+  /// In en, this message translates to:
+  /// **'is typing...'**
+  String get typingIndicator;
+
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// No description provided for @typeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message'**
+  String get typeMessage;
+
+  /// No description provided for @openingChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening chat...'**
+  String get openingChat;
 }
 
 class _AppLocalizationsDelegate
