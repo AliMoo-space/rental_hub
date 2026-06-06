@@ -61,6 +61,8 @@ class UserProfileModel extends UserProfileEntity {
 
   static String _normalizeSex(String value) {
     final normalized = value.trim().toLowerCase();
+    if (normalized == 'null' || normalized.isEmpty) return '';
+
     if (normalized.contains('male') || normalized.contains('ذكر')) {
       return 'ذكر';
     }
@@ -72,7 +74,7 @@ class UserProfileModel extends UserProfileEntity {
 
   static String _normalizeImageUrl(String value) {
     final trimmed = value.trim();
-    if (trimmed.isEmpty) {
+    if (trimmed.isEmpty || trimmed.toLowerCase() == 'null') {
       return '';
     }
 

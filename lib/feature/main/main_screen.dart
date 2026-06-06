@@ -74,7 +74,10 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: screens[currentIndex],
+      body: IndexedStack(
+        index: currentIndex,
+        children: screens,
+      ),
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadiusDirectional.only(
           topStart: Radius.circular(20.r),

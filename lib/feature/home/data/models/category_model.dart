@@ -2,10 +2,24 @@ import 'package:rental_hub/feature/home/domain/entities/category_entity.dart';
 
 class CategoryModel extends CategoryEntity {
   CategoryModel({required super.items});
-  factory CategoryModel.fromJson(Map<String, dynamic> json) {
+
+  factory CategoryModel.fromJson(dynamic json) {
+    if (json is! Map<String, dynamic>) {
+      // If the API returns a List directly, or malformed data
+      if (json is List) {
+        final items = json
+            .whereType<Map<String, dynamic>>()
+            .map(SubCategoryModel.fromJson)
+            .toList();
+        return CategoryModel(items: items);
+      }
+      return CategoryModel(items: []);
+    }
+
     final itemsList = json['items'] as List? ?? [];
     final items = itemsList
-        .map((item) => SubCategoryModel.fromJson(item as Map<String, dynamic>))
+        .whereType<Map<String, dynamic>>()
+        .map(SubCategoryModel.fromJson)
         .toList();
 
     return CategoryModel(items: items);
@@ -24,13 +38,19 @@ class SubCategoryModel extends SubCategoryEntity {
     final name = json['name'];
     final createdAtStr = json['createdAt'] ?? json['created_at'];
     final parsedCreatedAt =
-        DateTime.tryParse(createdAtStr?.toString() ?? '') ??
-        DateTime.fromMillisecondsSinceEpoch(0);
+        DateTime.tryParse(createdAtStr?.toString() ?? '') ?? DateTime.now();
 
     return SubCategoryModel(
-      id: id is int ? id : int.parse(id.toString()),
-      name: name.toString(),
+      id: _parseInt(id),
+      name: name?.toString() ?? '',
       createdAt: parsedCreatedAt,
     );
+  }
+
+  static int _parseInt(dynamic value) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    if (value == null) return 0;
+    return int.tryParse(value.toString()) ?? 0;
   }
 }

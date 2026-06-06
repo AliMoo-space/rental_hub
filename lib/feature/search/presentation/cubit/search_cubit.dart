@@ -41,6 +41,7 @@ class SearchCubit extends Cubit<SearchState> {
   }
 
   Future<void> submitSearch({bool reset = true}) async {
+    if (state is SearchLoading) return;
     if (reset) pageNumber = 1;
     emit(SearchLoading());
     final res = await searchProductsUseCase.call(
@@ -58,7 +59,7 @@ class SearchCubit extends Cubit<SearchState> {
   }
 
   Future<void> loadMore() async {
-    if (state is! SearchLoaded) return;
+    if (state is! SearchLoaded || state is SearchLoadingMore) return;
     final previousState = state as SearchLoaded;
     pageNumber += 1;
     emit(SearchLoadingMore());
@@ -66,7 +67,10 @@ class SearchCubit extends Cubit<SearchState> {
       query: currentQuery,
       pageNumber: pageNumber,
     );
-    res.fold((f) => emit(SearchError(f.errMessage)), (results) {
+    res.fold((f) {
+      pageNumber -= 1; // Rollback page number on error
+      emit(SearchError(f.errMessage));
+    }, (results) {
       final merged = SearchResultEntity(
         items: [...previousState.results.items, ...results.items],
         totalCount: results.totalCount,

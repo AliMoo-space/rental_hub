@@ -27,9 +27,17 @@ import 'package:rental_hub/feature/favorites/presentation/screens/favorites_scre
 import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
 import 'package:rental_hub/feature/intro/intro_screen.dart';
 import 'package:rental_hub/feature/main/main_screen.dart';
+import 'package:rental_hub/feature/product_details/presentation/cubit/product_details_cubit.dart';
 import 'package:rental_hub/feature/product_details/presentation/screens/product_details_screen.dart';
 import 'package:rental_hub/feature/product_reviews/presentation/cubit/product_review_cubit.dart';
 import 'package:rental_hub/feature/product_reviews/presentation/screens/product_reviews_screen.dart';
+import 'package:rental_hub/feature/my_products/presentation/cubit/my_products_cubit.dart';
+import 'package:rental_hub/feature/my_products/presentation/cubit/owner_stats_cubit.dart';
+import 'package:rental_hub/feature/my_products/presentation/screens/my_products_screen.dart';
+import 'package:rental_hub/feature/my_products/presentation/screens/owner_stats_screen.dart';
+import 'package:rental_hub/feature/my_products/presentation/screens/product_rental_requests_screen.dart';
+import 'package:rental_hub/feature/my_products/presentation/screens/product_stats_screen.dart';
+import 'package:rental_hub/feature/my_products/presentation/screens/product_transactions_screen.dart';
 import 'package:rental_hub/feature/profile/presentation/screens/settings_screen.dart';
 import 'package:rental_hub/feature/community/presentation/cubit/community_offers_cubit.dart';
 import 'package:rental_hub/feature/community/presentation/cubit/community_requests_cubit.dart';
@@ -114,17 +122,32 @@ class RouterGenerationConfig {
         name: AppRoutes.productDetailsScreen,
         path: '${AppRoutes.productDetailsPath}/:id',
         builder: (context, state) {
+          final productId =
+              int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
+          if (productId <= 0) {
+            return const Scaffold(
+              body: Center(child: Text('Invalid product id')),
+            );
+          }
+
           final product = state.extra is ProductEntity
               ? state.extra as ProductEntity
               : null;
 
-          if (product == null) {
-            return const Scaffold(
-              body: Center(child: Text('Missing product data')),
-            );
-          }
-
-          return ProductDetailsScreen(product: product);
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => getIt<ProductDetailsCubit>(),
+              ),
+              BlocProvider(
+                create: (context) => getIt<MyProductsCubit>(),
+              ),
+            ],
+            child: ProductDetailsScreen(
+              productId: productId,
+              previewProduct: product,
+            ),
+          );
         },
       ),
       GoRoute(
@@ -202,7 +225,64 @@ class RouterGenerationConfig {
       GoRoute(
         name: AppRoutes.addListingScreen,
         path: AppRoutes.addListingScreen,
-        builder: (context, state) => const AddListingScreen(),
+        builder: (context, state) {
+          final productToEdit = state.extra is ProductEntity
+              ? state.extra as ProductEntity
+              : null;
+          return AddListingScreen(productToEdit: productToEdit);
+        },
+      ),
+      GoRoute(
+        name: AppRoutes.myProductsScreen,
+        path: AppRoutes.myProductsScreen,
+        builder: (context, state) => BlocProvider(
+          create: (context) => getIt<MyProductsCubit>(),
+          child: const MyProductsScreen(),
+        ),
+      ),
+      GoRoute(
+        name: AppRoutes.ownerStatsScreen,
+        path: AppRoutes.ownerStatsScreen,
+        builder: (context, state) => BlocProvider(
+          create: (context) => getIt<OwnerStatsCubit>(),
+          child: const OwnerStatsScreen(),
+        ),
+      ),
+      GoRoute(
+        name: AppRoutes.productStatsScreen,
+        path: '${AppRoutes.productStatsScreen}/:productId',
+        builder: (context, state) {
+          final productId =
+              int.tryParse(state.pathParameters['productId'] ?? '') ?? 0;
+          return BlocProvider(
+            create: (context) => getIt<OwnerStatsCubit>(),
+            child: ProductStatsScreen(productId: productId),
+          );
+        },
+      ),
+      GoRoute(
+        name: AppRoutes.productTransactionsScreen,
+        path: '${AppRoutes.productTransactionsScreen}/:productId',
+        builder: (context, state) {
+          final productId =
+              int.tryParse(state.pathParameters['productId'] ?? '') ?? 0;
+          return BlocProvider(
+            create: (context) => getIt<OwnerStatsCubit>(),
+            child: ProductTransactionsScreen(productId: productId),
+          );
+        },
+      ),
+      GoRoute(
+        name: AppRoutes.productRentalRequestsScreen,
+        path: '${AppRoutes.productRentalRequestsScreen}/:productId',
+        builder: (context, state) {
+          final productId =
+              int.tryParse(state.pathParameters['productId'] ?? '') ?? 0;
+          return BlocProvider(
+            create: (context) => getIt<OwnerStatsCubit>(),
+            child: ProductRentalRequestsScreen(productId: productId),
+          );
+        },
       ),
       GoRoute(
         name: AppRoutes.aiChatScreen,

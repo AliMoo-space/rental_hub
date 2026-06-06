@@ -1,20 +1,29 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'dart:developer' as developer;
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:rental_hub/core/databases/api/auth_interceptor.dart';
 import 'package:rental_hub/core/databases/api/api_consumer.dart';
-import 'package:rental_hub/core/databases/api/end_points.dart';
 import 'package:rental_hub/core/errors/error_handling.dart';
 
 class DioConsumer extends ApiConsumer {
   final Dio dio;
   final AuthInterceptor authInterceptor;
 
-  DioConsumer({required this.dio, required this.authInterceptor}) {
+  DioConsumer({
+    required this.dio,
+    required this.authInterceptor,
+    String? baseUrl,
+    Duration connectTimeout = const Duration(seconds: 15),
+    Duration receiveTimeout = const Duration(seconds: 30),
+    Duration sendTimeout = const Duration(seconds: 15),
+  }) {
+    final resolvedBaseUrl = baseUrl ?? dio.options.baseUrl;
     dio.options = BaseOptions(
-      baseUrl: EndPoints.baseUrl,
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
+      baseUrl: resolvedBaseUrl,
+      connectTimeout: connectTimeout,
+      receiveTimeout: receiveTimeout,
+      sendTimeout: sendTimeout,
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -49,6 +58,13 @@ class DioConsumer extends ApiConsumer {
   }) async {
     try {
       final body = _prepareBody(data, isFormData);
+      _logRequest(
+        method: 'POST',
+        path: path,
+        queryParameters: queryParameters,
+        body: body,
+        skipAuth: skipAuth,
+      );
 
       final response = await dio.post(
         path,
@@ -57,9 +73,11 @@ class DioConsumer extends ApiConsumer {
         options: Options(extra: {'skipAuth': skipAuth}),
       );
 
+      _logResponse(method: 'POST', path: path, response: response);
       _throwIfErrorStatus(response);
       return response;
     } on DioException catch (e) {
+      _logDioException(method: 'POST', path: path, error: e);
       handleDioException(e);
       rethrow;
     }
@@ -73,15 +91,23 @@ class DioConsumer extends ApiConsumer {
     bool skipAuth = false,
   }) async {
     try {
+      _logRequest(
+        method: 'GET',
+        path: path,
+        queryParameters: queryParameters,
+        skipAuth: skipAuth,
+      );
       final response = await dio.get(
         path,
         queryParameters: queryParameters,
         options: Options(extra: {'skipAuth': skipAuth}),
       );
 
+      _logResponse(method: 'GET', path: path, response: response);
       _throwIfErrorStatus(response);
       return response;
     } on DioException catch (e) {
+      _logDioException(method: 'GET', path: path, error: e);
       handleDioException(e);
       rethrow;
     }
@@ -95,6 +121,13 @@ class DioConsumer extends ApiConsumer {
     bool skipAuth = false,
   }) async {
     try {
+      _logRequest(
+        method: 'DELETE',
+        path: path,
+        data: data,
+        queryParameters: queryParameters,
+        skipAuth: skipAuth,
+      );
       final response = await dio.delete(
         path,
         data: data,
@@ -102,9 +135,11 @@ class DioConsumer extends ApiConsumer {
         options: Options(extra: {'skipAuth': skipAuth}),
       );
 
+      _logResponse(method: 'DELETE', path: path, response: response);
       _throwIfErrorStatus(response);
       return response;
     } on DioException catch (e) {
+      _logDioException(method: 'DELETE', path: path, error: e);
       handleDioException(e);
       rethrow;
     }
@@ -120,6 +155,13 @@ class DioConsumer extends ApiConsumer {
   }) async {
     try {
       final body = _prepareBody(data, isFormData);
+      _logRequest(
+        method: 'PATCH',
+        path: path,
+        queryParameters: queryParameters,
+        body: body,
+        skipAuth: skipAuth,
+      );
 
       final response = await dio.patch(
         path,
@@ -128,9 +170,11 @@ class DioConsumer extends ApiConsumer {
         options: Options(extra: {'skipAuth': skipAuth}),
       );
 
+      _logResponse(method: 'PATCH', path: path, response: response);
       _throwIfErrorStatus(response);
       return response;
     } on DioException catch (e) {
+      _logDioException(method: 'PATCH', path: path, error: e);
       handleDioException(e);
       rethrow;
     }
@@ -144,6 +188,13 @@ class DioConsumer extends ApiConsumer {
     bool skipAuth = false,
   }) async {
     try {
+      _logRequest(
+        method: 'PUT',
+        path: path,
+        queryParameters: queryParameters,
+        data: data,
+        skipAuth: skipAuth,
+      );
       final response = await dio.put(
         path,
         data: data,
@@ -151,9 +202,11 @@ class DioConsumer extends ApiConsumer {
         options: Options(extra: {'skipAuth': skipAuth}),
       );
 
+      _logResponse(method: 'PUT', path: path, response: response);
       _throwIfErrorStatus(response);
       return response;
     } on DioException catch (e) {
+      _logDioException(method: 'PUT', path: path, error: e);
       handleDioException(e);
       rethrow;
     }
@@ -182,5 +235,51 @@ class DioConsumer extends ApiConsumer {
         message: 'Request failed with status code $statusCode',
       );
     }
+  }
+
+  void _logRequest({
+    required String method,
+    required String path,
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    bool skipAuth = false,
+    Object? body,
+  }) {
+    developer.log(
+      'HTTP $method $path\n'
+      'skipAuth=$skipAuth\n'
+      'queryParameters=${queryParameters ?? const {}}\n'
+      'data=${body ?? data ?? '<none>'}',
+      name: 'HTTP',
+    );
+  }
+
+  void _logResponse({
+    required String method,
+    required String path,
+    required Response<dynamic> response,
+  }) {
+    developer.log(
+      'HTTP $method $path -> ${response.statusCode}\n'
+      'responseType=${response.data.runtimeType}\n'
+      'responseBody=${response.data}',
+      name: 'HTTP',
+    );
+  }
+
+  void _logDioException({
+    required String method,
+    required String path,
+    required DioException error,
+  }) {
+    developer.log(
+      'HTTP $method $path failed\n'
+      'type=${error.type}\n'
+      'status=${error.response?.statusCode}\n'
+      'responseBody=${error.response?.data}\n'
+      'message=${error.message}\n'
+      'error=${error.error}',
+      name: 'HTTP',
+    );
   }
 }

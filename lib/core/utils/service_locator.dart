@@ -15,7 +15,21 @@ import 'package:rental_hub/feature/add_listing/data/datasource/add_listing_remot
 import 'package:rental_hub/feature/add_listing/data/repo/add_listing_repo_impl.dart';
 import 'package:rental_hub/feature/add_listing/domain/repo/add_listing_repo.dart';
 import 'package:rental_hub/feature/add_listing/domain/usecases/add_listing_use_case.dart';
+import 'package:rental_hub/feature/add_listing/domain/usecases/update_listing_use_case.dart';
 import 'package:rental_hub/feature/add_listing/presentation/cubit/add_listing_cubit.dart';
+import 'package:rental_hub/feature/my_products/data/datasource/my_products_remote_data_source.dart';
+import 'package:rental_hub/feature/my_products/data/repo/my_products_repo_impl.dart';
+import 'package:rental_hub/feature/my_products/domain/repo/my_products_repo.dart';
+import 'package:rental_hub/feature/my_products/domain/usecases/activate_product_use_case.dart';
+import 'package:rental_hub/feature/my_products/domain/usecases/delete_product_use_case.dart';
+import 'package:rental_hub/feature/my_products/domain/usecases/get_my_products.dart';
+import 'package:rental_hub/feature/my_products/domain/usecases/get_owner_stats_use_case.dart';
+import 'package:rental_hub/feature/my_products/domain/usecases/get_product_rental_requests_use_case.dart';
+import 'package:rental_hub/feature/my_products/domain/usecases/get_product_stats_use_case.dart';
+import 'package:rental_hub/feature/my_products/domain/usecases/get_product_transactions_use_case.dart';
+import 'package:rental_hub/feature/my_products/domain/usecases/suspend_product_use_case.dart';
+import 'package:rental_hub/feature/my_products/presentation/cubit/my_products_cubit.dart';
+import 'package:rental_hub/feature/my_products/presentation/cubit/owner_stats_cubit.dart';
 import 'package:rental_hub/feature/home/data/datasource/product_remote_data_source.dart';
 import 'package:rental_hub/feature/localization/data/repo/locale_repository_impl.dart';
 import 'package:rental_hub/feature/localization/domain/repo/locale_repository.dart';
@@ -158,7 +172,11 @@ Future<void> setupServiceLocator() async {
     () => AuthInterceptor(getIt<TokenStorageHelper>()),
   );
   getIt.registerLazySingleton<ApiConsumer>(
-    () => DioConsumer(dio: Dio(), authInterceptor: getIt<AuthInterceptor>()),
+    () => DioConsumer(
+      dio: Dio(),
+      authInterceptor: getIt<AuthInterceptor>(),
+      baseUrl: EndPoints.baseUrl,
+    ),
   );
 
   // Dedicated ApiConsumer for AI endpoints (separate Dio instance)
@@ -166,6 +184,8 @@ Future<void> setupServiceLocator() async {
     () => DioConsumer(
       dio: Dio(BaseOptions(baseUrl: EndPoints.aiBaseUrl)),
       authInterceptor: getIt<AuthInterceptor>(),
+      baseUrl: EndPoints.aiBaseUrl,
+      receiveTimeout: const Duration(seconds: 120),
     ),
     instanceName: 'ai',
   );
@@ -219,6 +239,9 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<AddListingRepo>(
     () => AddListingRepoImpl(getIt()),
   );
+  getIt.registerLazySingleton<MyProductsRepo>(
+    () => MyProductsRepoImpl(getIt()),
+  );
   getIt.registerLazySingleton<UserProfileRepository>(
     () => UserProfileRepositoryImpl(getIt()),
   );
@@ -253,6 +276,17 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton(() => UpdateProductReviewUseCase(getIt()));
   getIt.registerLazySingleton(() => DeleteProductReviewUseCase(getIt()));
   getIt.registerLazySingleton(() => AddListingUseCase(getIt()));
+  getIt.registerLazySingleton(() => UpdateListingUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetMyProducts(getIt()));
+  getIt.registerLazySingleton(() => DeleteProductUseCase(getIt()));
+  getIt.registerLazySingleton(() => SuspendProductUseCase(getIt()));
+  getIt.registerLazySingleton(() => ActivateProductUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetOwnerStatsUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetProductStatsUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetProductTransactionsUseCase(getIt()));
+  getIt.registerLazySingleton(
+    () => GetProductRentalRequestsUseCase(getIt()),
+  );
   getIt.registerLazySingleton(() => GetWalletBalanceUseCase(getIt()));
   getIt.registerLazySingleton(() => GetWalletTransactionsUseCase(getIt()));
   getIt.registerLazySingleton(() => DepositWalletUseCase(getIt()));
@@ -389,6 +423,9 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<AddListingRemoteDataSource>(
     () => AddListingRemoteDataSourceImpl(getIt()),
   );
+  getIt.registerLazySingleton<MyProductsRemoteDataSource>(
+    () => MyProductsRemoteDataSourceImpl(getIt()),
+  );
   getIt.registerLazySingleton<WalletRemoteDataSource>(
     () => WalletRemoteDataSourceImpl(getIt()),
   );
@@ -416,6 +453,22 @@ Future<void> setupServiceLocator() async {
     () => ProductDetailsCubit(getIt()),
   );
   getIt.registerFactory(
+    () => MyProductsCubit(
+      getIt(),
+      getIt(),
+      getIt(),
+      getIt(),
+    ),
+  );
+  getIt.registerFactory(
+    () => OwnerStatsCubit(
+      getIt(),
+      getIt(),
+      getIt(),
+      getIt(),
+    ),
+  );
+  getIt.registerFactory(
     () => ProductReviewCubit(
       getIt(),
       getIt(),
@@ -433,7 +486,9 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton(
     () => UserProfileCubit(getIt(), getIt(), getIt(), getIt()),
   );
-  getIt.registerFactory(() => AddListingCubit(getIt(), getIt(), getIt()));
+  getIt.registerFactory(
+    () => AddListingCubit(getIt(), getIt(), getIt(), getIt()),
+  );
   getIt.registerFactoryParam<OtpCubit, String, void>(
     (email, _) => OtpCubit(
       email: email,

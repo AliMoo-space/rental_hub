@@ -48,7 +48,6 @@ class AddListingRemoteDataSourceImpl implements AddListingRemoteDataSource {
     final response = await apiConsumer.put(
       '${EndPoints.productsEndpoint}/$id',
       data: await request.toFormData(),
-      isFormData: true,
     );
 
     final payload = ResponseParser.extractMessagePayload(
@@ -70,4 +69,3 @@ class AddListingRemoteDataSourceImpl implements AddListingRemoteDataSource {
     return message;
   }
 }
-

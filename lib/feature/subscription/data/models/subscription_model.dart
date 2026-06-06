@@ -72,10 +72,88 @@ class SubscriptionActiveModel extends SubscriptionActiveEntity {
   const SubscriptionActiveModel({required super.hasActiveSubscription});
 
   factory SubscriptionActiveModel.fromJson(Map<String, dynamic> json) {
-    return SubscriptionActiveModel(
-      hasActiveSubscription: (json['hasActiveSubscription'] is bool)
-          ? json['hasActiveSubscription'] as bool
-          : (json['hasActiveSubscription']?.toString().toLowerCase() == 'true'),
-    );
+    final active = _extractActiveFlag(json);
+    return SubscriptionActiveModel(hasActiveSubscription: active);
+  }
+
+  static bool _extractActiveFlag(Map<String, dynamic> json) {
+    final candidates = <dynamic>[
+      json['hasActiveSubscription'],
+      json['isActive'],
+      json['active'],
+      json['isSubscribed'],
+      json['subscriptionActive'],
+      json['hasSubscription'],
+      json['data'],
+      json['subscription'],
+    ];
+
+    for (final candidate in candidates) {
+      final parsed = _parseBoolCandidate(candidate);
+      if (parsed != null) {
+        return parsed;
+      }
+    }
+
+    return false;
+  }
+
+  static bool? _parseBoolCandidate(dynamic value) {
+    if (value is bool) return value;
+
+    if (value is num) {
+      if (value == 1) return true;
+      if (value == 0) return false;
+    }
+
+    if (value is String) {
+      final normalized = value.trim().toLowerCase();
+      if (normalized.isEmpty) return null;
+      if (const {
+        'true',
+        '1',
+        'yes',
+        'active',
+        'subscribed',
+      }.contains(normalized)) {
+        return true;
+      }
+      if (const {
+        'false',
+        '0',
+        'no',
+        'inactive',
+        'unsubscribed',
+      }.contains(normalized)) {
+        return false;
+      }
+      return null;
+    }
+
+    if (value is Map) {
+      final map = Map<String, dynamic>.from(value);
+      final nested = _extractActiveFlag(map);
+      if (nested) {
+        return true;
+      }
+
+      for (final key in const [
+        'hasActiveSubscription',
+        'isActive',
+        'active',
+        'isSubscribed',
+        'subscriptionActive',
+        'status',
+        'state',
+        'subscriptionStatus',
+      ]) {
+        final nestedCandidate = _parseBoolCandidate(map[key]);
+        if (nestedCandidate != null) {
+          return nestedCandidate;
+        }
+      }
+    }
+
+    return null;
   }
 }

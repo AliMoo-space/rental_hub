@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
+import 'package:rental_hub/core/styling/app_colors.dart';
+import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/loading_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 import 'package:rental_hub/feature/home/domain/entities/category_entity.dart';
@@ -46,24 +48,17 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const HomeHeaderWidget(),
-      body: Padding(
-        padding: EdgeInsetsDirectional.symmetric(horizontal: 18.w),
-        child: BlocBuilder<CategoryCubit, CategoryState>(
-          builder: (context, categoryState) {
-            if (categoryState is CategoryLoading ||
-                categoryState is CategoryInitial) {
-              return const LoadingWidget(height: 50);
-            }
-
-            if (categoryState is CategoryError) {
-              return Text(categoryState.message);
-            }
-
-            final categories = categoryState is CategoryLoaded
-                ? _buildCategoryTitles(categoryState.categories)
-                : <String>['All'];
-
-            return Column(
+      body: RefreshIndicator(
+        onRefresh: () async {
+          context.read<CategoryCubit>().fetchCategories();
+          context.read<ProductCubit>().refresh();
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsetsDirectional.symmetric(horizontal: 18.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 HomeSearchSectionWidget(
                   title: context.l10n.getEverythingYouWant,
@@ -71,19 +66,46 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 HeightSpace(20),
                 const SubscriptionBannerWidget(),
-
                 HeightSpace(20),
-                HomeCategoriesWidget(
-                  categories: categories,
-                  selectedCategoryIndex: _selectedCategory,
-                  onCategorySelected: (index) {
-                    setState(() {
-                      _selectedCategory = index;
-                    });
+                BlocBuilder<CategoryCubit, CategoryState>(
+                  builder: (context, categoryState) {
+                    if (categoryState is CategoryLoading ||
+                        categoryState is CategoryInitial) {
+                      return const LoadingWidget(height: 50);
+                    }
+
+                    if (categoryState is CategoryError) {
+                      return SizedBox(
+                        height: 50.h,
+                        child: Center(
+                          child: Text(
+                            categoryState.message,
+                            style: AppStyles.instrumentSans500Size14.copyWith(
+                              color: AppColors.errorColor,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    final categories = categoryState is CategoryLoaded
+                        ? _buildCategoryTitles(categoryState.categories)
+                        : <String>['All'];
+
+                    return HomeCategoriesWidget(
+                      categories: categories,
+                      selectedCategoryIndex: _selectedCategory,
+                      onCategorySelected: (index) {
+                        setState(() {
+                          _selectedCategory = index;
+                        });
+                      },
+                    );
                   },
                 ),
                 HeightSpace(20),
-                Expanded(
+                SizedBox(
+                  height: 500.h, // Fixed height for the products section
                   child: BlocBuilder<ProductCubit, ProductState>(
                     builder: (context, productState) {
                       if (productState is ProductLoading ||
@@ -92,25 +114,45 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
 
                       if (productState is ProductError) {
-                        return Text(productState.message);
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                productState.message,
+                                textAlign: TextAlign.center,
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    context.read<ProductCubit>().refresh(),
+                                child: const Text('إعادة المحاولة'),
+                              ),
+                            ],
+                          ),
+                        );
                       }
+
+                      // We need the category names for filtering, get them from CategoryCubit state
+                      final categoryState = context.read<CategoryCubit>().state;
+                      final categories = categoryState is CategoryLoaded
+                          ? _buildCategoryTitles(categoryState.categories)
+                          : <String>['All'];
 
                       final selectedCategoryName =
                           _selectedCategory == 0 ||
-                              _selectedCategory >= categories.length
-                          ? null
-                          : categories[_selectedCategory];
+                                  _selectedCategory >= categories.length
+                              ? null
+                              : categories[_selectedCategory];
 
                       if (selectedCategoryName == null) {
                         return HomeRecommendedItemsListWidget(
                           ratings: const [],
-                          pagingController: context
-                              .read<ProductCubit>()
-                              .pagingController,
+                          pagingController:
+                              context.read<ProductCubit>().pagingController,
                           onFavoritePressed: (product) {
                             context.read<ProductCubit>().toggleFavorite(
-                              product.id,
-                            );
+                                  product.id,
+                                );
                           },
                           isFavoriteLoading: (product) {
                             final state = context.read<ProductCubit>().state;
@@ -155,8 +197,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         ratings: ratings,
                         onFavoritePressed: (product) {
                           context.read<ProductCubit>().toggleFavorite(
-                            product.id,
-                          );
+                                product.id,
+                              );
                         },
                         isFavoriteLoading: (product) {
                           final state = context.read<ProductCubit>().state;
@@ -175,8 +217,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ],
-            );
-          },
+            ),
+          ),
         ),
       ),
     );

@@ -208,9 +208,7 @@ class ProductCubit extends Cubit<ProductState> {
     if (pageNumber == 1) {
       emit(ProductLoading());
       pagingController.refresh();
-      // Trigger the first page fetch after refresh
-      await Future.delayed(const Duration(milliseconds: 100));
-      pagingController.fetchNextPage();
+      // pagingController.refresh() will clear items and trigger fetchPage(1)
     } else {
       pagingController.fetchNextPage();
     }

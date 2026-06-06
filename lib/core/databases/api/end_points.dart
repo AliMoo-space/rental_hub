@@ -22,6 +22,8 @@ class EndPoints {
       "/api/UserSubscription/subscribe";
   static const String subscriptionActiveEndpoint =
       "/api/UserSubscription/active";
+  static const String userDashboardSubscriptionEndpoint =
+      "/api/UserDashboard/subscription";
   static const String walletBalanceEndpoint = "/api/Wallet/balance";
   static const String walletTransactionsEndpoint = "/api/Wallet/transactions";
   static const String walletDepositEndpoint = "/api/Wallet/deposit";
@@ -53,8 +55,9 @@ class EndPoints {
   static String activateProduct(int id) => '/api/Product/$id/activate';
   static const String ownerStats = '/api/Product/stats/owner';
   static String productUserList(String userId) => '/api/Product/user/$userId';
-  static String productTransactions(int productId) => '/api/Product/$productId/transactions';
-  static String productRentalRequests(int productId) => '/api/Product/$productId/rental-requests';
+  static String productTransactions(int productId) =>
+      '/api/Product/$productId/transactions';
+  static String productRentalRequests(int productId) =>
+      '/api/Product/$productId/rental-requests';
   static String productStats(int productId) => '/api/Product/$productId/stats';
 }
-

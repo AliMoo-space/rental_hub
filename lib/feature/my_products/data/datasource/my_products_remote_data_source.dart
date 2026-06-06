@@ -82,37 +82,60 @@ class MyProductsRemoteDataSourceImpl implements MyProductsRemoteDataSource {
   Future<List<ProductTransactionModel>> getProductTransactions({required int id}) async {
     final response = await apiConsumer.get(EndPoints.productTransactions(id));
     final payload = ResponseParser.extractDataPayload(response.data);
-    if (payload is List) {
-      return payload.map((e) => ProductTransactionModel.fromJson(e as Map<String, dynamic>)).toList();
-    }
-    // Fallback if data wraps in a list field
-    if (payload is Map && payload['items'] is List) {
-      return (payload['items'] as List).map((e) => ProductTransactionModel.fromJson(e as Map<String, dynamic>)).toList();
-    }
-    return [];
+    return _extractModels(
+      payload,
+      itemFactory: ProductTransactionModel.fromJson,
+    );
   }
 
   @override
   Future<List<ProductRentalRequestModel>> getProductRentalRequests({required int id}) async {
     final response = await apiConsumer.get(EndPoints.productRentalRequests(id));
     final payload = ResponseParser.extractDataPayload(response.data);
-    if (payload is List) {
-      return payload.map((e) => ProductRentalRequestModel.fromJson(e as Map<String, dynamic>)).toList();
-    }
-    if (payload is Map && payload['items'] is List) {
-      return (payload['items'] as List).map((e) => ProductRentalRequestModel.fromJson(e as Map<String, dynamic>)).toList();
-    }
-    return [];
+    return _extractModels(
+      payload,
+      itemFactory: ProductRentalRequestModel.fromJson,
+    );
   }
 
   @override
   Future<double> getCommissionSetting() async {
     final response = await apiConsumer.get(EndPoints.productCommission);
     final payload = ResponseParser.extractDataPayload(response.data);
-    if (payload is num) return payload.toDouble();
-    if (payload is Map && payload['commission'] is num) {
-      return (payload['commission'] as num).toDouble();
+    final commissionValue = payload['commission'] ?? payload['value'] ?? payload['data'];
+    if (commissionValue is num) return commissionValue.toDouble();
+    if (commissionValue is Map<String, dynamic>) {
+      final nestedValue =
+          commissionValue['commission'] ?? commissionValue['value'];
+      if (nestedValue is num) return nestedValue.toDouble();
+      return double.tryParse(nestedValue?.toString() ?? '') ?? 0.0;
     }
-    return double.tryParse(payload?.toString() ?? '') ?? 0.0;
+    return double.tryParse(commissionValue?.toString() ?? '') ?? 0.0;
+  }
+
+  List<T> _extractModels<T>(
+    Map<String, dynamic> payload, {
+    required T Function(Map<String, dynamic>) itemFactory,
+  }) {
+    final items = payload['items'];
+    if (items is List) {
+      return items
+          .whereType<Map>()
+          .map((item) => itemFactory(Map<String, dynamic>.from(item)))
+          .toList();
+    }
+
+    final nestedData = payload['data'];
+    if (nestedData is Map<String, dynamic>) {
+      final nestedItems = nestedData['items'];
+      if (nestedItems is List) {
+        return nestedItems
+            .whereType<Map>()
+            .map((item) => itemFactory(Map<String, dynamic>.from(item)))
+            .toList();
+      }
+    }
+
+    return [];
   }
 }

@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:rental_hub/core/databases/api/api_consumer.dart';
-import 'package:rental_hub/core/databases/api/end_points.dart';
 import 'package:rental_hub/core/utils/response_parser.dart';
 import 'package:rental_hub/feature/search/data/models/live_suggestion_model.dart';
 
@@ -22,7 +21,7 @@ class AiSearchRemoteDataSourceImpl implements AiSearchRemoteDataSource {
     CancelToken? cancelToken,
   }) async {
     final response = await apiConsumer.get(
-      '${EndPoints.aiBaseUrl}/search/live',
+      '/search/live',
       queryParameters: {'q': query},
     );
 

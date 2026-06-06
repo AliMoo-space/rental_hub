@@ -146,10 +146,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         context.l10n.myListings,
                         style: AppStyles.instrumentSans700Size18,
                       ),
-                      Text(
-                        context.l10n.viewAll,
-                        style: AppStyles.instrumentSans500Size14.copyWith(
-                          fontWeight: FontWeight.bold,
+                      GestureDetector(
+                        onTap: () {
+                          context.pushNamed(AppRoutes.myProductsScreen);
+                        },
+                        child: Text(
+                          context.l10n.viewAll,
+                          style: AppStyles.instrumentSans500Size14.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],

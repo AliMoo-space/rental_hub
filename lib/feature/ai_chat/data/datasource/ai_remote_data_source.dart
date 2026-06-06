@@ -15,7 +15,7 @@ class AiRemoteDataSourceImpl implements AiRemoteDataSource {
   @override
   Future<AiChatModel> sendMessage(AiChatParams params) async {
     final response = await apiConsumer.post(
-      '${EndPoints.aiBaseUrl}${EndPoints.aichatEndpoint}',
+      EndPoints.aichatEndpoint,
       data: {
         "query": params.query,
         "session_id": params.sessionId,

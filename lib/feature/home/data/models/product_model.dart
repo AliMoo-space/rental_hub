@@ -11,11 +11,24 @@ class ProductsModel extends ProductsEntity {
     required super.hasNext,
   });
 
-  factory ProductsModel.fromJson(Map<String, dynamic> json) {
+  factory ProductsModel.fromJson(dynamic json) {
+    if (json is! Map<String, dynamic>) {
+      return ProductsModel(
+        items: [],
+        totalCount: 0,
+        pageNumber: 1,
+        pageSize: 10,
+        totalPages: 0,
+        hasPrevious: false,
+        hasNext: false,
+      );
+    }
+
     final itemsList = json['items'] as List? ?? [];
     return ProductsModel(
       items: itemsList
-          .map((item) => ProductModel.fromJson(item as Map<String, dynamic>))
+          .whereType<Map<String, dynamic>>()
+          .map(ProductModel.fromJson)
           .toList(),
       totalCount: _parseInt(json['totalCount']),
       pageNumber: _parseInt(json['pageNumber']),
@@ -29,11 +42,13 @@ class ProductsModel extends ProductsEntity {
   static int _parseInt(dynamic value) {
     if (value is int) return value;
     if (value is num) return value.toInt();
+    if (value == null) return 0;
     return int.tryParse(value.toString()) ?? 0;
   }
 
   static bool _parseBool(dynamic value) {
     if (value is bool) return value;
+    if (value == null) return false;
     final normalized = value.toString().toLowerCase();
     return normalized == 'true' || normalized == '1';
   }
@@ -93,14 +108,16 @@ class ProductModel extends ProductEntity {
       commissionPercentage: _parseNum(json['commissionPercentage']),
       termsConditions: json['termsConditions']?.toString() ?? '',
       status: json['status']?.toString() ?? '',
-      createdAt: createdAtValue != null
-          ? DateTime.parse(createdAtValue.toString())
-          : DateTime.now(),
+      createdAt: DateTime.tryParse(createdAtValue?.toString() ?? '') ??
+          DateTime.now(),
       averageRating: _parseDouble(json['averageRating']),
       totalReviews: _parseInt(json['totalReviews']),
       totalRentalCount: _parseInt(json['totalRentalCount']),
       totalPlatformProfit: _parseNum(json['totalPlatformProfit']),
-      images: imagesValue.map((image) => image.toString()).toList(),
+      images: imagesValue
+          .map((image) => image?.toString() ?? '')
+          .where((s) => s.isNotEmpty && s.toLowerCase() != 'null')
+          .toList(),
       isFavorite: _parseBool(json['isFavorite'] ?? json['is_favorite']),
     );
   }
@@ -108,17 +125,20 @@ class ProductModel extends ProductEntity {
   static int _parseInt(dynamic value) {
     if (value is int) return value;
     if (value is num) return value.toInt();
+    if (value == null) return 0;
     return int.tryParse(value.toString()) ?? 0;
   }
 
   static double _parseDouble(dynamic value) {
     if (value is double) return value;
     if (value is num) return value.toDouble();
-    return double.tryParse(value.toString()) ?? 0;
+    if (value == null) return 0.0;
+    return double.tryParse(value.toString()) ?? 0.0;
   }
 
   static num _parseNum(dynamic value) {
     if (value is num) return value;
+    if (value == null) return 0;
     return num.tryParse(value.toString()) ?? 0;
   }
 

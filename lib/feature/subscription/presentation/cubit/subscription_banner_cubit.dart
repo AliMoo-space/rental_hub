@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'dart:developer' as developer;
 import 'package:rental_hub/feature/subscription/domain/usecases/get_subscription_active_use_case.dart';
 
 import 'subscription_banner_state.dart';
@@ -11,9 +12,15 @@ class SubscriptionBannerCubit extends Cubit<SubscriptionBannerState> {
   Future<void> load() async {
     emit(SubscriptionBannerLoading());
     final result = await _getActive();
-    result.fold(
-      (failure) => emit(SubscriptionBannerError(failure.errMessage)),
-      (value) => emit(SubscriptionBannerLoaded(value.hasActiveSubscription)),
-    );
+    result.fold((failure) {
+      developer.log(
+        'SubscriptionBannerCubit.load: failed to resolve active subscription\n'
+        'status=${failure.statusCode}\n'
+        'message=${failure.errMessage}\n'
+        'Falling back to inactive so Home keeps rendering.',
+        name: 'Subscription',
+      );
+      emit(const SubscriptionBannerLoaded(false));
+    }, (value) => emit(SubscriptionBannerLoaded(value.hasActiveSubscription)));
   }
 }

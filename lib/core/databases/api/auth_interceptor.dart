@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'dart:developer' as developer;
 import 'package:rental_hub/core/databases/cache/token_storage_helper.dart';
 
 class AuthInterceptor {
@@ -10,6 +11,11 @@ class AuthInterceptor {
     return QueuedInterceptorsWrapper(
       onRequest: (options, handler) async {
         final skipAuth = options.extra['skipAuth'] == true;
+        developer.log(
+          'AuthInterceptor.onRequest: ${options.method} ${options.uri}\n'
+          'skipAuth=$skipAuth',
+          name: 'Auth',
+        );
 
         if (!skipAuth) {
           final token = await _tokenStorageHelper.getAccessToken();
@@ -29,6 +35,16 @@ class AuthInterceptor {
             }
 
             options.headers['Authorization'] = authorizationHeader;
+            developer.log(
+              'AuthInterceptor.onRequest: attached Authorization header\n'
+              'Token preview: ${_previewToken(token)}',
+              name: 'Auth',
+            );
+          } else {
+            developer.log(
+              'AuthInterceptor.onRequest: no access token available',
+              name: 'Auth',
+            );
           }
         }
 
@@ -39,6 +55,11 @@ class AuthInterceptor {
       },
     );
   }
+}
+
+String _previewToken(String token) {
+  if (token.length <= 16) return token;
+  return '${token.substring(0, 8)}...${token.substring(token.length - 8)}';
 }
 
 bool _isValidAuthorizationHeader(String header) {
