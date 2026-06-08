@@ -26,6 +26,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     super.initState();
 
     context.read<FavoriteCubit>().pagingController.refresh();
+    context.read<FavoriteCubit>().pagingController.fetchNextPage();
   }
 
   @override

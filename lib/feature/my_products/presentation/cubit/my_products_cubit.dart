@@ -33,9 +33,10 @@ class MyProductsCubit extends Cubit<MyProductsState> {
         if (state.keys == null || state.keys!.isEmpty) {
           return 1;
         }
+        if (state.lastPageIsEmpty) return null;
 
         final lastKey = state.keys!.last;
-        return state.hasNextPage ? lastKey + 1 : null;
+        return lastKey + 1;
       },
       fetchPage: (pageKey) async {
         final result = await getMyProductsUseCase(pageKey);

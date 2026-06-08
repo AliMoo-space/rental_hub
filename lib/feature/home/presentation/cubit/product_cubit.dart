@@ -6,6 +6,7 @@ import 'package:rental_hub/feature/favorites/domain/usecase/add_to_favorite_usec
 import 'package:rental_hub/feature/favorites/domain/usecase/remove_favorite_use_case.dart';
 import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
 import 'package:rental_hub/feature/home/domain/usecases/get_products.dart';
+import 'dart:developer' as developer;
 
 part 'product_state.dart';
 
@@ -24,22 +25,35 @@ class ProductCubit extends Cubit<ProductState> {
     _initializePagingController();
   }
 
+  @override
+  void onChange(Change<ProductState> change) {
+    super.onChange(change);
+    developer.log('Cubit state transition: ${change.currentState.runtimeType} -> ${change.nextState.runtimeType}', name: 'Instrumentation');
+    if (change.nextState is ProductLoaded) {
+      developer.log('Cubit count: ${(change.nextState as ProductLoaded).products.items.length}', name: 'Instrumentation');
+    }
+  }
+
   void _initializePagingController() {
     pagingController = PagingController<int, ProductEntity>(
       getNextPageKey: (state) {
         if (state.keys == null || state.keys!.isEmpty) return 1;
+        if (state.lastPageIsEmpty) return null;
         final lastKey = state.keys!.last;
-        return state.hasNextPage ? lastKey + 1 : null;
+        return lastKey + 1;
       },
       fetchPage: (pageKey) async {
+        developer.log('PagingController count start fetchPage $pageKey', name: 'Instrumentation');
         try {
           final result = await _getProducts(pageKey);
           return result.fold(
             (failure) {
+              developer.log('PagingController count fetchPage error: ${failure.errMessage}', name: 'Instrumentation');
               _handleError(failure.errMessage);
               throw Exception(failure.errMessage);
             },
             (response) {
+              developer.log('PagingController count success: ${response.items.length}', name: 'Instrumentation');
               if (pageKey == 1) {
                 emit(ProductLoaded(response));
               }
@@ -47,6 +61,7 @@ class ProductCubit extends Cubit<ProductState> {
             },
           );
         } catch (e) {
+          developer.log('PagingController count fetchPage catch error: $e', name: 'Instrumentation');
           _handleError(e.toString());
           rethrow;
         }
@@ -208,7 +223,7 @@ class ProductCubit extends Cubit<ProductState> {
     if (pageNumber == 1) {
       emit(ProductLoading());
       pagingController.refresh();
-      // pagingController.refresh() will clear items and trigger fetchPage(1)
+      pagingController.fetchNextPage();
     } else {
       pagingController.fetchNextPage();
     }
@@ -216,6 +231,7 @@ class ProductCubit extends Cubit<ProductState> {
 
   void refresh() {
     pagingController.refresh();
+    pagingController.fetchNextPage();
     emit(ProductLoading());
   }
 

@@ -131,7 +131,8 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
       if (query.subcategoryId != null) 'subcategoryId': query.subcategoryId,
       if (query.governorate != null && query.governorate!.trim().isNotEmpty)
         'governorate': query.governorate,
-      if (query.city != null && query.city!.trim().isNotEmpty) 'city': query.city,
+      if (query.city != null && query.city!.trim().isNotEmpty)
+        'city': query.city,
       if (query.search != null && query.search!.trim().isNotEmpty)
         'search': query.search,
       'pageNumber': query.pageNumber,
@@ -183,17 +184,15 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
     final payload = ResponseParser.extractDataPayload(raw);
 
     if (payload.containsKey('items')) {
-      return CommunityOffersPageModel.fromJson(payload)
-          .items
-          .whereType<CommunityOfferModel>()
-          .toList();
+      return CommunityOffersPageModel.fromJson(
+        payload,
+      ).items.whereType<CommunityOfferModel>().toList();
     }
 
     if (raw is List) {
-      return CommunityOffersPageModel.fromJson(raw)
-          .items
-          .whereType<CommunityOfferModel>()
-          .toList();
+      return CommunityOffersPageModel.fromJson(
+        raw,
+      ).items.whereType<CommunityOfferModel>().toList();
     }
 
     if (payload.isNotEmpty && payload['id'] != null) {

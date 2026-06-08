@@ -108,30 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 500.h, // Fixed height for the products section
                   child: BlocBuilder<ProductCubit, ProductState>(
                     builder: (context, productState) {
-                      if (productState is ProductLoading ||
-                          productState is ProductInitial) {
-                        return const LoadingWidget(height: 220);
-                      }
-
-                      if (productState is ProductError) {
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                productState.message,
-                                textAlign: TextAlign.center,
-                              ),
-                              TextButton(
-                                onPressed: () =>
-                                    context.read<ProductCubit>().refresh(),
-                                child: const Text('إعادة المحاولة'),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-
                       // We need the category names for filtering, get them from CategoryCubit state
                       final categoryState = context.read<CategoryCubit>().state;
                       final categories = categoryState is CategoryLoaded
@@ -144,6 +120,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               ? null
                               : categories[_selectedCategory];
 
+                      // 1. If 'All' is selected, ALWAYS render the PagedListView widget.
+                      //    This prevents the deadlock where PagedListView is not mounted
+                      //    so it never triggers the fetchPage callback.
                       if (selectedCategoryName == null) {
                         return HomeRecommendedItemsListWidget(
                           ratings: const [],
@@ -165,6 +144,32 @@ class _HomeScreenState extends State<HomeScreen> {
                               _ratingsByProductId[product.id] = rating;
                             });
                           },
+                        );
+                      }
+
+                      // 2. If a specific category is selected, use traditional filtering.
+                      //    For this, we wait until products are loaded.
+                      if (productState is ProductLoading ||
+                          productState is ProductInitial) {
+                        return const LoadingWidget(height: 220);
+                      }
+
+                      if (productState is ProductError) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                productState.message,
+                                textAlign: TextAlign.center,
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    context.read<ProductCubit>().refresh(),
+                                child: const Text('إعادة المحاولة'),
+                              ),
+                            ],
+                          ),
                         );
                       }
 

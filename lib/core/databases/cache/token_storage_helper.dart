@@ -8,6 +8,8 @@ class TokenStorageHelper {
   static const String refreshTokenKey = 'refresh_token';
 
   final CacheHelper _cacheHelper;
+  String? _cachedAccessToken;
+  String? _cachedRefreshToken;
 
   TokenStorageHelper(this._cacheHelper);
 
@@ -22,6 +24,7 @@ class TokenStorageHelper {
       name: 'Auth',
     );
 
+    _cachedAccessToken = cleanToken;
     await _cacheHelper.saveSecureData(key: accessTokenKey, value: cleanToken);
   }
 
@@ -43,11 +46,14 @@ class TokenStorageHelper {
       name: 'Auth',
     );
 
+    _cachedRefreshToken = cleanToken;
     await _cacheHelper.saveSecureData(key: refreshTokenKey, value: cleanToken);
   }
 
   /// Get access token - returns raw string only
   Future<String?> getAccessToken() async {
+    if (_cachedAccessToken != null) return _cachedAccessToken;
+
     final storedToken = await _cacheHelper.getSecureData(key: accessTokenKey);
     if (storedToken == null) {
       developer.log(
@@ -71,6 +77,7 @@ class TokenStorageHelper {
           'Normalized preview: ${_preview(cleanToken)}',
           name: 'Auth',
         );
+        _cachedAccessToken = cleanToken;
         await _cacheHelper.saveSecureData(
           key: accessTokenKey,
           value: cleanToken,
@@ -83,6 +90,7 @@ class TokenStorageHelper {
           'Returned token preview: ${_preview(cleanToken)}',
           name: 'Auth',
         );
+        _cachedAccessToken = cleanToken;
       }
 
       return cleanToken;
@@ -93,12 +101,15 @@ class TokenStorageHelper {
         'Reason: ${error.message}',
         name: 'Auth',
       );
+      _cachedAccessToken = null;
       await _cacheHelper.removeSecureData(key: accessTokenKey);
       return null;
     }
   }
 
   Future<String?> getRefreshToken() async {
+    if (_cachedRefreshToken != null) return _cachedRefreshToken;
+
     final storedToken = await _cacheHelper.getSecureData(key: refreshTokenKey);
     if (storedToken == null) return null;
 
@@ -108,13 +119,17 @@ class TokenStorageHelper {
         fieldName: 'storedRefreshToken',
       );
       if (cleanToken != storedToken) {
+        _cachedRefreshToken = cleanToken;
         await _cacheHelper.saveSecureData(
           key: refreshTokenKey,
           value: cleanToken,
         );
+      } else {
+        _cachedRefreshToken = cleanToken;
       }
       return cleanToken;
     } on FormatException {
+      _cachedRefreshToken = null;
       await _cacheHelper.removeSecureData(key: refreshTokenKey);
       return null;
     }
@@ -122,6 +137,8 @@ class TokenStorageHelper {
 
   Future<void> clearTokens() async {
     developer.log('🗑️ TokenStorageHelper: Clearing all tokens', name: 'Auth');
+    _cachedAccessToken = null;
+    _cachedRefreshToken = null;
     await _cacheHelper.removeSecureData(key: accessTokenKey);
     await _cacheHelper.removeSecureData(key: refreshTokenKey);
   }

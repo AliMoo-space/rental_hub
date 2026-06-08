@@ -4,6 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
 import 'package:rental_hub/feature/home/presentation/widgets/home_recommended_item_card_widget.dart';
+import 'dart:developer' as developer;
 
 class HomeRecommendedItemsListWidget extends StatelessWidget {
   const HomeRecommendedItemsListWidget({
@@ -41,6 +42,7 @@ class HomeRecommendedItemsListWidget extends StatelessWidget {
             fetchNextPage: () => pagingController!.fetchNextPage(),
             builderDelegate: PagedChildBuilderDelegate<ProductEntity>(
               itemBuilder: (context, item, index) {
+                developer.log('itemBuilder count: Index $index, Item: ${item.id}', name: 'Instrumentation');
                 final rating = index < ratings.length ? ratings[index] : 3.5;
                 return HomeRecommendedItemCardWidget(
                   rating: rating,
