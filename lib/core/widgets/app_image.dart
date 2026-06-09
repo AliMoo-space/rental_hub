@@ -63,7 +63,7 @@ class AppImage extends StatelessWidget {
             width: width,
             fit: fit ?? BoxFit.contain,
             errorBuilder: (context, error, stackTrace) =>
-                Image.asset('assets/images/not_found.jpg', height: 50.h),
+                Center(child: Icon(Icons.error)),
           );
         }
         if (isCircle) return ClipOval(child: child);

@@ -33,8 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Future.microtask(() {
       if (mounted) {
         context.read<CategoryCubit>().fetchCategories();
-        context.read<ProductCubit>().fetchProducts();
-        // banner loads itself via its own cubit
       }
     });
   }
@@ -116,9 +114,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       final selectedCategoryName =
                           _selectedCategory == 0 ||
-                                  _selectedCategory >= categories.length
-                              ? null
-                              : categories[_selectedCategory];
+                              _selectedCategory >= categories.length
+                          ? null
+                          : categories[_selectedCategory];
 
                       // 1. If 'All' is selected, ALWAYS render the PagedListView widget.
                       //    This prevents the deadlock where PagedListView is not mounted
@@ -126,12 +124,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (selectedCategoryName == null) {
                         return HomeRecommendedItemsListWidget(
                           ratings: const [],
-                          pagingController:
-                              context.read<ProductCubit>().pagingController,
+                          pagingController: context
+                              .read<ProductCubit>()
+                              .pagingController,
                           onFavoritePressed: (product) {
                             context.read<ProductCubit>().toggleFavorite(
-                                  product.id,
-                                );
+                              product.id,
+                            );
                           },
                           isFavoriteLoading: (product) {
                             final state = context.read<ProductCubit>().state;
@@ -202,8 +201,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         ratings: ratings,
                         onFavoritePressed: (product) {
                           context.read<ProductCubit>().toggleFavorite(
-                                product.id,
-                              );
+                            product.id,
+                          );
                         },
                         isFavoriteLoading: (product) {
                           final state = context.read<ProductCubit>().state;

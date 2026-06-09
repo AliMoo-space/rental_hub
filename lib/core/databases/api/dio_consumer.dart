@@ -14,9 +14,9 @@ class DioConsumer extends ApiConsumer {
     required this.dio,
     required this.authInterceptor,
     String? baseUrl,
-    Duration connectTimeout = const Duration(seconds: 15),
+    Duration connectTimeout = const Duration(seconds: 30),
     Duration receiveTimeout = const Duration(seconds: 30),
-    Duration sendTimeout = const Duration(seconds: 15),
+    Duration sendTimeout = const Duration(seconds: 30),
   }) {
     final resolvedBaseUrl = baseUrl ?? dio.options.baseUrl;
     dio.options = BaseOptions(
