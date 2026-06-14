@@ -1,5 +1,6 @@
 import 'package:rental_hub/feature/favorites/domain/entities/favorites_item_entity.dart';
 import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
+import 'package:rental_hub/core/databases/api/end_points.dart';
 
 class FavoriteItemModel extends FavoriteItemEntity {
   const FavoriteItemModel({
@@ -17,11 +18,25 @@ class FavoriteItemModel extends FavoriteItemEntity {
       id: json['id'],
       productId: json['productId'],
       productName: json['productName'] ?? '',
-      productImage: json['productImage'] ?? '',
+      productImage: _parseImageUrl(json['productImage']),
       finalPricePerDay: (json['finalPricePerDay'] as num).toDouble(),
       averageRating: (json['averageRating'] as num).toDouble(),
       createdAt: DateTime.parse(json['createdAt']),
     );
+  }
+
+  static String _parseImageUrl(dynamic imageObj) {
+    if (imageObj == null) return '';
+    String url = '';
+    if (imageObj is String) {
+      url = imageObj;
+    } else if (imageObj is Map) {
+      url = imageObj['imageUrl']?.toString() ?? imageObj['url']?.toString() ?? '';
+    }
+    if (url.isEmpty || url.toLowerCase() == 'null') return '';
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    if (!url.startsWith('/')) url = '/$url';
+    return '${EndPoints.baseUrl}$url';
   }
 }
 
@@ -80,7 +95,7 @@ extension FavoriteItemMapper on FavoriteItemModel {
       totalReviews: 0,
       totalRentalCount: 0,
       totalPlatformProfit: 0,
-      images: [],
+      images: productImage.isNotEmpty ? [productImage] : [],
       isFavorite: true,
     );
   }

@@ -31,7 +31,6 @@ class HomeRecommendedItemsListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Use PagedListView if pagingController is provided
     if (pagingController != null) {
       return ValueListenableBuilder<PagingState<int, ProductEntity>>(
         valueListenable: pagingController!,
@@ -42,7 +41,10 @@ class HomeRecommendedItemsListWidget extends StatelessWidget {
             fetchNextPage: () => pagingController!.fetchNextPage(),
             builderDelegate: PagedChildBuilderDelegate<ProductEntity>(
               itemBuilder: (context, item, index) {
-                developer.log('itemBuilder count: Index $index, Item: ${item.id}', name: 'Instrumentation');
+                developer.log(
+                  'itemBuilder count: Index $index, Item: ${item.id}',
+                  name: 'Instrumentation',
+                );
                 final rating = index < ratings.length ? ratings[index] : 3.5;
                 return HomeRecommendedItemCardWidget(
                   rating: rating,

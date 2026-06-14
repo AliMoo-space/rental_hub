@@ -1,4 +1,5 @@
 import 'package:rental_hub/feature/ai_chat/domain/entities/ai_chat_entity.dart';
+import 'package:rental_hub/core/databases/api/end_points.dart';
 
 class AiChatModel extends AiChatEntity {
   AiChatModel({
@@ -48,7 +49,16 @@ class ProductChatModel extends ProductChatEntity {
       location: json['location'] ?? '',
       rentalGuarantee: json['rental_guarantee'] ?? false,
       status: json['status'] ?? '',
-      imageUrl: json['image_url'],
+      imageUrl: _parseImageUrl(json['image_url']),
     );
+  }
+
+  static String? _parseImageUrl(dynamic imageObj) {
+    if (imageObj == null) return null;
+    String url = imageObj.toString();
+    if (url.isEmpty || url.toLowerCase() == 'null') return null;
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    if (!url.startsWith('/')) url = '/$url';
+    return '${EndPoints.baseUrl}$url';
   }
 }

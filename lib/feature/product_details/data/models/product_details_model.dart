@@ -1,4 +1,5 @@
 import 'package:rental_hub/feature/product_details/domain/entities/product_details_entity.dart';
+import 'package:rental_hub/core/databases/api/end_points.dart';
 
 class ProductDetailsModel extends ProductDetailsEntity {
   ProductDetailsModel({
@@ -65,7 +66,19 @@ class ProductDetailsModel extends ProductDetailsEntity {
       categoryName: json['categoryName']?.toString() ?? '',
       subcategoryId: _parseInt(json['subcategoryId']),
       subcategoryName: json['subcategoryName']?.toString() ?? '',
-      images: imagesValue.map((image) => image.toString()).toList(),
+      images: imagesValue.map((image) {
+        if (image == null) return '';
+        String url = '';
+        if (image is String) {
+          url = image;
+        } else if (image is Map) {
+          url = image['imageUrl']?.toString() ?? image['url']?.toString() ?? '';
+        }
+        if (url.isEmpty || url.toLowerCase() == 'null') return '';
+        if (url.startsWith('http://') || url.startsWith('https://')) return url;
+        if (!url.startsWith('/')) url = '/$url';
+        return '${EndPoints.baseUrl}$url';
+      }).where((s) => s.isNotEmpty).toList(),
     );
   }
 

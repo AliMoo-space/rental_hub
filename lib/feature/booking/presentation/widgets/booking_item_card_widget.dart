@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
+import 'package:rental_hub/core/widgets/app_image.dart';
 
 /// Shows the product being booked with image, name, location, and rating
 class BookingItemCardWidget extends StatelessWidget {
@@ -41,13 +42,9 @@ class BookingItemCardWidget extends StatelessWidget {
               width: 80.w,
               height: 80.w,
               color: AppColors.surfaceColor,
-              child: Image.network(
-                imageUrl,
+              child: AppNetworkImage(
+                images: [imageUrl],
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  color: AppColors.surfaceVariantColor,
-                  child: const Icon(Icons.image_not_supported),
-                ),
               ),
             ),
           ),

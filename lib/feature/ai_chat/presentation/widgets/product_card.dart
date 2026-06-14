@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/product_preview.dart';
+import 'package:rental_hub/core/widgets/app_image.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductPreview product;
@@ -32,17 +33,15 @@ class ProductCard extends StatelessWidget {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(12.r)),
                 color: Colors.grey.shade200,
               ),
-              child: product.imageUrl != null
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(12.r),
-                      ),
-                      child: Image.network(
-                        product.imageUrl!,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : Center(child: Icon(Icons.image_not_supported, size: 36.sp)),
+              child: ClipRRect(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(12.r),
+                ),
+                child: AppNetworkImage(
+                  images: product.imageUrl != null ? [product.imageUrl!] : [],
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
             Padding(
               padding: EdgeInsets.all(12.w),

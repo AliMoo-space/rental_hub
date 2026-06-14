@@ -103,10 +103,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 HeightSpace(20),
                 SizedBox(
-                  height: 500.h, // Fixed height for the products section
+                  height: 500.h,
                   child: BlocBuilder<ProductCubit, ProductState>(
                     builder: (context, productState) {
-                      // We need the category names for filtering, get them from CategoryCubit state
                       final categoryState = context.read<CategoryCubit>().state;
                       final categories = categoryState is CategoryLoaded
                           ? _buildCategoryTitles(categoryState.categories)
@@ -118,9 +117,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ? null
                           : categories[_selectedCategory];
 
-                      // 1. If 'All' is selected, ALWAYS render the PagedListView widget.
-                      //    This prevents the deadlock where PagedListView is not mounted
-                      //    so it never triggers the fetchPage callback.
                       if (selectedCategoryName == null) {
                         return HomeRecommendedItemsListWidget(
                           ratings: const [],
@@ -146,8 +142,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       }
 
-                      // 2. If a specific category is selected, use traditional filtering.
-                      //    For this, we wait until products are loaded.
                       if (productState is ProductLoading ||
                           productState is ProductInitial) {
                         return const LoadingWidget(height: 220);

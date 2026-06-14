@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/feature/search/domain/entities/search_result_entity.dart';
+import 'package:rental_hub/core/widgets/app_image.dart';
 
 class SearchResultCard extends StatelessWidget {
   final ProductItemEntity item;
@@ -45,17 +46,9 @@ class SearchResultCard extends StatelessWidget {
                       child: Container(
                         color: AppColors.surfaceVariantColor,
                         width: double.infinity,
-                        child: Image.network(
-                          item.images.isNotEmpty ? item.images.first : '',
+                        child: AppNetworkImage(
+                          images: item.images,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => Container(
-                            color: AppColors.surfaceVariantColor,
-                            child: Icon(
-                              Icons.image_not_supported_rounded,
-                              size: 30.sp,
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
                         ),
                       ),
                     ),

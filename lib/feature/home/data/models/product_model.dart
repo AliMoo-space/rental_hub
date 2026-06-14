@@ -1,4 +1,5 @@
 import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
+import 'package:rental_hub/core/databases/api/end_points.dart';
 
 class ProductsModel extends ProductsEntity {
   ProductsModel({
@@ -114,10 +115,19 @@ class ProductModel extends ProductEntity {
       totalReviews: _parseInt(json['totalReviews']),
       totalRentalCount: _parseInt(json['totalRentalCount']),
       totalPlatformProfit: _parseNum(json['totalPlatformProfit']),
-      images: imagesValue
-          .map((image) => image?.toString() ?? '')
-          .where((s) => s.isNotEmpty && s.toLowerCase() != 'null')
-          .toList(),
+      images: imagesValue.map((image) {
+        if (image == null) return '';
+        String url = '';
+        if (image is String) {
+          url = image;
+        } else if (image is Map) {
+          url = image['imageUrl']?.toString() ?? image['url']?.toString() ?? '';
+        }
+        if (url.isEmpty || url.toLowerCase() == 'null') return '';
+        if (url.startsWith('http://') || url.startsWith('https://')) return url;
+        if (!url.startsWith('/')) url = '/$url';
+        return '${EndPoints.baseUrl}$url';
+      }).where((s) => s.isNotEmpty).toList(),
       isFavorite: _parseBool(json['isFavorite'] ?? json['is_favorite']),
     );
   }

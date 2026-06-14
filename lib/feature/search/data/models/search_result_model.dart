@@ -1,4 +1,5 @@
 import 'package:rental_hub/feature/search/domain/entities/search_result_entity.dart';
+import 'package:rental_hub/core/databases/api/end_points.dart';
 
 class SearchResultModel extends SearchResultEntity {
   SearchResultModel({
@@ -18,9 +19,19 @@ class SearchResultModel extends SearchResultEntity {
         basePricePerDay: (map['basePricePerDay'] as num?)?.toDouble() ?? 0.0,
         location: map['location'] as String? ?? '',
         condition: map['condition'] as String? ?? '',
-        images: (map['images'] as List<dynamic>? ?? [])
-            .map((img) => (img as Map<String, dynamic>)['url'] as String? ?? '')
-            .toList(),
+        images: (map['images'] as List<dynamic>? ?? []).map((img) {
+          if (img == null) return '';
+          String url = '';
+          if (img is String) {
+            url = img;
+          } else if (img is Map) {
+            url = img['imageUrl']?.toString() ?? img['url']?.toString() ?? '';
+          }
+          if (url.isEmpty || url.toLowerCase() == 'null') return '';
+          if (url.startsWith('http://') || url.startsWith('https://')) return url;
+          if (!url.startsWith('/')) url = '/$url';
+          return '${EndPoints.baseUrl}$url';
+        }).where((s) => s.isNotEmpty).toList(),
         rating: (map['rating'] as num?)?.toDouble() ?? 0.0,
       );
     }).toList();
