@@ -54,7 +54,9 @@ class _CommunityScreenState extends State<CommunityScreen>
 
   void _showFeedback(BuildContext context, String? message) {
     if (message == null || message.trim().isEmpty) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -127,10 +129,14 @@ class _CommunityFeedTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () => context.read<CommunityRequestsCubit>().loadRequests(refresh: true),
+      onRefresh: () =>
+          context.read<CommunityRequestsCubit>().loadRequests(refresh: true),
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsetsDirectional.symmetric(horizontal: 18.w, vertical: 20.h),
+        padding: EdgeInsetsDirectional.symmetric(
+          horizontal: 18.w,
+          vertical: 20.h,
+        ),
         child: Column(
           children: [
             _CreateCommunityPostCard(
@@ -186,13 +192,15 @@ class _CommunityFeedTab extends StatelessWidget {
                         onPressed: state.isLoadingMore
                             ? null
                             : () => context
-                                .read<CommunityRequestsCubit>()
-                                .loadMoreRequests(),
+                                  .read<CommunityRequestsCubit>()
+                                  .loadMoreRequests(),
                         child: state.isLoadingMore
                             ? const SizedBox(
                                 width: 22,
                                 height: 22,
-                                child: CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               )
                             : const Text('تحميل المزيد'),
                       ),
@@ -483,11 +491,14 @@ class _CommunityRequestCard extends StatelessWidget {
               CircleAvatar(
                 radius: 28.r,
                 backgroundColor: AppColors.surfaceVariantColor,
-                backgroundImage: request.userImageUrl != null &&
+                backgroundImage:
+                    request.userImageUrl != null &&
                         request.userImageUrl!.isNotEmpty
                     ? NetworkImage(request.userImageUrl!)
                     : null,
-                child: request.userImageUrl == null || request.userImageUrl!.isEmpty
+                child:
+                    request.userImageUrl == null ||
+                        request.userImageUrl!.isEmpty
                     ? Icon(
                         Icons.person,
                         size: 20.sp,
@@ -497,11 +508,7 @@ class _CommunityRequestCard extends StatelessWidget {
               ),
               SizedBox(width: 10.w),
               Expanded(
-                child: Text(
-                  displayName,
-                  textAlign: TextAlign.end,
-                  style: AppStyles.hendi500Size20,
-                ),
+                child: Text(displayName, style: AppStyles.hendi500Size20),
               ),
             ],
           ),

@@ -1,4 +1,5 @@
 import 'package:rental_hub/feature/community/domain/entities/community_offer_entity.dart';
+import 'package:rental_hub/core/databases/api/end_points.dart';
 
 class CommunityOfferModel extends CommunityOfferEntity {
   const CommunityOfferModel({
@@ -26,10 +27,10 @@ class CommunityOfferModel extends CommunityOfferEntity {
           json['requestTitle']?.toString() ?? json['RequestTitle']?.toString(),
       proposedPrice: _parseDouble(json['proposedPrice'] ?? json['ProposedPrice']),
       message: json['message']?.toString() ?? json['Message']?.toString() ?? '',
-      imageUrl:
+      imageUrl: _parseImageUrl(
           json['imageUrl']?.toString() ??
           json['image']?.toString() ??
-          json['Image']?.toString(),
+          json['Image']?.toString()),
       governorate:
           json['governorate']?.toString() ?? json['Governorate']?.toString() ?? '',
       city: json['city']?.toString() ?? json['City']?.toString() ?? '',
@@ -44,10 +45,10 @@ class CommunityOfferModel extends CommunityOfferEntity {
           json['userFullName']?.toString() ??
           json['UserFullName']?.toString() ??
           '',
-      offererImageUrl:
+      offererImageUrl: _parseImageUrl(
           json['offererImageUrl']?.toString() ??
           json['userImageUrl']?.toString() ??
-          json['UserImage']?.toString(),
+          json['UserImage']?.toString()),
       status: json['status']?.toString() ?? json['Status']?.toString() ?? '',
       createdAt: _parseDate(json['createdAt'] ?? json['CreatedAt']),
     );
@@ -68,6 +69,15 @@ class CommunityOfferModel extends CommunityOfferEntity {
   static DateTime? _parseDate(dynamic value) {
     if (value == null) return null;
     return DateTime.tryParse(value.toString());
+  }
+
+  static String? _parseImageUrl(dynamic imageObj) {
+    if (imageObj == null) return null;
+    String url = imageObj.toString();
+    if (url.isEmpty || url.toLowerCase() == 'null') return null;
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    if (!url.startsWith('/')) url = '/$url';
+    return '${EndPoints.baseUrl}$url';
   }
 }
 

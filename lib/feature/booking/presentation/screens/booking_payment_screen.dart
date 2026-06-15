@@ -8,14 +8,21 @@ import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 import 'package:rental_hub/feature/booking/presentation/widgets/booking_item_card_widget.dart';
 import 'package:rental_hub/feature/booking/presentation/widgets/booking_stepper_widget.dart';
 import 'package:rental_hub/feature/booking/presentation/widgets/payment_summary_widget.dart';
+import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
 
 /// Final step of booking flow - payment confirmation
 class BookingPaymentScreen extends StatefulWidget {
+  final ProductEntity product;
+  final int days;
+  final bool isLoading;
   final void Function()? onPreviousStep;
   final void Function()? onConfirmPayment;
 
   const BookingPaymentScreen({
     super.key,
+    required this.product,
+    required this.days,
+    this.isLoading = false,
     this.onPreviousStep,
     this.onConfirmPayment,
   });
@@ -27,6 +34,12 @@ class BookingPaymentScreen extends StatefulWidget {
 class _BookingPaymentScreenState extends State<BookingPaymentScreen> {
   @override
   Widget build(BuildContext context) {
+    final double rentalPrice =
+        widget.product.basePricePerDay.toDouble() * widget.days;
+    final double insurancePrice = rentalPrice * 0.1; // Example 10%
+    final double servicePrice = rentalPrice * 0.05; // Example 5%
+    final double totalPrice = rentalPrice + insurancePrice + servicePrice;
+
     return Scaffold(
       backgroundColor: const Color(0xffF5F6FA),
       appBar: AppBar(
@@ -51,11 +64,13 @@ class _BookingPaymentScreenState extends State<BookingPaymentScreen> {
 
             // Product Card
             BookingItemCardWidget(
-              productName: 'Canon Camera',
-              location: 'Cairo, Egypt',
+              productName: widget.product.name,
+              location: widget.product.locationArea,
               rating: 4.5,
               reviewCount: 128,
-              imageUrl: 'https://via.placeholder.com/200x200?text=Canon+Camera',
+              imageUrl: widget.product.images.isNotEmpty
+                  ? widget.product.images.first
+                  : 'https://via.placeholder.com/200',
             ),
             verticalSpacing(24),
 
@@ -63,10 +78,10 @@ class _BookingPaymentScreenState extends State<BookingPaymentScreen> {
             Text('تفاصيل الدفع', style: AppStyles.titleMedium),
             verticalSpacing(12),
             PaymentSummaryWidget(
-              rentalPrice: 750,
-              insurancePrice: 190,
-              servicePrice: 100,
-              totalPrice: 1040,
+              rentalPrice: rentalPrice,
+              insurancePrice: insurancePrice,
+              servicePrice: servicePrice,
+              totalPrice: totalPrice,
             ),
             verticalSpacing(24),
 
@@ -101,7 +116,7 @@ class _BookingPaymentScreenState extends State<BookingPaymentScreen> {
                   horizontalSpacing(12),
                   Expanded(
                     child: Text(
-                      'حميع المعلومات صحيحة ومسؤول الطالب بحالها في النموذج',
+                      'الموافقة على الشروط والأحكام الخاصة بالاستئجار',
                       style: AppStyles.bodySmall.copyWith(
                         color: AppColors.successColor,
                       ),
@@ -113,13 +128,15 @@ class _BookingPaymentScreenState extends State<BookingPaymentScreen> {
             verticalSpacing(32),
 
             // Confirm Button
-            PrimaryButtonWidget(
-              buttonText: 'تأكيد الدفع',
-              onPress: () {
-                // Confirm payment
-                _showConfirmationDialog(context);
-              },
-            ),
+            widget.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : PrimaryButtonWidget(
+                    width: double.infinity,
+                    buttonText: 'تأكيد الحجز',
+                    onPress: () {
+                      widget.onConfirmPayment?.call();
+                    },
+                  ),
             verticalSpacing(12),
 
             // Back Button
@@ -145,33 +162,6 @@ class _BookingPaymentScreenState extends State<BookingPaymentScreen> {
             verticalSpacing(16),
           ],
         ),
-      ),
-    );
-  }
-
-  void _showConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('تأكيد الحجز', style: AppStyles.titleMedium),
-        content: Text(
-          'تم تأكيد حجزك بنجاح. سيتم إرسال تفاصيل الحجز إلى بريدك الإلكتروني.',
-          style: AppStyles.bodyMedium,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              widget.onConfirmPayment?.call();
-            },
-            child: Text(
-              'حسناً',
-              style: AppStyles.bodyLarge.copyWith(
-                color: AppColors.primaryColor,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:rental_hub/core/models/paginated_response_model.dart';
 import 'package:rental_hub/feature/community/domain/entities/community_request_entity.dart';
+import 'package:rental_hub/core/databases/api/end_points.dart';
 
 class CommunityRequestModel extends CommunityRequestEntity {
   const CommunityRequestModel({
@@ -46,20 +47,20 @@ class CommunityRequestModel extends CommunityRequestEntity {
       endDate: _parseDate(json['endDate'] ?? json['EndDate']),
       description:
           json['description']?.toString() ?? json['Description']?.toString() ?? '',
-      imageUrl:
+      imageUrl: _parseImageUrl(
           json['imageUrl']?.toString() ??
           json['image']?.toString() ??
-          json['Image']?.toString(),
+          json['Image']?.toString()),
       userId: json['userId']?.toString() ?? json['UserId']?.toString() ?? '',
       userFullName:
           json['userFullName']?.toString() ??
           json['UserFullName']?.toString() ??
           json['ownerName']?.toString() ??
           '',
-      userImageUrl:
+      userImageUrl: _parseImageUrl(
           json['userImageUrl']?.toString() ??
           json['userImage']?.toString() ??
-          json['UserImage']?.toString(),
+          json['UserImage']?.toString()),
       status: json['status']?.toString() ?? json['Status']?.toString() ?? '',
       createdAt: _parseDate(json['createdAt'] ?? json['CreatedAt']),
       offersCount: _parseInt(json['offersCount'] ?? json['OffersCount']),
@@ -81,6 +82,15 @@ class CommunityRequestModel extends CommunityRequestEntity {
   static DateTime? _parseDate(dynamic value) {
     if (value == null) return null;
     return DateTime.tryParse(value.toString());
+  }
+
+  static String? _parseImageUrl(dynamic imageObj) {
+    if (imageObj == null) return null;
+    String url = imageObj.toString();
+    if (url.isEmpty || url.toLowerCase() == 'null') return null;
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    if (!url.startsWith('/')) url = '/$url';
+    return '${EndPoints.baseUrl}$url';
   }
 }
 

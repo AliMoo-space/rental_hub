@@ -156,6 +156,32 @@ import 'package:rental_hub/feature/profile/domain/usecases/get_profile_usecase.d
 import 'package:rental_hub/feature/profile/domain/usecases/update_profile_usecase.dart';
 import 'package:rental_hub/feature/profile/domain/usecases/upload_image_usecase.dart';
 import 'package:rental_hub/feature/profile/presentation/cubit/user_profile_cubit.dart';
+import 'package:rental_hub/feature/notifications/data/datasources/notification_remote_data_source.dart';
+import 'package:rental_hub/feature/notifications/data/repositories/notification_repository_impl.dart';
+import 'package:rental_hub/feature/notifications/domain/repositories/notification_repository.dart';
+import 'package:rental_hub/feature/notifications/domain/usecases/get_notifications_use_case.dart';
+import 'package:rental_hub/feature/notifications/domain/usecases/get_unread_notifications_count_use_case.dart';
+import 'package:rental_hub/feature/notifications/domain/usecases/read_all_notifications_use_case.dart';
+import 'package:rental_hub/feature/notifications/domain/usecases/read_notification_use_case.dart';
+import 'package:rental_hub/feature/notifications/presentation/cubit/notification_cubit.dart';
+import 'package:data_connection_checker_tv/data_connection_checker.dart';
+import 'package:rental_hub/core/connection/network_info.dart';
+import 'package:rental_hub/feature/booking/data/datasources/booking_remote_data_source.dart';
+import 'package:rental_hub/feature/booking/data/repositories/booking_repository_impl.dart';
+import 'package:rental_hub/feature/booking/domain/repositories/booking_repository.dart';
+import 'package:rental_hub/feature/booking/domain/usecases/approve_rental_order_usecase.dart';
+import 'package:rental_hub/feature/booking/domain/usecases/cancel_rental_order_usecase.dart';
+import 'package:rental_hub/feature/booking/domain/usecases/confirm_receipt_rental_order_usecase.dart';
+import 'package:rental_hub/feature/booking/domain/usecases/create_rental_order_usecase.dart';
+import 'package:rental_hub/feature/booking/domain/usecases/get_my_listings_orders_usecase.dart';
+import 'package:rental_hub/feature/booking/domain/usecases/get_my_orders_usecase.dart';
+import 'package:rental_hub/feature/booking/domain/usecases/get_rental_order_by_id_usecase.dart';
+import 'package:rental_hub/feature/booking/domain/usecases/get_renter_order_stats_usecase.dart';
+import 'package:rental_hub/feature/booking/domain/usecases/reject_rental_order_usecase.dart';
+import 'package:rental_hub/feature/booking/domain/usecases/return_rental_order_usecase.dart';
+import 'package:rental_hub/feature/booking/domain/usecases/ship_rental_order_usecase.dart';
+import 'package:rental_hub/feature/booking/presentation/cubit/booking_action_cubit.dart';
+import 'package:rental_hub/feature/booking/presentation/cubit/my_orders_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -177,6 +203,11 @@ Future<void> setupServiceLocator() async {
       authInterceptor: getIt<AuthInterceptor>(),
       baseUrl: EndPoints.baseUrl,
     ),
+  );
+
+  getIt.registerLazySingleton(() => DataConnectionChecker());
+  getIt.registerLazySingleton<NetworkInfo>(
+    () => NetworkInfoImpl(getIt()),
   );
 
   // Dedicated ApiConsumer for AI endpoints (separate Dio instance)
@@ -246,6 +277,13 @@ Future<void> setupServiceLocator() async {
     () => UserProfileRepositoryImpl(getIt()),
   );
 
+  getIt.registerLazySingleton<BookingRepository>(
+    () => BookingRepositoryImpl(
+      remoteDataSource: getIt(),
+      networkInfo: getIt(),
+    ),
+  );
+
   // ======================= USE CASES ========================
 
   getIt.registerLazySingleton(() => LoginUseCase(getIt()));
@@ -306,6 +344,23 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton(() => GetMyRequestsUseCase(getIt()));
   getIt.registerLazySingleton(() => AcceptOfferUseCase(getIt()));
   getIt.registerLazySingleton(() => RejectOfferUseCase(getIt()));
+
+  getIt.registerLazySingleton(() => CreateRentalOrderUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => ApproveRentalOrderUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => RejectRentalOrderUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => CancelRentalOrderUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => ShipRentalOrderUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => ConfirmReceiptRentalOrderUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => ReturnRentalOrderUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => GetMyOrdersUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => GetMyListingsOrdersUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => GetRentalOrderByIdUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => GetRenterOrderStatsUseCase(repository: getIt()));
+
+  getIt.registerLazySingleton(() => GetNotificationsUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => ReadNotificationUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => ReadAllNotificationsUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => GetUnreadNotificationsCountUseCase(repository: getIt()));
 
   getIt.registerFactory(
     () => CommunityRequestsCubit(getIt(), getIt(), getIt(), getIt()),
@@ -432,9 +487,19 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<CommunityRemoteDataSource>(
     () => CommunityRemoteDataSourceImpl(getIt()),
   );
+  getIt.registerLazySingleton<NotificationRemoteDataSource>(
+    () => NotificationRemoteDataSourceImpl(apiConsumer: getIt()),
+  );
+
+  getIt.registerLazySingleton<BookingRemoteDataSource>(
+    () => BookingRemoteDataSourceImpl(api: getIt()),
+  );
 
   getIt.registerLazySingleton<CommunityRepository>(
     () => CommunityRepositoryImpl(getIt()),
+  );
+  getIt.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepositoryImpl(remoteDataSource: getIt()),
   );
 
   // ========================= CUBITS =========================
@@ -481,6 +546,15 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory(() => AiChatCubit(getIt()));
 
   getIt.registerFactory(
+    () => NotificationCubit(
+      getNotificationsUseCase: getIt(),
+      readNotificationUseCase: getIt(),
+      readAllNotificationsUseCase: getIt(),
+      getUnreadCountUseCase: getIt(),
+    ),
+  );
+
+  getIt.registerFactory(
     () => WalletCubit(getIt(), getIt(), getIt(), getIt(), getIt()),
   );
   getIt.registerLazySingleton(
@@ -488,6 +562,23 @@ Future<void> setupServiceLocator() async {
   );
   getIt.registerFactory(
     () => AddListingCubit(getIt(), getIt(), getIt(), getIt()),
+  );
+  getIt.registerFactory(
+    () => BookingActionCubit(
+      createOrderUseCase: getIt(),
+      approveOrderUseCase: getIt(),
+      rejectOrderUseCase: getIt(),
+      cancelOrderUseCase: getIt(),
+      shipOrderUseCase: getIt(),
+      confirmReceiptOrderUseCase: getIt(),
+      returnOrderUseCase: getIt(),
+    ),
+  );
+  getIt.registerFactory(
+    () => MyOrdersCubit(
+      getMyOrdersUseCase: getIt(),
+      getMyListingsOrdersUseCase: getIt(),
+    ),
   );
   getIt.registerFactoryParam<OtpCubit, String, void>(
     (email, _) => OtpCubit(

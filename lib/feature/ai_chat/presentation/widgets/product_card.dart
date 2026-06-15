@@ -20,7 +20,7 @@ class ProductCard extends StatelessWidget {
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12.r),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 6),
+            BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 6),
           ],
         ),
         child: Column(

@@ -160,6 +160,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
+                Padding(
+                  padding: EdgeInsetsDirectional.symmetric(
+                    horizontal: 20.w,
+                    vertical: 16.h,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'طلبات الإيجار لمنتجاتي',
+                        style: AppStyles.instrumentSans700Size18,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          context.pushNamed(AppRoutes.myListingsOrdersScreen);
+                        },
+                        child: Text(
+                          context.l10n.viewAll,
+                          style: AppStyles.instrumentSans500Size14.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 HomeRecommendedItemCardWidget(
                   rating: _ratings[0],
                   onRatingChanged: (newRating) {
@@ -180,10 +206,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         context.l10n.activeRentals,
                         style: AppStyles.instrumentSans700Size18,
                       ),
-                      Text(
-                        context.l10n.viewAll,
-                        style: AppStyles.instrumentSans500Size14.copyWith(
-                          fontWeight: FontWeight.bold,
+                      GestureDetector(
+                        onTap: () {
+                          context.pushNamed(AppRoutes.myOrdersScreen);
+                        },
+                        child: Text(
+                          context.l10n.viewAll,
+                          style: AppStyles.instrumentSans500Size14.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],

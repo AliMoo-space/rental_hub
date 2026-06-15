@@ -94,6 +94,7 @@ class _UserProfileViewState extends State<_UserProfileView> {
   }
 
   Future<void> _pickAndUploadImage(BuildContext context) async {
+    final userProfileCubit = context.read<UserProfileCubit>();
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(
       source: ImageSource.gallery,
@@ -113,7 +114,7 @@ class _UserProfileViewState extends State<_UserProfileView> {
       _localImageBytes = imageBytes;
     });
 
-    await context.read<UserProfileCubit>().uploadProfileImage(
+    await userProfileCubit.uploadProfileImage(
       imageBytes: imageBytes,
       fileName: pickedImage.name.isNotEmpty ? pickedImage.name : 'profile.jpg',
     );

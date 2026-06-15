@@ -15,6 +15,8 @@ import 'package:rental_hub/feature/auth/presentation/screens/otp_verification_sc
 import 'package:rental_hub/feature/auth/presentation/screens/reset_password_screen.dart';
 import 'package:rental_hub/feature/auth/presentation/widgets/animated_auth_toggle.dart';
 import 'package:rental_hub/feature/booking/presentation/screens/booking_flow_screen.dart';
+import 'package:rental_hub/feature/booking/presentation/screens/my_orders_screen.dart';
+import 'package:rental_hub/feature/booking/presentation/screens/my_listings_orders_screen.dart';
 import 'package:rental_hub/feature/ai_chat/presentation/screens/ai_chat_screen.dart';
 import 'package:rental_hub/feature/chat/presentation/cubit/chat_cubit.dart';
 import 'package:rental_hub/feature/chat/presentation/cubit/conversations_cubit.dart';
@@ -51,6 +53,8 @@ import 'package:rental_hub/feature/wallet/presentation/screens/wallet_screen.dar
 import 'package:rental_hub/feature/profile/presentation/cubit/user_profile_cubit.dart';
 import 'package:rental_hub/feature/search/presentation/screens/search_screen.dart';
 import 'package:rental_hub/feature/search/presentation/cubit/search_cubit.dart';
+import 'package:rental_hub/feature/notifications/presentation/screens/notifications_screen.dart';
+import 'package:rental_hub/feature/notifications/presentation/cubit/notification_cubit.dart';
 
 class RouterGenerationConfig {
   static GoRouter goRouter = GoRouter(
@@ -166,7 +170,25 @@ class RouterGenerationConfig {
       GoRoute(
         name: AppRoutes.bookingFlowScreen,
         path: AppRoutes.bookingFlowScreen,
-        builder: (context, state) => const BookingFlowScreen(),
+        builder: (context, state) {
+          if (state.extra is! ProductEntity) {
+            return const Scaffold(
+              body: Center(child: Text('Error: Missing Product')),
+            );
+          }
+          final product = state.extra as ProductEntity;
+          return BookingFlowScreen(product: product);
+        },
+      ),
+      GoRoute(
+        name: AppRoutes.myOrdersScreen,
+        path: AppRoutes.myOrdersScreen,
+        builder: (context, state) => const MyOrdersScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.myListingsOrdersScreen,
+        path: AppRoutes.myListingsOrdersScreen,
+        builder: (context, state) => const MyListingsOrdersScreen(),
       ),
       GoRoute(
         name: AppRoutes.userProfileScreen,
@@ -213,6 +235,14 @@ class RouterGenerationConfig {
         name: AppRoutes.dealsScreen,
         path: AppRoutes.dealsScreen,
         builder: (context, state) => const DealsScreen(),
+      ),
+      GoRoute(
+        name: AppRoutes.notificationsScreen,
+        path: AppRoutes.notificationsScreen,
+        builder: (context, state) => BlocProvider.value(
+          value: getIt<NotificationCubit>(),
+          child: const NotificationsScreen(),
+        ),
       ),
       GoRoute(
         name: AppRoutes.walletScreen,

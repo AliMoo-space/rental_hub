@@ -11,6 +11,7 @@ class AppRoutes {
   static const String communityScreen = '/communityScreen';
   static const String favoritesScreen = '/favoritesScreen';
   static const String dealsScreen = '/dealsScreen';
+  static const String notificationsScreen = '/notificationsScreen';
   static const String walletScreen = '/walletScreen';
   static const String addListingScreen = '/addListingScreen';
   static const String productDetailsScreen = '/productDetailsScreen';
@@ -31,6 +32,8 @@ class AppRoutes {
   static const String subscriptionScreen = '/subscriptionScreen';
   static const String searchScreen = '/searchScreen';
   static const String productReviewsScreen = '/productReviewsScreen';
+  static const String myOrdersScreen = '/myOrdersScreen';
+  static const String myListingsOrdersScreen = '/myListingsOrdersScreen';
   static const String productReviewsPath = '/product-reviews';
 
   static String productReviewsLocation(int productId) =>

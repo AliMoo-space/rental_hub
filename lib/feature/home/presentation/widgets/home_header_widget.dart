@@ -8,12 +8,29 @@ import 'package:go_router/go_router.dart';
 import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/core/styling/app_assets.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
+import 'package:rental_hub/core/styling/app_styles.dart';
+import 'package:rental_hub/core/utils/service_locator.dart';
+import 'package:rental_hub/feature/notifications/presentation/cubit/notification_cubit.dart';
+import 'package:rental_hub/feature/notifications/presentation/cubit/notification_state.dart';
 
-class HomeHeaderWidget extends StatelessWidget implements PreferredSizeWidget {
+class HomeHeaderWidget extends StatefulWidget implements PreferredSizeWidget {
   const HomeHeaderWidget({super.key});
 
   @override
+  State<HomeHeaderWidget> createState() => _HomeHeaderWidgetState();
+
+  @override
   Size get preferredSize => Size.fromHeight(100.h);
+}
+
+class _HomeHeaderWidgetState extends State<HomeHeaderWidget> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      getIt<NotificationCubit>().fetchUnreadCount();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +42,45 @@ class HomeHeaderWidget extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         Row(
           children: [
-            GestureDetector(
-              onTap: () => context.pushNamed(AppRoutes.settingsScreen),
-              child: CircleAvatar(
-                backgroundColor: AppColors.backgroundColor,
-                radius: 20.r,
-                child: SvgPicture.asset(AppAssets.bell, width: 30.w),
+            BlocProvider.value(
+              value: getIt<NotificationCubit>(),
+              child: BlocBuilder<NotificationCubit, NotificationState>(
+                builder: (context, state) {
+                  int unreadCount = 0;
+                  if (state is NotificationLoaded) {
+                    unreadCount = state.unreadCount;
+                  }
+                  
+                  return GestureDetector(
+                    onTap: () => context.pushNamed(AppRoutes.notificationsScreen),
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: AppColors.backgroundColor,
+                          radius: 20.r,
+                          child: SvgPicture.asset(AppAssets.bell, width: 30.w),
+                        ),
+                        if (unreadCount > 0)
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            child: Container(
+                              padding: EdgeInsets.all(4.r),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryColor,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Text(
+                                unreadCount > 99 ? '99+' : unreadCount.toString(),
+                                style: AppStyles.labelSmall.copyWith(color: Colors.white, fontSize: 8.sp),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
             SizedBox(width: 16.w),

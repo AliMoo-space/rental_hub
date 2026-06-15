@@ -50,7 +50,7 @@ class HomeRecommendedItemCardWidget extends StatelessWidget {
           children: [
             SizedBox(
               width: 375.w,
-              height: 234.h,
+              height: 254.h,
               child: AppNetworkImage(images: product?.images ?? const []),
             ),
             Positioned.fill(
@@ -110,7 +110,7 @@ class HomeRecommendedItemCardWidget extends StatelessWidget {
                   vertical: 10.h,
                 ),
                 decoration: BoxDecoration(
-                  color: const Color(0xffFFFFFF).withValues(alpha: .8),
+                  color: const Color(0xffFFFFFF).withValues(alpha: .6),
                   borderRadius: BorderRadiusDirectional.all(
                     Radius.circular(12.r),
                   ),
@@ -191,8 +191,8 @@ class HomeRecommendedItemCardWidget extends StatelessWidget {
                               AppRoutes.productDetailsScreen,
                               pathParameters:
                                   AppRoutes.productDetailsPathParameters(
-                                productId,
-                              ),
+                                    productId,
+                                  ),
                             );
                           },
                     ),

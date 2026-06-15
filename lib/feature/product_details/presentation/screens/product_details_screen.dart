@@ -137,12 +137,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ProductActionButtonsWidget(
                         onChat: () => _openSellerChat(context, product),
                         onReview: () => _openReviews(context, product),
-                        onBookNow: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Booking flow will open here.'),
-                            ),
-                          );
+                        onBookNow: () async {
+                          final dto = await context.pushNamed(AppRoutes.bookingFlowScreen, extra: product);
+                          if (dto != null) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('تم الحجز بنجاح!')),
+                              );
+                            }
+                          }
                         },
                       ),
                     verticalSpacing(24),

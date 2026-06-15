@@ -60,4 +60,23 @@ class EndPoints {
   static String productRentalRequests(int productId) =>
       '/api/Product/$productId/rental-requests';
   static String productStats(int productId) => '/api/Product/$productId/stats';
+
+  // Notifications endpoints
+  static const String notificationsEndpoint = '/api/Notifications';
+  static String readNotificationEndpoint(int id) => '/api/Notifications/$id/read';
+  static const String readAllNotificationsEndpoint = '/api/Notifications/read-all';
+  static const String unreadNotificationsCountEndpoint = '/api/Notifications/unread-count';
+
+  // RentalOrder endpoints
+  static const String rentalOrder = '/api/RentalOrder';
+  static const String renterOrderStats = '/api/RentalOrder/renter/order-stats';
+  static const String rentalMyOrders = '/api/RentalOrder/my-orders';
+  static const String rentalMyListings = '/api/RentalOrder/my-listings';
+  static String rentalOrderById(int id) => '/api/RentalOrder/$id';
+  static String approveRentalOrder(int id) => '/api/RentalOrder/$id/approve';
+  static String rejectRentalOrder(int id) => '/api/RentalOrder/$id/reject';
+  static String cancelRentalOrder(int id) => '/api/RentalOrder/$id/cancel';
+  static String shipRentalOrder(int id) => '/api/RentalOrder/$id/ship';
+  static String confirmReceiptRentalOrder(int id) => '/api/RentalOrder/$id/confirm-receipt';
+  static String returnRentalOrder(int id) => '/api/RentalOrder/$id/return';
 }

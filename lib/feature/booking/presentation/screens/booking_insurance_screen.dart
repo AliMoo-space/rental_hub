@@ -94,18 +94,23 @@ class _BookingInsuranceScreenState extends State<BookingInsuranceScreen> {
             // Action Buttons
             PrimaryButtonWidget(
               buttonText: 'متابعة إلى الدفع',
+              width: double.infinity,
               onPress: () {
                 // Navigate to payment screen
                 widget.onNextStep?.call(3);
               },
             ),
             verticalSpacing(12),
-            PrimaryOutlineButtonWidget(
-              text: 'العودة',
-              onPressed: () {
-                // Go back to details
-                widget.onPreviousStep?.call();
-              },
+            Expanded(
+              child: PrimaryOutlineButtonWidget(
+                text: 'العودة',
+
+                // width: double.infinity,
+                onPressed: () {
+                  // Go back to details
+                  widget.onPreviousStep?.call();
+                },
+              ),
             ),
             verticalSpacing(16),
           ],
