@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
+import 'package:rental_hub/core/utils/snack_bar_widget.dart';
 import 'package:rental_hub/core/widgets/primary_button_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 import 'package:rental_hub/feature/booking/presentation/widgets/booking_item_card_widget.dart';
@@ -15,6 +16,7 @@ class BookingPaymentScreen extends StatefulWidget {
   final ProductEntity product;
   final int days;
   final bool isLoading;
+  final VoidCallback? onBackPressed;
   final void Function()? onPreviousStep;
   final void Function()? onConfirmPayment;
 
@@ -23,6 +25,7 @@ class BookingPaymentScreen extends StatefulWidget {
     required this.product,
     required this.days,
     this.isLoading = false,
+    this.onBackPressed,
     this.onPreviousStep,
     this.onConfirmPayment,
   });
@@ -32,13 +35,26 @@ class BookingPaymentScreen extends StatefulWidget {
 }
 
 class _BookingPaymentScreenState extends State<BookingPaymentScreen> {
+  void _handleConfirmPayment() {
+    final onConfirm = widget.onConfirmPayment;
+    if (onConfirm != null) {
+      onConfirm();
+      return;
+    }
+
+    showMsg(
+      'تعذر إتمام الدفع. يرجى المحاولة مرة أخرى.',
+      context,
+      isError: true,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final double rentalPrice =
-        widget.product.basePricePerDay.toDouble() * widget.days;
-    final double insurancePrice = rentalPrice * 0.1; // Example 10%
-    final double servicePrice = rentalPrice * 0.05; // Example 5%
-    final double totalPrice = rentalPrice + insurancePrice + servicePrice;
+    final breakdown = _BookingPaymentBreakdown.from(
+      product: widget.product,
+      days: widget.days,
+    );
 
     return Scaffold(
       backgroundColor: const Color(0xffF5F6FA),
@@ -46,7 +62,7 @@ class _BookingPaymentScreenState extends State<BookingPaymentScreen> {
         title: Text(context.l10n.bookings, style: AppStyles.titleMedium),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
-          onPressed: () => Navigator.pop(context),
+          onPressed: widget.onBackPressed ?? () => Navigator.pop(context),
         ),
       ),
       body: SingleChildScrollView(
@@ -66,8 +82,8 @@ class _BookingPaymentScreenState extends State<BookingPaymentScreen> {
             BookingItemCardWidget(
               productName: widget.product.name,
               location: widget.product.locationArea,
-              rating: 4.5,
-              reviewCount: 128,
+              rating: widget.product.averageRating,
+              reviewCount: widget.product.totalReviews,
               imageUrl: widget.product.images.isNotEmpty
                   ? widget.product.images.first
                   : 'https://via.placeholder.com/200',
@@ -78,10 +94,10 @@ class _BookingPaymentScreenState extends State<BookingPaymentScreen> {
             Text('تفاصيل الدفع', style: AppStyles.titleMedium),
             verticalSpacing(12),
             PaymentSummaryWidget(
-              rentalPrice: rentalPrice,
-              insurancePrice: insurancePrice,
-              servicePrice: servicePrice,
-              totalPrice: totalPrice,
+              rentalPrice: breakdown.rentalPrice,
+              insurancePrice: breakdown.insurancePrice,
+              servicePrice: breakdown.servicePrice,
+              totalPrice: breakdown.totalPrice,
             ),
             verticalSpacing(24),
 
@@ -133,9 +149,7 @@ class _BookingPaymentScreenState extends State<BookingPaymentScreen> {
                 : PrimaryButtonWidget(
                     width: double.infinity,
                     buttonText: 'تأكيد الحجز',
-                    onPress: () {
-                      widget.onConfirmPayment?.call();
-                    },
+                    onPress: _handleConfirmPayment,
                   ),
             verticalSpacing(12),
 
@@ -164,6 +178,52 @@ class _BookingPaymentScreenState extends State<BookingPaymentScreen> {
         ),
       ),
     );
+  }
+}
+
+class _BookingPaymentBreakdown {
+  final double rentalPrice;
+  final double insurancePrice;
+  final double servicePrice;
+  final double totalPrice;
+
+  const _BookingPaymentBreakdown({
+    required this.rentalPrice,
+    required this.insurancePrice,
+    required this.servicePrice,
+    required this.totalPrice,
+  });
+
+  factory _BookingPaymentBreakdown.from({
+    required ProductEntity product,
+    required int days,
+  }) {
+    final rentalDays = days > 0 ? days : 1;
+    final pricePerDay = _resolvePricePerDay(product);
+    final rentalPrice = pricePerDay * rentalDays;
+    final insurancePrice = rentalPrice * 0.1;
+    final commission = product.commissionPercentage.toDouble();
+    final servicePrice = commission > 0
+        ? rentalPrice * (commission / 100)
+        : rentalPrice * 0.05;
+    final totalPrice = rentalPrice + insurancePrice + servicePrice;
+
+    return _BookingPaymentBreakdown(
+      rentalPrice: rentalPrice,
+      insurancePrice: insurancePrice,
+      servicePrice: servicePrice,
+      totalPrice: totalPrice,
+    );
+  }
+
+  static double _resolvePricePerDay(ProductEntity product) {
+    final finalPrice = product.finalPricePerDay.toDouble();
+    if (finalPrice > 0) return finalPrice;
+
+    final basePrice = product.basePricePerDay.toDouble();
+    if (basePrice > 0) return basePrice;
+
+    return 0;
   }
 }
 

@@ -33,7 +33,12 @@ class SubscriptionBannerWidget extends StatelessWidget {
               child: Stack(
                 children: [
                   Image.asset(AppAssets.modernChair, fit: BoxFit.cover),
-                  Image.asset(AppAssets.transparent, fit: BoxFit.cover),
+                  Image.asset(
+                    AppAssets.transparent,
+                    fit: BoxFit.cover,
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
                   Positioned(
                     left: 18.w,
                     bottom: 10.h,

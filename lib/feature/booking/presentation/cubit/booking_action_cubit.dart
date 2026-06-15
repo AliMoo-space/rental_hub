@@ -33,7 +33,9 @@ class BookingActionCubit extends Cubit<BookingActionState> {
     final result = await createOrderUseCase(dto);
     result.fold(
       (failure) => emit(BookingActionFailure(errMessage: failure.errMessage)),
-      (order) => emit(BookingActionSuccess(order: order, errMessage: "تم إنشاء الطلب بنجاح")),
+      (order) => emit(
+        BookingActionSuccess(order: order, errMessage: "تم إنشاء الطلب بنجاح"),
+      ),
     );
   }
 

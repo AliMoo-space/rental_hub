@@ -42,10 +42,7 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         return Scaffold(
           backgroundColor: const Color(0xffF7F8FC),
           appBar: AppBar(
-            title: Text(
-              'قائمة منتجاتي',
-              style: AppStyles.hendi500Size20,
-            ),
+            title: Text('قائمة منتجاتي', style: AppStyles.hendi500Size20),
             actions: [
               IconButton(
                 onPressed: () {
@@ -56,14 +53,13 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
             ],
           ),
           body: state is MyProductsLoading && !hasItems
-              ? const LoadingWidget()
+              ? const SizedBox.shrink()
               : RefreshIndicator(
                   onRefresh: cubit.loadMyProducts,
                   child: PagedListView<int, ProductEntity>(
                     state: cubit.pagingController.value,
                     fetchNextPage: cubit.pagingController.fetchNextPage,
-                    builderDelegate:
-                        PagedChildBuilderDelegate<ProductEntity>(
+                    builderDelegate: PagedChildBuilderDelegate<ProductEntity>(
                       itemBuilder: (context, product, index) {
                         return _MyProductCard(
                           product: product,
@@ -82,9 +78,8 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                             : 'تعذر تحميل المنتجات',
                         onRetry: cubit.loadMyProducts,
                       ),
-                      noItemsFoundIndicatorBuilder: (context) => _EmptyView(
-                        onRefresh: cubit.loadMyProducts,
-                      ),
+                      noItemsFoundIndicatorBuilder: (context) =>
+                          _EmptyView(onRefresh: cubit.loadMyProducts),
                     ),
                   ),
                 ),
@@ -93,7 +88,10 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
     );
   }
 
-  Future<void> _deleteProduct(BuildContext context, ProductEntity product) async {
+  Future<void> _deleteProduct(
+    BuildContext context,
+    ProductEntity product,
+  ) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -114,7 +112,9 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
 
     if (confirmed != true || !context.mounted) return;
 
-    final result = await context.read<MyProductsCubit>().deleteProduct(id: product.id);
+    final result = await context.read<MyProductsCubit>().deleteProduct(
+      id: product.id,
+    );
     if (!context.mounted) return;
 
     result.fold(
@@ -123,7 +123,10 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
     );
   }
 
-  Future<void> _toggleStatus(BuildContext context, ProductEntity product) async {
+  Future<void> _toggleStatus(
+    BuildContext context,
+    ProductEntity product,
+  ) async {
     final cubit = context.read<MyProductsCubit>();
     final isSuspended = _isSuspended(product.status);
     final result = isSuspended
@@ -138,10 +141,7 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
   }
 
   void _openEdit(BuildContext context, ProductEntity product) {
-    context.pushNamed(
-      AppRoutes.addListingScreen,
-      extra: product,
-    );
+    context.pushNamed(AppRoutes.addListingScreen, extra: product);
   }
 
   void _openProductStats(BuildContext context, ProductEntity product) {
@@ -366,7 +366,9 @@ class _StatusChip extends StatelessWidget {
     final backgroundColor = isSuspended
         ? AppColors.primaryColor.withValues(alpha: 0.12)
         : AppColors.successColor.withValues(alpha: 0.12);
-    final textColor = isSuspended ? AppColors.primaryColor : AppColors.successColor;
+    final textColor = isSuspended
+        ? AppColors.primaryColor
+        : AppColors.successColor;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
@@ -431,10 +433,7 @@ class _EmptyView extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                'لا توجد منتجات حتى الآن',
-                style: AppStyles.titleMedium,
-              ),
+              Text('لا توجد منتجات حتى الآن', style: AppStyles.titleMedium),
               verticalSpacing(12),
               PrimaryButtonWidget(
                 buttonText: 'تحديث',
@@ -450,4 +449,11 @@ class _EmptyView extends StatelessWidget {
   }
 }
 
-enum _MyProductAction { edit, stats, transactions, requests, toggleStatus, delete }
+enum _MyProductAction {
+  edit,
+  stats,
+  transactions,
+  requests,
+  toggleStatus,
+  delete,
+}

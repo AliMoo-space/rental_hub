@@ -126,8 +126,7 @@ class RouterGenerationConfig {
         name: AppRoutes.productDetailsScreen,
         path: '${AppRoutes.productDetailsPath}/:id',
         builder: (context, state) {
-          final productId =
-              int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
+          final productId = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
           if (productId <= 0) {
             return const Scaffold(
               body: Center(child: Text('Invalid product id')),
@@ -140,12 +139,8 @@ class RouterGenerationConfig {
 
           return MultiBlocProvider(
             providers: [
-              BlocProvider(
-                create: (context) => getIt<ProductDetailsCubit>(),
-              ),
-              BlocProvider(
-                create: (context) => getIt<MyProductsCubit>(),
-              ),
+              BlocProvider(create: (context) => getIt<ProductDetailsCubit>()),
+              BlocProvider(create: (context) => getIt<MyProductsCubit>()),
             ],
             child: ProductDetailsScreen(
               productId: productId,

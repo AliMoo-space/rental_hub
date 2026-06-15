@@ -7,6 +7,7 @@ import 'package:rental_hub/feature/booking/presentation/cubit/booking_action_sta
 import 'package:rental_hub/feature/booking/presentation/screens/booking_details_screen.dart';
 import 'package:rental_hub/feature/booking/presentation/screens/booking_insurance_screen.dart';
 import 'package:rental_hub/feature/booking/presentation/screens/booking_payment_screen.dart';
+import 'package:rental_hub/feature/booking/presentation/widgets/booking_flow_state_listener.dart';
 import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
 
 class BookingFlowScreen extends StatefulWidget {
@@ -18,15 +19,17 @@ class BookingFlowScreen extends StatefulWidget {
 }
 
 class _BookingFlowScreenState extends State<BookingFlowScreen> {
-  late PageController _pageController;
+  static const int _totalSteps = 3;
 
-  // Collected data
+  late final PageController _pageController;
+  int _currentPageIndex = 0;
+
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now().add(const Duration(days: 5));
   String _street = '';
   String _city = '';
   String _governorate = '';
-  String _deliveryMethod = 'Pickup';
+  final String _deliveryMethod = 'Pickup';
 
   @override
   void initState() {
@@ -40,87 +43,111 @@ class _BookingFlowScreenState extends State<BookingFlowScreen> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => getIt<BookingActionCubit>(),
-      child: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          BookingDetailsScreen(
-            product: widget.product,
-            onNextStep: (step, startDate, endDate, street, city, governorate) {
-              setState(() {
-                _startDate = startDate;
-                _endDate = endDate;
-                _street = street;
-                _city = city;
-                _governorate = governorate;
-              });
-              _goToStep(step);
-            },
-          ),
-          BookingInsuranceScreen(
-            onNextStep: (step) {
-              _goToStep(step);
-            },
-            onPreviousStep: () {
-              _goToStep(1);
-            },
-          ),
-          // Step 3: Payment Confirmation
-          BlocListener<BookingActionCubit, BookingActionState>(
-            listener: (context, state) {
-              if (state is BookingActionSuccess) {
-                Navigator.pop(context, true);
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.errMessage)));
-              } else if (state is BookingActionFailure) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.errMessage)));
-              }
-            },
-            child: BlocBuilder<BookingActionCubit, BookingActionState>(
-              builder: (context, state) {
-                return BookingPaymentScreen(
-                  product: widget.product,
-                  days: _endDate.difference(_startDate).inDays > 0
-                      ? _endDate.difference(_startDate).inDays
-                      : 1,
-                  isLoading: state is BookingActionLoading,
-                  onPreviousStep: () {
-                    _goToStep(2);
-                  },
-                  onConfirmPayment: () {
-                    final dto = CreateRentalOrderDto(
-                      productId: widget.product.id,
-                      startDate: _startDate,
-                      endDate: _endDate,
-                      deliveryMethod: _deliveryMethod,
-                      street: _street,
-                      city: _city,
-                      governorate: _governorate,
-                      termsAgreed: true,
-                    );
-                    context.read<BookingActionCubit>().createRentalOrder(dto);
-                  },
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
+  int get _rentalDays {
+    final days = _endDate.difference(_startDate).inDays;
+    return days > 0 ? days : 1;
   }
 
   void _goToStep(int step) {
+    final pageIndex = (step - 1).clamp(0, _totalSteps - 1);
+    if (!_pageController.hasClients) return;
+    if (_pageController.page?.round() == pageIndex) return;
+
     _pageController.animateToPage(
-      step - 1,
+      pageIndex,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
+    );
+  }
+
+  void _handleSystemBack() {
+    if (_currentPageIndex > 0) {
+      _goToStep(_currentPageIndex);
+    } else {
+      Navigator.of(context).pop();
+    }
+  }
+
+  void _confirmPayment(BuildContext blocContext) {
+    final dto = CreateRentalOrderDto(
+      productId: widget.product.id,
+      startDate: _startDate,
+      endDate: _endDate,
+      deliveryMethod: _deliveryMethod,
+      street: _street,
+      city: _city,
+      governorate: _governorate,
+      termsAgreed: true,
+    );
+    blocContext.read<BookingActionCubit>().createRentalOrder(dto);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => getIt<BookingActionCubit>(),
+      child: BookingFlowStateListener(
+        child: BlocBuilder<BookingActionCubit, BookingActionState>(
+          buildWhen: (previous, current) {
+            final wasLoading = previous is BookingActionLoading;
+            final isLoading = current is BookingActionLoading;
+            return wasLoading != isLoading;
+          },
+          builder: (context, state) {
+            final isLoading = state is BookingActionLoading;
+
+            return PopScope(
+              canPop: _currentPageIndex == 0,
+              onPopInvokedWithResult: (didPop, _) {
+                if (!didPop) _handleSystemBack();
+              },
+              child: PageView(
+                controller: _pageController,
+                physics: const NeverScrollableScrollPhysics(),
+                onPageChanged: (index) {
+                  setState(() => _currentPageIndex = index);
+                },
+                children: [
+                  BookingDetailsScreen(
+                    product: widget.product,
+                    onBackPressed: () => Navigator.of(context).pop(),
+                    onNextStep: (
+                      step,
+                      startDate,
+                      endDate,
+                      street,
+                      city,
+                      governorate,
+                    ) {
+                      setState(() {
+                        _startDate = startDate;
+                        _endDate = endDate;
+                        _street = street;
+                        _city = city;
+                        _governorate = governorate;
+                      });
+                      _goToStep(step);
+                    },
+                  ),
+                  BookingInsuranceScreen(
+                    onBackPressed: () => _goToStep(1),
+                    onNextStep: _goToStep,
+                    onPreviousStep: () => _goToStep(1),
+                  ),
+                  BookingPaymentScreen(
+                    product: widget.product,
+                    days: _rentalDays,
+                    isLoading: isLoading,
+                    onBackPressed: () => _goToStep(2),
+                    onPreviousStep: () => _goToStep(2),
+                    onConfirmPayment: () => _confirmPayment(context),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

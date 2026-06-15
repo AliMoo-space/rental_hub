@@ -22,11 +22,13 @@ class BookingDetailsScreen extends StatefulWidget {
     String governorate,
   )?
   onNextStep;
+  final VoidCallback? onBackPressed;
 
   const BookingDetailsScreen({
     super.key,
     required this.product,
     this.onNextStep,
+    this.onBackPressed,
   });
 
   @override
@@ -97,7 +99,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
         title: Text(context.l10n.bookings, style: AppStyles.titleMedium),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
-          onPressed: () => Navigator.pop(context),
+          onPressed: widget.onBackPressed ?? () => Navigator.pop(context),
         ),
       ),
       body: SingleChildScrollView(
@@ -171,19 +173,20 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
               ),
               verticalSpacing(24),
 
-              // Pricing Summary
-              Text('ملخص الأسعار ($days أيام)', style: AppStyles.titleMedium),
-              verticalSpacing(12),
-              PaymentSummaryWidget(
-                rentalPrice: rentalPrice,
-                insurancePrice: insurancePrice,
-                servicePrice: servicePrice,
-                totalPrice: totalPrice,
-              ),
-              verticalSpacing(32),
+              // // Pricing Summary
+              // Text('ملخص الأسعار ($days أيام)', style: AppStyles.titleMedium),
+              // verticalSpacing(12),
+              // PaymentSummaryWidget(
+              //   rentalPrice: rentalPrice,
+              //   insurancePrice: insurancePrice,
+              //   servicePrice: servicePrice,
+              //   totalPrice: totalPrice,
+              // ),
+              // verticalSpacing(32),
 
               // Next Button
               PrimaryButtonWidget(
+                width: double.infinity,
                 buttonText: 'متابعة',
                 onPress: () {
                   if (_formKey.currentState?.validate() ?? false) {

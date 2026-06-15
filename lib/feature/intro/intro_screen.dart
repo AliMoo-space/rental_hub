@@ -11,7 +11,6 @@ import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/primary_button_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 import 'package:rental_hub/feature/auth/presentation/widgets/social_login_widget.dart';
-// Removed unused TermsWidget import (not used in this screen)
 import 'package:rental_hub/feature/intro/widgets/refactor.dart';
 import 'package:rental_hub/feature/theme/presentation/cubit/theme_cubit.dart';
 

@@ -81,10 +81,14 @@ class SellerProfileWidget extends StatelessWidget {
                       size: 14.w,
                     ),
                     horizontalSpacing(4),
-                    Text(
-                      product.locationArea,
-                      style: AppStyles.bodySmall.copyWith(
-                        color: AppColors.textSecondaryColor,
+                    Expanded(
+                      child: Text(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        product.locationArea,
+                        style: AppStyles.bodySmall.copyWith(
+                          color: AppColors.textSecondaryColor,
+                        ),
                       ),
                     ),
                   ],
