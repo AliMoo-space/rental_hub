@@ -14,4 +14,5 @@ abstract class SearchRepository {
     required int pageNumber,
     int pageSize = 10,
   });
+  Future<Either<Failure, SearchResultEntity>> getRecommendations();
 }

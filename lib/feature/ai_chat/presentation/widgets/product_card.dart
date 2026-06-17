@@ -20,7 +20,10 @@ class ProductCard extends StatelessWidget {
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12.r),
           boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 6),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 6,
+            ),
           ],
         ),
         child: Column(
@@ -34,9 +37,7 @@ class ProductCard extends StatelessWidget {
                 color: Colors.grey.shade200,
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(12.r),
-                ),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(12.r)),
                 child: AppNetworkImage(
                   images: product.imageUrl != null ? [product.imageUrl!] : [],
                   fit: BoxFit.cover,

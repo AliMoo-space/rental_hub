@@ -36,7 +36,7 @@ class SearchResultCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                flex: 3,
+                flex: 4,
                 child: Stack(
                   children: [
                     ClipRRect(
@@ -49,6 +49,7 @@ class SearchResultCard extends StatelessWidget {
                         child: AppNetworkImage(
                           images: item.images,
                           fit: BoxFit.cover,
+                          height: double.infinity,
                         ),
                       ),
                     ),
@@ -87,9 +88,9 @@ class SearchResultCard extends StatelessWidget {
                 ),
               ),
               Expanded(
-                flex: 2,
+                flex: 3,
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 12.h),
+                  padding: EdgeInsets.fromLTRB(10.w, 8.h, 10.w, 8.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -97,12 +98,12 @@ class SearchResultCard extends StatelessWidget {
                         item.name,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: AppStyles.bodyLarge.copyWith(
+                        style: AppStyles.bodyMedium.copyWith(
                           color: AppColors.textPrimary,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      SizedBox(height: 8.h),
+                      SizedBox(height: 4.h),
                       Text(
                         '${item.basePricePerDay.toStringAsFixed(0)} ج.م/يوم',
                         style: AppStyles.bodyMedium.copyWith(
@@ -120,14 +121,15 @@ class SearchResultCard extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: AppStyles.bodySmall.copyWith(
                                 color: AppColors.textSecondary,
+                                fontSize: 11.sp,
                               ),
                             ),
                           ),
                           SizedBox(width: 8.w),
                           Container(
                             padding: EdgeInsets.symmetric(
-                              horizontal: 10.w,
-                              vertical: 6.h,
+                              horizontal: 8.w,
+                              vertical: 3.h,
                             ),
                             decoration: BoxDecoration(
                               color:

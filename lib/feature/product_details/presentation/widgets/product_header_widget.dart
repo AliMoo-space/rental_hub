@@ -18,8 +18,12 @@ class ProductHeaderWidget extends StatelessWidget {
         Container(
           width: double.infinity,
           height: 300.h,
-          decoration: BoxDecoration(color: AppColors.surfaceColor),
-          child: AppNetworkImage(images: product.images),
+          decoration: BoxDecoration(color: Colors.transparent),
+          child: AppNetworkImage(
+            images: product.images,
+            width: double.infinity,
+            height: double.infinity,
+          ),
         ),
         // Location Badge
         Positioned(
