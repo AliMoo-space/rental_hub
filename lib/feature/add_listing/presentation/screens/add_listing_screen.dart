@@ -35,24 +35,6 @@ class AddListingScreen extends StatefulWidget {
 }
 
 class _AddListingScreenState extends State<AddListingScreen> {
-  static const List<_SelectionOption<String>> _cityOptions = [
-    _SelectionOption(label: 'القاهرة', value: 'القاهرة'),
-    _SelectionOption(label: 'الجيزة', value: 'الجيزة'),
-    _SelectionOption(label: 'الإسكندرية', value: 'الإسكندرية'),
-  ];
-
-  static const List<_SelectionOption<String>> _governorateOptions = [
-    _SelectionOption(label: 'القاهرة', value: 'القاهرة'),
-    _SelectionOption(label: 'الجيزة', value: 'الجيزة'),
-    _SelectionOption(label: 'الإسكندرية', value: 'الإسكندرية'),
-  ];
-
-  static const List<_SelectionOption<String>> _locationAreaOptions = [
-    _SelectionOption(label: 'مدينة نصر', value: 'مدينة نصر'),
-    _SelectionOption(label: 'المعادي', value: 'المعادي'),
-    _SelectionOption(label: 'التجمع الخامس', value: 'التجمع الخامس'),
-  ];
-
   final TextEditingController _itemNameController = TextEditingController();
   final TextEditingController _itemDescriptionController =
       TextEditingController();
@@ -65,6 +47,9 @@ class _AddListingScreenState extends State<AddListingScreen> {
   final TextEditingController _brandController = TextEditingController();
   final TextEditingController _termsConditionsController =
       TextEditingController(text: 'لا يوجد');
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _governorateController = TextEditingController();
+  final TextEditingController _locationAreaController = TextEditingController();
 
   final ImagePicker _imagePicker = ImagePicker();
 
@@ -72,9 +57,6 @@ class _AddListingScreenState extends State<AddListingScreen> {
   String? _selectedCategoryLabel;
   int? _selectedSubcategoryId;
   String? _selectedSubcategoryLabel;
-  String? _selectedCity;
-  String? _selectedGovernorate;
-  String? _selectedLocationArea;
   bool _isNewCondition = true;
 
   final List<XFile> _productImages = [];
@@ -102,9 +84,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
       _selectedCategoryLabel = p.categoryName;
       _selectedSubcategoryId = p.subcategoryId;
       _selectedSubcategoryLabel = p.subcategoryName;
-      _selectedCity = p.locationArea.isNotEmpty ? p.locationArea : 'القاهرة';
-      _selectedGovernorate = p.locationArea.isNotEmpty ? p.locationArea : 'القاهرة';
-      _selectedLocationArea = p.locationArea.isNotEmpty ? p.locationArea : 'مدينة نصر';
+      _locationAreaController.text = p.locationArea;
       _isNewCondition = p.condition.toLowerCase() == 'new';
       _existingImages.addAll(p.images);
     }
@@ -119,6 +99,9 @@ class _AddListingScreenState extends State<AddListingScreen> {
     _productTypeController.dispose();
     _brandController.dispose();
     _termsConditionsController.dispose();
+    _cityController.dispose();
+    _governorateController.dispose();
+    _locationAreaController.dispose();
     super.dispose();
   }
 
@@ -171,7 +154,8 @@ class _AddListingScreenState extends State<AddListingScreen> {
       child: BlocConsumer<AddListingCubit, AddListingState>(
         listener: (context, state) {
           if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
-            showMsg(state.errorMessage!, context);
+            showMsg(state.errorMessage!, context, isError: true);
+            context.read<AddListingCubit>().clearFeedback();
           }
 
           if (state.successMessage != null &&
@@ -359,49 +343,22 @@ class _AddListingScreenState extends State<AddListingScreen> {
                           ],
                         ),
                         SizedBox(height: 12.h),
-                        PickerField(
-                          hintText: 'المدينة',
-                          value: _selectedCity,
-                          onTap: () => _pickSelection(
-                            context,
-                            title: 'اختر المدينة',
-                            options: _cityOptions,
-                            onSelected: (option) {
-                              setState(() {
-                                _selectedCity = option.value;
-                              });
-                            },
-                          ),
+                        LabeledTextField(
+                          label: 'المدينة',
+                          controller: _cityController,
+                          hintText: 'اكتب هنا..',
                         ),
                         SizedBox(height: 10.h),
-                        PickerField(
-                          hintText: 'المنطقة',
-                          value: _selectedGovernorate,
-                          onTap: () => _pickSelection(
-                            context,
-                            title: 'اختر المنطقة',
-                            options: _governorateOptions,
-                            onSelected: (option) {
-                              setState(() {
-                                _selectedGovernorate = option.value;
-                              });
-                            },
-                          ),
+                        LabeledTextField(
+                          label: 'المنطقة',
+                          controller: _governorateController,
+                          hintText: 'اكتب هنا..',
                         ),
                         SizedBox(height: 10.h),
-                        PickerField(
-                          hintText: 'منطقة التفاصيل',
-                          value: _selectedLocationArea,
-                          onTap: () => _pickSelection(
-                            context,
-                            title: 'اختر المنطقة التفصيلية',
-                            options: _locationAreaOptions,
-                            onSelected: (option) {
-                              setState(() {
-                                _selectedLocationArea = option.value;
-                              });
-                            },
-                          ),
+                        LabeledTextField(
+                          label: 'منطقة التفاصيل',
+                          controller: _locationAreaController,
+                          hintText: 'اكتب هنا..',
                         ),
                         SizedBox(height: 18.h),
                         Row(
@@ -843,9 +800,9 @@ class _AddListingScreenState extends State<AddListingScreen> {
                   ),
                 ),
                 SizedBox(height: 12.h),
-                Expanded(
+                SizedBox(
+                  height: 300,
                   child: ListView(
-                    shrinkWrap: true,
                     children: options.map(
                       (option) => ListTile(
                         contentPadding: EdgeInsets.zero,
@@ -874,14 +831,14 @@ class _AddListingScreenState extends State<AddListingScreen> {
     if (_selectedSubcategoryId == null) {
       return 'اختيار النوع الفرعي مطلوب';
     }
-    if (_selectedCity == null) {
-      return 'اختيار المدينة مطلوب';
+    if (_cityController.text.trim().isEmpty) {
+      return 'المدينة مطلوبة';
     }
-    if (_selectedGovernorate == null) {
-      return 'اختيار المنطقة مطلوب';
+    if (_governorateController.text.trim().isEmpty) {
+      return 'المنطقة مطلوبة';
     }
-    if (_selectedLocationArea == null) {
-      return 'اختيار المنطقة التفصيلية مطلوب';
+    if (_locationAreaController.text.trim().isEmpty) {
+      return 'منطقة التفاصيل مطلوبة';
     }
     if (_itemNameController.text.trim().isEmpty) {
       return 'اسم المنتج مطلوب';
@@ -936,7 +893,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
       final request = UpdateProductRequest(
         categoryId: _selectedCategoryId!,
         subcategoryId: _selectedSubcategoryId!,
-        locationArea: _selectedLocationArea!,
+        locationArea: _locationAreaController.text.trim(),
         condition: _isNewCondition ? 'New' : 'Used',
         productType: _productTypeController.text,
         brand: _brandController.text,
@@ -945,8 +902,8 @@ class _AddListingScreenState extends State<AddListingScreen> {
         description: _itemDescriptionController.text,
         basePricePerDay: parsedBasePrice,
         termsConditions: _termsConditionsController.text,
-        city: _selectedCity!,
-        governorate: _selectedGovernorate!,
+        city: _cityController.text.trim(),
+        governorate: _governorateController.text.trim(),
         newImages: _productImages,
         deletedImageIds: _deletedImageIds,
         primaryImageId: null,
@@ -955,11 +912,11 @@ class _AddListingScreenState extends State<AddListingScreen> {
       context.read<AddListingCubit>().updateListing(widget.productToEdit!.id, request);
     } else {
       final request = CreateProductRequest(
-        city: _selectedCity!,
-        governorate: _selectedGovernorate!,
+        city: _cityController.text.trim(),
+        governorate: _governorateController.text.trim(),
         categoryId: _selectedCategoryId!,
         subcategoryId: _selectedSubcategoryId!,
-        locationArea: _selectedLocationArea!,
+        locationArea: _locationAreaController.text.trim(),
         condition: _isNewCondition ? 'New' : 'Used',
         productType: _productTypeController.text,
         brand: _brandController.text,

@@ -31,6 +31,7 @@ abstract class ApiConsumer {
     String path, {
     dynamic data,
     Map<String, dynamic>? queryParameters,
+    bool isFormData = false,
     bool skipAuth = false,
   });
 }

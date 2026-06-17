@@ -36,10 +36,37 @@ class ErrorModel {
     );
   }
 
-  /// أول رسالة مهما كان المفتاح
+  /// Primary user-facing message: field errors first, then API message, then fallback.
   String get firstErrorMessage {
-    if (errors.isEmpty) return message;
-    return errors.values.first.first;
+    if (errors.isNotEmpty) {
+      for (final messages in errors.values) {
+        for (final entry in messages) {
+          final trimmed = entry.trim();
+          if (trimmed.isNotEmpty) return trimmed;
+        }
+      }
+    }
+
+    final trimmedMessage = message.trim();
+    if (trimmedMessage.isNotEmpty) return trimmedMessage;
+
+    if (statusCode > 0) {
+      return 'حدث خطأ أثناء تنفيذ الطلب (رمز: $statusCode)';
+    }
+
+    return 'حدث خطأ غير متوقع';
+  }
+
+  /// Detailed message for logs, including all validation errors when present.
+  String get logMessage {
+    if (errors.isEmpty) {
+      return 'statusCode=$statusCode message=$message';
+    }
+
+    final details = errors.entries
+        .map((entry) => '${entry.key}: ${entry.value.join(', ')}')
+        .join(' | ');
+    return 'statusCode=$statusCode message=$message errors=$details';
   }
 
   static int? _parseInt(dynamic value) {

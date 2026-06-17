@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:rental_hub/core/databases/api/api_consumer.dart';
 import 'package:rental_hub/core/databases/api/end_points.dart';
 import 'package:rental_hub/core/errors/error_handling.dart';
@@ -18,29 +20,52 @@ class AddListingRemoteDataSourceImpl implements AddListingRemoteDataSource {
 
   @override
   Future<String> createProduct(CreateProductRequest request) async {
-    final response = await apiConsumer.post(
-      EndPoints.productsEndpoint,
-      data: await request.toFormData(),
-      isFormData: true,
+    developer.log(
+      'createProduct request started (images=${request.images.length})',
+      name: 'AddListing',
     );
 
-    final payload = ResponseParser.extractMessagePayload(
-      response.data,
-      defaultMessage: 'تمت إضافة المنتج بنجاح',
-    );
-
-    final message = payload['message']?.toString().trim() ?? '';
-    if (message.isEmpty) {
-      throw ServerException(
-        ErrorModel(
-          statusCode: response.statusCode ?? 500,
-          message: 'Invalid create product response format',
-          errors: {},
-        ),
+    try {
+      final formData = await request.toFormData();
+      final response = await apiConsumer.post(
+        EndPoints.productsEndpoint,
+        data: formData,
+        isFormData: true,
       );
-    }
 
-    return message;
+      developer.log(
+        'createProduct response status=${response.statusCode} body=${response.data}',
+        name: 'AddListing',
+      );
+
+      final payload = ResponseParser.extractMessagePayload(
+        response.data,
+        defaultMessage: 'تمت إضافة المنتج بنجاح',
+      );
+
+      final message = payload['message']?.toString().trim() ?? '';
+      if (message.isEmpty) {
+        throw ServerException(
+          ErrorModel(
+            statusCode: response.statusCode ?? 500,
+            message: 'Invalid create product response format',
+            errors: {},
+          ),
+        );
+      }
+
+      return message;
+    } on ServerException {
+      rethrow;
+    } catch (e, stackTrace) {
+      developer.log(
+        'createProduct failed before/during API call: $e',
+        name: 'AddListing',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
   }
 
   @override
@@ -48,6 +73,7 @@ class AddListingRemoteDataSourceImpl implements AddListingRemoteDataSource {
     final response = await apiConsumer.put(
       '${EndPoints.productsEndpoint}/$id',
       data: await request.toFormData(),
+      isFormData: true,
     );
 
     final payload = ResponseParser.extractMessagePayload(

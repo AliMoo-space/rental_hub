@@ -5,6 +5,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:rental_hub/core/databases/api/auth_interceptor.dart';
 import 'package:rental_hub/core/databases/api/api_consumer.dart';
 import 'package:rental_hub/core/errors/error_handling.dart';
+import 'package:rental_hub/core/utils/image_upload_utils.dart';
 
 class DioConsumer extends ApiConsumer {
   final Dio dio;
@@ -16,7 +17,7 @@ class DioConsumer extends ApiConsumer {
     String? baseUrl,
     Duration connectTimeout = const Duration(seconds: 30),
     Duration receiveTimeout = const Duration(seconds: 30),
-    Duration sendTimeout = const Duration(seconds: 30),
+    Duration sendTimeout = const Duration(minutes: 5),
   }) {
     final resolvedBaseUrl = baseUrl ?? dio.options.baseUrl;
     dio.options = BaseOptions(
@@ -58,6 +59,11 @@ class DioConsumer extends ApiConsumer {
   }) async {
     try {
       final body = _prepareBody(data, isFormData);
+      final options = _buildRequestOptions(
+        body: body,
+        isFormData: isFormData,
+        skipAuth: skipAuth,
+      );
       _logRequest(
         method: 'POST',
         path: path,
@@ -70,7 +76,7 @@ class DioConsumer extends ApiConsumer {
         path,
         data: body,
         queryParameters: queryParameters,
-        options: Options(extra: {'skipAuth': skipAuth}),
+        options: options,
       );
 
       _logResponse(method: 'POST', path: path, response: response);
@@ -155,6 +161,11 @@ class DioConsumer extends ApiConsumer {
   }) async {
     try {
       final body = _prepareBody(data, isFormData);
+      final options = _buildRequestOptions(
+        body: body,
+        isFormData: isFormData,
+        skipAuth: skipAuth,
+      );
       _logRequest(
         method: 'PATCH',
         path: path,
@@ -167,7 +178,7 @@ class DioConsumer extends ApiConsumer {
         path,
         data: body,
         queryParameters: queryParameters,
-        options: Options(extra: {'skipAuth': skipAuth}),
+        options: options,
       );
 
       _logResponse(method: 'PATCH', path: path, response: response);
@@ -185,21 +196,28 @@ class DioConsumer extends ApiConsumer {
     String path, {
     dynamic data,
     Map<String, dynamic>? queryParameters,
+    bool isFormData = false,
     bool skipAuth = false,
   }) async {
     try {
+      final body = _prepareBody(data, isFormData);
+      final options = _buildRequestOptions(
+        body: body,
+        isFormData: isFormData,
+        skipAuth: skipAuth,
+      );
       _logRequest(
         method: 'PUT',
         path: path,
         queryParameters: queryParameters,
-        data: data,
+        body: body,
         skipAuth: skipAuth,
       );
       final response = await dio.put(
         path,
-        data: data,
+        data: body,
         queryParameters: queryParameters,
-        options: Options(extra: {'skipAuth': skipAuth}),
+        options: options,
       );
 
       _logResponse(method: 'PUT', path: path, response: response);
@@ -223,6 +241,29 @@ class DioConsumer extends ApiConsumer {
     }
 
     return data;
+  }
+
+  bool _isMultipartBody(dynamic body, bool isFormData) {
+    return isFormData || body is FormData;
+  }
+
+  Options _buildRequestOptions({
+    required dynamic body,
+    required bool isFormData,
+    required bool skipAuth,
+  }) {
+    if (!_isMultipartBody(body, isFormData)) {
+      return Options(extra: {'skipAuth': skipAuth});
+    }
+
+    return ImageUploadUtils.dioMultipartOptions(skipAuth: skipAuth);
+  }
+
+  String _describeRequestBody(Object? body) {
+    if (body is FormData) {
+      return 'FormData(fields=${body.fields.length}, files=${body.files.length})';
+    }
+    return body?.toString() ?? '<none>';
   }
 
   void _throwIfErrorStatus(Response<dynamic> response) {
@@ -249,9 +290,20 @@ class DioConsumer extends ApiConsumer {
       'HTTP $method $path\n'
       'skipAuth=$skipAuth\n'
       'queryParameters=${queryParameters ?? const {}}\n'
-      'data=${body ?? data ?? '<none>'}',
+      'data=${_describeRequestBody(body ?? data)}',
       name: 'HTTP',
     );
+
+    if (body is FormData || data is FormData) {
+      final formData = (body ?? data) as FormData;
+      developer.log(
+        'HTTP $method $path multipart upload: '
+        'contentType=${Headers.multipartFormDataContentType}, '
+        'sendTimeout=${ImageUploadUtils.uploadSendTimeout.inSeconds}s, '
+        'fileCount=${formData.files.length}',
+        name: 'HTTP',
+      );
+    }
   }
 
   void _logResponse({

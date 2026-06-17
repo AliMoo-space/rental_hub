@@ -88,7 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Text(
                             profile.fullName.isNotEmpty
                                 ? profile.fullName
-                                : 'علي محمد',
+                                : 'User Name',
                             style: AppStyles.instrumentSans700Size24,
                           ),
                         ],

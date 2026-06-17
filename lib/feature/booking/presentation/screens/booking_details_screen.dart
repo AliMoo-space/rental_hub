@@ -6,7 +6,6 @@ import 'package:rental_hub/core/widgets/primary_button_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
 import 'package:rental_hub/feature/booking/presentation/widgets/booking_item_card_widget.dart';
 import 'package:rental_hub/feature/booking/presentation/widgets/booking_stepper_widget.dart';
-import 'package:rental_hub/feature/booking/presentation/widgets/payment_summary_widget.dart';
 import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
 import 'package:rental_hub/core/widgets/custom_text_field.dart';
 
