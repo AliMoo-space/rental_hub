@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rental_hub/core/utils/image_upload_utils.dart';
 
 class UpdateProductRequest {
   final int categoryId;
@@ -58,21 +59,35 @@ class UpdateProductRequest {
     ]);
 
     if (primaryImageId != null) {
-      formData.fields.add(MapEntry('PrimaryImageId', primaryImageId.toString()));
+      formData.fields.add(
+        MapEntry('PrimaryImageId', primaryImageId.toString()),
+      );
     }
 
     for (final id in deletedImageIds) {
       formData.fields.add(MapEntry('DeletedImageIds', id.toString()));
     }
 
-    for (final image in newImages) {
-      formData.files.add(
-        MapEntry(
-          'NewImages',
-          await MultipartFile.fromFile(image.path, filename: image.name),
-        ),
-      );
+    if (newImages.isNotEmpty) {
+      const logTag = 'ProductUpload';
+
+      await ImageUploadUtils.logImagesBeforeUpload(newImages, logTag: logTag);
+
+      final compressedFiles =
+          await ImageUploadUtils.compressImagesToMultipartFiles(
+            newImages,
+            logTag: logTag,
+          );
+
+      for (final file in compressedFiles) {
+        formData.files.add(MapEntry('NewImages', file));
+      }
     }
+
+    await ImageUploadUtils.logFormDataPayload(
+      formData,
+      logTag: 'ProductUpload',
+    );
 
     return formData;
   }

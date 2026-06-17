@@ -42,6 +42,7 @@ dependencies:
   signalr_netcore: ^1.4.4
   carousel_slider: ^5.1.2
   http: ^1.6.0
+  flutter_image_compress: ^2.4.0
 
 dev_dependencies:
   flutter_lints: ^6.0.0

@@ -41,7 +41,6 @@ class _MainScreenState extends State<MainScreen> {
       create: (context) => getIt<ConversationsCubit>()..loadConversations(),
       child: const ConversationsScreen(),
     ),
-    // const DealsScreen(),
     const SizedBox.shrink(),
     MultiBlocProvider(
       providers: [
@@ -74,10 +73,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: currentIndex,
-        children: screens,
-      ),
+      body: IndexedStack(index: currentIndex, children: screens),
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadiusDirectional.only(
           topStart: Radius.circular(20.r),

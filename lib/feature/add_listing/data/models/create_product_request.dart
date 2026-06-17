@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rental_hub/core/utils/image_upload_utils.dart';
 
 class CreateProductRequest {
   final String city;
@@ -35,6 +36,16 @@ class CreateProductRequest {
   });
 
   Future<FormData> toFormData() async {
+    const logTag = 'ProductUpload';
+
+    await ImageUploadUtils.logImagesBeforeUpload(images, logTag: logTag);
+
+    final compressedFiles =
+        await ImageUploadUtils.compressImagesToMultipartFiles(
+          images,
+          logTag: logTag,
+        );
+
     final formData = FormData();
 
     formData.fields.addAll([
@@ -53,14 +64,11 @@ class CreateProductRequest {
       MapEntry('TermsConditions', termsConditions.trim()),
     ]);
 
-    for (final image in images) {
-      formData.files.add(
-        MapEntry(
-          'Images',
-          await MultipartFile.fromFile(image.path, filename: image.name),
-        ),
-      );
+    for (final file in compressedFiles) {
+      formData.files.add(MapEntry('Images', file));
     }
+
+    await ImageUploadUtils.logFormDataPayload(formData, logTag: logTag);
 
     return formData;
   }

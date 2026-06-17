@@ -1,4 +1,6 @@
 //!ServerException
+import 'dart:developer' as developer;
+
 import 'package:dio/dio.dart';
 import 'package:rental_hub/core/errors/error_model.dart';
 
@@ -88,6 +90,18 @@ ErrorModel _buildErrorModel(DioException e) {
 void handleDioException(DioException e) {
   final errorModel = _buildErrorModel(e);
 
+  developer.log(
+    'DioException handled\n'
+    'type=${e.type}\n'
+    'status=${e.response?.statusCode}\n'
+    'uri=${e.requestOptions.uri}\n'
+    'responseBody=${e.response?.data}\n'
+    'message=${e.message}\n'
+    'parsed=${errorModel.logMessage}',
+    name: 'HTTP',
+    error: e,
+  );
+
   switch (e.type) {
     case DioExceptionType.connectionError:
       throw ConnectionErrorException(errorModel);
@@ -99,10 +113,20 @@ void handleDioException(DioException e) {
       throw ConnectionTimeoutException(errorModel);
 
     case DioExceptionType.receiveTimeout:
-      throw ReceiveTimeoutException(errorModel);
+      throw ReceiveTimeoutException(
+        _withFallbackMessage(
+          errorModel,
+          'انتهت مهلة انتظار الاستجابة من الخادم. حاول مرة أخرى.',
+        ),
+      );
 
     case DioExceptionType.sendTimeout:
-      throw SendTimeoutException(errorModel);
+      throw SendTimeoutException(
+        _withFallbackMessage(
+          errorModel,
+          'انتهت مهلة رفع البيانات. حاول تقليل عدد الصور أو حجمها.',
+        ),
+      );
 
     case DioExceptionType.badResponse:
       switch (e.response?.statusCode) {
@@ -131,13 +155,7 @@ void handleDioException(DioException e) {
           );
 
         default:
-          throw ServerException(
-            ErrorModel(
-              statusCode: e.response?.statusCode ?? 500,
-              message: 'Unexpected status code: ${e.response?.statusCode}',
-              errors: {},
-            ),
-          );
+          throw ServerException(errorModel);
       }
 
     case DioExceptionType.cancel:
@@ -146,4 +164,16 @@ void handleDioException(DioException e) {
     case DioExceptionType.unknown:
       throw UnknownException(errorModel);
   }
+}
+
+ErrorModel _withFallbackMessage(ErrorModel model, String fallback) {
+  if (model.message.trim().isNotEmpty || model.errors.isNotEmpty) {
+    return model;
+  }
+
+  return ErrorModel(
+    statusCode: model.statusCode,
+    message: fallback,
+    errors: model.errors,
+  );
 }

@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:bloc/bloc.dart';
 import 'package:rental_hub/feature/add_listing/data/models/create_product_request.dart';
 import 'package:rental_hub/feature/add_listing/data/models/update_product_request.dart';
@@ -98,9 +100,17 @@ class AddListingCubit extends Cubit<AddListingState> {
     final result = await addListingUseCase(request);
 
     result.fold(
-      (failure) => emit(
-        state.copyWith(isSubmitting: false, errorMessage: failure.errMessage),
-      ),
+      (failure) {
+        developer.log(
+          'submitListing failed\n'
+          'statusCode=${failure.statusCode}\n'
+          'message=${failure.errMessage}',
+          name: 'AddListing',
+        );
+        emit(
+          state.copyWith(isSubmitting: false, errorMessage: failure.errMessage),
+        );
+      },
       (message) =>
           emit(state.copyWith(isSubmitting: false, successMessage: message)),
     );
@@ -120,9 +130,17 @@ class AddListingCubit extends Cubit<AddListingState> {
     final result = await updateListingUseCase(id, request);
 
     result.fold(
-      (failure) => emit(
-        state.copyWith(isSubmitting: false, errorMessage: failure.errMessage),
-      ),
+      (failure) {
+        developer.log(
+          'updateListing failed\n'
+          'statusCode=${failure.statusCode}\n'
+          'message=${failure.errMessage}',
+          name: 'AddListing',
+        );
+        emit(
+          state.copyWith(isSubmitting: false, errorMessage: failure.errMessage),
+        );
+      },
       (message) =>
           emit(state.copyWith(isSubmitting: false, successMessage: message)),
     );
