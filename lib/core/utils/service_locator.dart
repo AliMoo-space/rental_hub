@@ -146,6 +146,7 @@ import 'package:rental_hub/feature/search/data/datasources/ai_search_remote_data
 import 'package:rental_hub/feature/search/data/datasources/search_remote_data_source.dart';
 import 'package:rental_hub/feature/search/data/repositories/search_repository_impl.dart';
 import 'package:rental_hub/feature/search/domain/repositories/search_repository.dart';
+import 'package:rental_hub/feature/search/domain/usecases/get_recommendations_usecase.dart';
 import 'package:rental_hub/feature/search/domain/usecases/live_search_usecase.dart';
 import 'package:rental_hub/feature/search/domain/usecases/search_products_usecase.dart';
 import 'package:rental_hub/feature/search/presentation/cubit/search_cubit.dart';
@@ -206,9 +207,7 @@ Future<void> setupServiceLocator() async {
   );
 
   getIt.registerLazySingleton(() => DataConnectionChecker());
-  getIt.registerLazySingleton<NetworkInfo>(
-    () => NetworkInfoImpl(getIt()),
-  );
+  getIt.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(getIt()));
 
   // Dedicated ApiConsumer for AI endpoints (separate Dio instance)
   getIt.registerLazySingleton<ApiConsumer>(
@@ -278,10 +277,8 @@ Future<void> setupServiceLocator() async {
   );
 
   getIt.registerLazySingleton<BookingRepository>(
-    () => BookingRepositoryImpl(
-      remoteDataSource: getIt(),
-      networkInfo: getIt(),
-    ),
+    () =>
+        BookingRepositoryImpl(remoteDataSource: getIt(), networkInfo: getIt()),
   );
 
   // ======================= USE CASES ========================
@@ -322,9 +319,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton(() => GetOwnerStatsUseCase(getIt()));
   getIt.registerLazySingleton(() => GetProductStatsUseCase(getIt()));
   getIt.registerLazySingleton(() => GetProductTransactionsUseCase(getIt()));
-  getIt.registerLazySingleton(
-    () => GetProductRentalRequestsUseCase(getIt()),
-  );
+  getIt.registerLazySingleton(() => GetProductRentalRequestsUseCase(getIt()));
   getIt.registerLazySingleton(() => GetWalletBalanceUseCase(getIt()));
   getIt.registerLazySingleton(() => GetWalletTransactionsUseCase(getIt()));
   getIt.registerLazySingleton(() => DepositWalletUseCase(getIt()));
@@ -345,22 +340,50 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton(() => AcceptOfferUseCase(getIt()));
   getIt.registerLazySingleton(() => RejectOfferUseCase(getIt()));
 
-  getIt.registerLazySingleton(() => CreateRentalOrderUseCase(repository: getIt()));
-  getIt.registerLazySingleton(() => ApproveRentalOrderUseCase(repository: getIt()));
-  getIt.registerLazySingleton(() => RejectRentalOrderUseCase(repository: getIt()));
-  getIt.registerLazySingleton(() => CancelRentalOrderUseCase(repository: getIt()));
-  getIt.registerLazySingleton(() => ShipRentalOrderUseCase(repository: getIt()));
-  getIt.registerLazySingleton(() => ConfirmReceiptRentalOrderUseCase(repository: getIt()));
-  getIt.registerLazySingleton(() => ReturnRentalOrderUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+    () => CreateRentalOrderUseCase(repository: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => ApproveRentalOrderUseCase(repository: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => RejectRentalOrderUseCase(repository: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => CancelRentalOrderUseCase(repository: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => ShipRentalOrderUseCase(repository: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => ConfirmReceiptRentalOrderUseCase(repository: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => ReturnRentalOrderUseCase(repository: getIt()),
+  );
   getIt.registerLazySingleton(() => GetMyOrdersUseCase(repository: getIt()));
-  getIt.registerLazySingleton(() => GetMyListingsOrdersUseCase(repository: getIt()));
-  getIt.registerLazySingleton(() => GetRentalOrderByIdUseCase(repository: getIt()));
-  getIt.registerLazySingleton(() => GetRenterOrderStatsUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+    () => GetMyListingsOrdersUseCase(repository: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => GetRentalOrderByIdUseCase(repository: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => GetRenterOrderStatsUseCase(repository: getIt()),
+  );
 
-  getIt.registerLazySingleton(() => GetNotificationsUseCase(repository: getIt()));
-  getIt.registerLazySingleton(() => ReadNotificationUseCase(repository: getIt()));
-  getIt.registerLazySingleton(() => ReadAllNotificationsUseCase(repository: getIt()));
-  getIt.registerLazySingleton(() => GetUnreadNotificationsCountUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+    () => GetNotificationsUseCase(repository: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => ReadNotificationUseCase(repository: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => ReadAllNotificationsUseCase(repository: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => GetUnreadNotificationsCountUseCase(repository: getIt()),
+  );
 
   getIt.registerFactory(
     () => CommunityRequestsCubit(getIt(), getIt(), getIt(), getIt()),
@@ -395,7 +418,9 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton(() => GetConversationsUseCase(getIt()));
   getIt.registerLazySingleton(() => GetMessagesUseCase(getIt()));
   getIt.registerLazySingleton(() => CreateOrGetConversationUseCase(getIt()));
-  getIt.registerLazySingleton(() => seller_chat.SendChatMessageUseCase(getIt()));
+  getIt.registerLazySingleton(
+    () => seller_chat.SendChatMessageUseCase(getIt()),
+  );
   getIt.registerLazySingleton(() => ReportMessageUseCase(getIt()));
   getIt.registerLazySingleton(() => ConnectToChatUseCase(getIt()));
   getIt.registerLazySingleton(() => ListenToMessagesUseCase(getIt()));
@@ -422,7 +447,11 @@ Future<void> setupServiceLocator() async {
   );
 
   getIt.registerLazySingleton<AiSearchRemoteDataSource>(
-    () => AiSearchRemoteDataSourceImpl(getIt<ApiConsumer>(instanceName: 'ai')),
+    () => AiSearchRemoteDataSourceImpl(
+      apiConsumer: getIt<ApiConsumer>(instanceName: 'ai'),
+      tokenStorageHelper: getIt<TokenStorageHelper>(),
+      cacheHelper: getIt<CacheHelper>(),
+    ),
   );
 
   getIt.registerLazySingleton<SearchRepository>(
@@ -431,8 +460,9 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerLazySingleton(() => LiveSearchUseCase(getIt()));
   getIt.registerLazySingleton(() => SearchProductsUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetRecommendationsUseCase(getIt()));
 
-  getIt.registerFactory(() => SearchCubit(getIt(), getIt()));
+  getIt.registerFactory(() => SearchCubit(getIt(), getIt(), getIt()));
 
   // ===================== DATA SOURCES =======================
 
@@ -518,20 +548,10 @@ Future<void> setupServiceLocator() async {
     () => ProductDetailsCubit(getIt()),
   );
   getIt.registerFactory(
-    () => MyProductsCubit(
-      getIt(),
-      getIt(),
-      getIt(),
-      getIt(),
-    ),
+    () => MyProductsCubit(getIt(), getIt(), getIt(), getIt()),
   );
   getIt.registerFactory(
-    () => OwnerStatsCubit(
-      getIt(),
-      getIt(),
-      getIt(),
-      getIt(),
-    ),
+    () => OwnerStatsCubit(getIt(), getIt(), getIt(), getIt()),
   );
   getIt.registerFactory(
     () => ProductReviewCubit(

@@ -71,4 +71,24 @@ class SearchRepositoryImpl implements SearchRepository {
       return Left(Failure(errMessage: 'فشل البحث: ${e.toString()}'));
     }
   }
+
+  @override
+  Future<Either<Failure, SearchResultEntity>> getRecommendations() async {
+    try {
+      final result = await aiRemoteDataSource.getRecommendations();
+      return Right(result);
+    } on ServerException catch (e) {
+      if (isNetworkUnavailableException(e)) {
+        return Left(Failure(errMessage: friendlyNetworkErrorMessage()));
+      }
+      return Left(
+        Failure(
+          statusCode: e.errorModel.statusCode,
+          errMessage: e.errorModel.firstErrorMessage,
+        ),
+      );
+    } catch (e) {
+      return Left(Failure(errMessage: 'فشل جلب التوصيات: ${e.toString()}'));
+    }
+  }
 }

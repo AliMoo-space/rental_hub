@@ -98,7 +98,8 @@ class _AppNetworkImageState extends State<AppNetworkImage> {
 
   @override
   Widget build(BuildContext context) {
-    final validImages = widget.images?.where((img) => img.trim().isNotEmpty).toList() ?? [];
+    final validImages =
+        widget.images?.where((img) => img.trim().isNotEmpty).toList() ?? [];
 
     if (validImages.isEmpty) {
       return SizedBox(
@@ -120,75 +121,75 @@ class _AppNetworkImageState extends State<AppNetworkImage> {
       child: Stack(
         children: [
           CarouselSlider(
-          options: CarouselOptions(
-            height: widget.height,
-            viewportFraction: 1.0,
-            enableInfiniteScroll: validImages.length > 1,
-            autoPlay: validImages.length > 1,
-            autoPlayAnimationDuration: const Duration(milliseconds: 800),
-            onPageChanged: (index, reason) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-          ),
-          items: validImages.map((imageUrl) {
-            return Builder(
-              builder: (BuildContext context) {
-                return SizedBox(
-                  width: widget.width ?? MediaQuery.of(context).size.width,
-                  height: widget.height,
-                  child: Image.network(
-                    imageUrl,
-                    fit: widget.fit ?? BoxFit.cover,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
+            options: CarouselOptions(
+              height: widget.height,
+              viewportFraction: 1.0,
+              enableInfiniteScroll: validImages.length > 1,
+              autoPlay: validImages.length > 1,
+              autoPlayAnimationDuration: const Duration(milliseconds: 800),
+              onPageChanged: (index, reason) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+            ),
+            items: validImages.map((imageUrl) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: widget.height,
+                    child: Image.network(
+                      imageUrl,
+                      fit: widget.fit ?? BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) => Center(
+                        child: Icon(
+                          Icons.broken_image_outlined,
+                          color: Colors.grey,
+                          size: 36.sp,
                         ),
-                      );
-                    },
-                    errorBuilder: (context, error, stackTrace) => Center(
-                      child: Icon(
-                        Icons.broken_image_outlined,
-                        color: Colors.grey,
-                        size: 36.sp,
                       ),
                     ),
-                  ),
-                );
-              },
-            );
-          }).toList(),
-        ),
-        if (validImages.length > 1)
-          Positioned(
-            bottom: 8.h,
-            left: 0,
-            right: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: validImages.asMap().entries.map((entry) {
-                return Container(
-                  width: _currentIndex == entry.key ? 16.w : 6.w,
-                  height: 6.h,
-                  margin: EdgeInsets.symmetric(horizontal: 2.w),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(3.r),
-                    color: _currentIndex == entry.key
-                        ? AppColors.primaryColor
-                        : Colors.white.withValues(alpha: 0.6),
-                  ),
-                );
-              }).toList(),
-            ),
+                  );
+                },
+              );
+            }).toList(),
           ),
-      ],
-    ),
+          if (validImages.length > 1)
+            Positioned(
+              bottom: 6.h,
+              left: 0,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: validImages.asMap().entries.map((entry) {
+                  return Container(
+                    width: _currentIndex == entry.key ? 16.w : 6.w,
+                    height: 6.h,
+                    margin: EdgeInsets.symmetric(horizontal: 2.w),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(3.r),
+                      color: _currentIndex == entry.key
+                          ? AppColors.primaryColor
+                          : Colors.white.withValues(alpha: 0.6),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

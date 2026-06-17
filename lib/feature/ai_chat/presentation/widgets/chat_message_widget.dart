@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:rental_hub/feature/ai_chat/presentation/models/chat_message_model.dart';
 import 'package:rental_hub/feature/ai_chat/presentation/widgets/product_card.dart';
 
@@ -26,7 +27,7 @@ class ChatMessageWidget extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: message.products
-                      .map((p) => ProductCard(product: p))
+                      .map((p) => ProductCard(product: p, onTap: () {}))
                       .toList(),
                 ),
               ),
@@ -117,12 +118,6 @@ class ChatMessageWidget extends StatelessWidget {
   }
 
   String _formatTime(DateTime dateTime) {
-    final now = DateTime.now();
-    if (dateTime.day == now.day &&
-        dateTime.month == now.month &&
-        dateTime.year == now.year) {
-      return '${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-    }
-    return '${dateTime.day}/${dateTime.month}';
+    return DateFormat('h:mm a', 'en').format(dateTime);
   }
 }

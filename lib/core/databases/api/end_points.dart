@@ -3,6 +3,7 @@ class EndPoints {
   static const String aiBaseUrl =
       "https://remunerative-alita-nonfluent.ngrok-free.dev";
   static const String aichatEndpoint = "/chat";
+  static const String recommendationsEndpoint = "/recommendations";
   static const String chatConversationsEndpoint = '/api/Chat/conversations';
   static String chatMessagesEndpoint(int conversationId) =>
       '/api/Chat/messages/$conversationId';
@@ -63,9 +64,12 @@ class EndPoints {
 
   // Notifications endpoints
   static const String notificationsEndpoint = '/api/Notifications';
-  static String readNotificationEndpoint(int id) => '/api/Notifications/$id/read';
-  static const String readAllNotificationsEndpoint = '/api/Notifications/read-all';
-  static const String unreadNotificationsCountEndpoint = '/api/Notifications/unread-count';
+  static String readNotificationEndpoint(int id) =>
+      '/api/Notifications/$id/read';
+  static const String readAllNotificationsEndpoint =
+      '/api/Notifications/read-all';
+  static const String unreadNotificationsCountEndpoint =
+      '/api/Notifications/unread-count';
 
   // RentalOrder endpoints
   static const String rentalOrder = '/api/RentalOrder';
@@ -77,6 +81,7 @@ class EndPoints {
   static String rejectRentalOrder(int id) => '/api/RentalOrder/$id/reject';
   static String cancelRentalOrder(int id) => '/api/RentalOrder/$id/cancel';
   static String shipRentalOrder(int id) => '/api/RentalOrder/$id/ship';
-  static String confirmReceiptRentalOrder(int id) => '/api/RentalOrder/$id/confirm-receipt';
+  static String confirmReceiptRentalOrder(int id) =>
+      '/api/RentalOrder/$id/confirm-receipt';
   static String returnRentalOrder(int id) => '/api/RentalOrder/$id/return';
 }

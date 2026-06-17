@@ -41,6 +41,8 @@ class _SearchScreenState extends State<SearchScreen> {
       if (!mounted) return;
       if (controller.text.isNotEmpty) {
         context.read<SearchCubit>().onQueryChanged(controller.text);
+      } else {
+        context.read<SearchCubit>().loadRecommendations();
       }
     });
   }
@@ -151,114 +153,76 @@ class _SearchScreenState extends State<SearchScreen> {
               },
             ),
 
-            // Padding(
-            //   padding: EdgeInsets.fromLTRB(16.w, 14.h, 16.w, 8.h),
-            //   child: Container(
-            //     width: double.infinity,
-            //     padding: EdgeInsets.all(14.w),
-            //     decoration: BoxDecoration(
-            //       color: Colors.white,
-            //       borderRadius: BorderRadius.circular(20.r),
-            //       border: Border.all(color: AppColors.borderColor),
-            //     ),
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         Text(
-            //           'فلاتر سريعة',
-            //           style: AppStyles.titleMedium.copyWith(
-            //             color: AppColors.textPrimary,
-            //           ),
-            //         ),
-            //         SizedBox(height: 10.h),
-            //         SearchFilterChips(
-            //           categories: const [
-            //             'الكل',
-            //             'معدات',
-            //             'الكترونيات',
-            //             'أجهزة',
-            //             'إكسسوارات',
-            //           ],
-            //           onCategorySelected: (c) =>
-            //               context.read<SearchCubit>().submitSearch(),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            // Expanded(
-            //   child: Padding(
-            //     padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h),
-            //     child: BlocBuilder<SearchCubit, SearchState>(
-            //       builder: (context, state) {
-            //         if (state is SearchLoading) {
-            //           return const SearchLoadingShimmer();
-            //         }
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h),
+                child: BlocBuilder<SearchCubit, SearchState>(
+                  builder: (context, state) {
+                    if (state is SearchLoading) {
+                      return const SearchLoadingShimmer();
+                    }
 
-            //         if (state is SearchLoadingMore) {
-            //           return const SearchLoadingShimmer(showMoreTile: true);
-            //         }
+                    if (state is SearchLoadingMore) {
+                      return const SearchLoadingShimmer(showMoreTile: true);
+                    }
 
-            //         if (state is SearchEmpty) {
-            //           return _EmptyState(
-            //             onReset: () {
-            //               controller.clear();
-            //               context.read<SearchCubit>().onQueryChanged('');
-            //             },
-            //           );
-            //         }
+                    if (state is SearchEmpty) {
+                      return _EmptyState(
+                        onReset: () {
+                          controller.clear();
+                          context.read<SearchCubit>().onQueryChanged('');
+                        },
+                      );
+                    }
 
-            //         if (state is SearchError) {
-            //           return _ErrorState(
-            //             message: state.message,
-            //             onRetry: () =>
-            //                 context.read<SearchCubit>().submitSearch(),
-            //           );
-            //         }
+                    if (state is SearchError) {
+                      return _ErrorState(
+                        message: state.message,
+                        onRetry: () =>
+                            context.read<SearchCubit>().submitSearch(),
+                      );
+                    }
 
-            //         if (state is SearchLoaded) {
-            //           final items = state.results.items;
-            //           return NotificationListener<ScrollNotification>(
-            //             onNotification: (scroll) {
-            //               if (scroll.metrics.pixels >=
-            //                   scroll.metrics.maxScrollExtent - 200) {
-            //                 context.read<SearchCubit>().loadMore();
-            //               }
-            //               return false;
-            //             },
-            //             child: GridView.builder(
-            //               padding: EdgeInsets.zero,
-            //               gridDelegate:
-            //                   SliverGridDelegateWithFixedCrossAxisCount(
-            //                     crossAxisCount: 2,
-            //                     crossAxisSpacing: 12.w,
-            //                     mainAxisSpacing: 12.h,
-            //                     childAspectRatio: 0.72,
-            //                   ),
-            //               itemCount: items.length + (state.hasMore ? 1 : 0),
-            //               itemBuilder: (context, index) {
-            //                 if (index >= items.length) {
-            //                   return const _LoadMoreTile();
-            //                 }
-            //                 final item = items[index];
-            //                 return SearchResultCard(
-            //                   item: item,
-            //                   onTap: () =>
-            //                       _openSearchResultDetails(context, item),
-            //                 );
-            //               },
-            //             ),
-            //           );
-            //         }
+                    if (state is SearchLoaded) {
+                      final items = state.results.items;
+                      return NotificationListener<ScrollNotification>(
+                        onNotification: (scroll) {
+                          if (scroll.metrics.pixels >=
+                              scroll.metrics.maxScrollExtent - 200) {
+                            context.read<SearchCubit>().loadMore();
+                          }
+                          return false;
+                        },
+                        child: GridView.builder(
+                          padding: EdgeInsets.zero,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 12.w,
+                                mainAxisSpacing: 12.h,
+                                childAspectRatio: 0.72,
+                              ),
+                          itemCount: items.length + (state.hasMore ? 1 : 0),
+                          itemBuilder: (context, index) {
+                            if (index >= items.length) {
+                              return const _LoadMoreTile();
+                            }
+                            final item = items[index];
+                            return SearchResultCard(
+                              item: item,
+                              onTap: () =>
+                                  _openSearchResultDetails(context, item),
+                            );
+                          },
+                        ),
+                      );
+                    }
 
-            //         return _InitialState(
-            //           onSearch: () =>
-            //               context.read<SearchCubit>().submitSearch(),
-            //         );
-            //       },
-            //     ),
-            //   ),
-            // ),
+                    return const SearchLoadingShimmer();
+                  },
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -344,83 +308,6 @@ ProductEntity _buildProductEntity({
     totalPlatformProfit: 0,
     images: images,
   );
-}
-
-class _InitialState extends StatelessWidget {
-  final VoidCallback onSearch;
-
-  const _InitialState({required this.onSearch});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(24.w),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24.r),
-          border: Border.all(color: AppColors.borderColor),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 72.w,
-              height: 72.w,
-              decoration: BoxDecoration(
-                color: AppColors.primarySoftColor.withValues(alpha: 0.22),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.manage_search_rounded,
-                size: 34.sp,
-                color: AppColors.primaryColor,
-              ),
-            ),
-            SizedBox(height: 16.h),
-            Text(
-              'ابدأ البحث عن منتج',
-              style: AppStyles.titleMedium.copyWith(
-                color: AppColors.textPrimary,
-              ),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              'اكتب اسم المنتج، أو استخدم الفلاتر للوصول بسرعة إلى النتائج المناسبة.',
-              textAlign: TextAlign.center,
-              style: AppStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-            SizedBox(height: 18.h),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: onSearch,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(vertical: 14.h),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.r),
-                  ),
-                ),
-                child: const Text('ابدأ البحث'),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class _ErrorState extends StatelessWidget {
