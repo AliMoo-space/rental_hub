@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:rental_hub/core/routing/app_routes.dart';
 import 'package:rental_hub/feature/ai_chat/presentation/models/chat_message_model.dart';
 import 'package:rental_hub/feature/ai_chat/presentation/widgets/product_card.dart';
+import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
 
 class ChatMessageWidget extends StatelessWidget {
   final ChatMessageModel message;
@@ -27,7 +30,44 @@ class ChatMessageWidget extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: message.products
-                      .map((p) => ProductCard(product: p, onTap: () {}))
+                      .map(
+                        (p) => ProductCard(
+                          product: p,
+                          onTap: () => context.pushNamed(
+                            AppRoutes.productDetailsScreen,
+                            pathParameters:
+                                AppRoutes.productDetailsPathParameters(p.id),
+                            extra: ProductEntity(
+                              id: p.id,
+                              userId: '',
+                              userFullName: '',
+                              categoryId: 0,
+                              categoryName: '',
+                              subcategoryId: 0,
+                              subcategoryName: '',
+                              locationArea: p.location,
+                              condition: p.condition,
+                              productType: '',
+                              brand: '',
+                              rentalGuarantee: '',
+                              name: p.name,
+                              description: '',
+                              basePricePerDay: p.pricePerDay,
+                              finalPricePerDay: p.pricePerDay,
+                              commissionPercentage: 0,
+                              termsConditions: '',
+                              status: '',
+                              createdAt: DateTime.now(),
+                              averageRating: 0.0,
+                              totalReviews: 0,
+                              totalRentalCount: 0,
+                              totalPlatformProfit: 0,
+                              images:
+                                  p.imageUrl != null ? [p.imageUrl!] : const [],
+                            ),
+                          ),
+                        ),
+                      )
                       .toList(),
                 ),
               ),
