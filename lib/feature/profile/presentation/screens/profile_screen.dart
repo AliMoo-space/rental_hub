@@ -136,7 +136,8 @@ class _ProfileContent extends StatelessWidget {
             width: 260.w,
             child: PrimaryOutlineButtonWidget(
               text: context.l10n.addQuestion,
-              onPressed: () => context.pushNamed(AppRoutes.communityScreen),
+              onPressed: () {},
+              //     context.pushNamed(AppRoutes.createCommunityRequestScreen),
               textColor: AppColors.secondaryColor,
               borderRadius: 30.r,
               borderColor: AppColors.secondaryColor,
