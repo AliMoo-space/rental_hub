@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/utils/validation_utils.dart';
@@ -20,9 +21,8 @@ class PersonalInfoForm extends StatelessWidget {
     required this.onSexChanged,
   });
 
-  static const List<String> _sexOptions = ['ذكر', 'أنثى'];
-
-  static const Color _profilePrimaryColor = Color(0xFF6C63FF);
+  static const List<String> _male = ['ذكر', 'Male'];
+  static const List<String> _female = ['أنثى', 'Female'];
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +32,16 @@ class PersonalInfoForm extends StatelessWidget {
           children: [
             Expanded(
               child: CustomTextField(
-                title: 'الاسم بالكامل',
-                hintText: 'الاسم بالكامل',
+                title: context.l10n.fullName,
+                hintText: context.l10n.fullNameHint,
                 controller: fullNameController,
                 validator: (value) {
                   final text = value ?? '';
                   if (text.trim().isEmpty) {
-                    return 'الاسم بالكامل مطلوب';
+                    return context.l10n.fullNameRequired;
                   }
                   if (!ValidationUtils.isValidFullName(text)) {
-                    return 'يجب أن يكون الاسم 3 أحرف على الأقل';
+                    return context.l10n.fullNameMinLength;
                   }
                   return null;
                 },
@@ -50,18 +50,18 @@ class PersonalInfoForm extends StatelessWidget {
             SizedBox(width: 12.w),
             Expanded(
               child: CustomTextField(
-                title: 'رقم الهاتف',
-                hintText: 'رقم الهاتف',
+                title: context.l10n.phoneNumberLabel,
+                hintText: context.l10n.phoneNumberLabel,
                 controller: phoneNumberController,
                 keyboardType: TextInputType.phone,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 validator: (value) {
                   final text = value ?? '';
                   if (text.trim().isEmpty) {
-                    return 'رقم الهاتف مطلوب';
+                    return context.l10n.phoneNumberRequired;
                   }
                   if (!ValidationUtils.isValidPhoneNumber(text)) {
-                    return 'رقم الهاتف يجب أن يكون أرقام فقط وبحد أدنى 11 رقم';
+                    return context.l10n.phoneNumberInvalid;
                   }
                   return null;
                 },
@@ -73,7 +73,7 @@ class PersonalInfoForm extends StatelessWidget {
         Align(
           alignment: AlignmentDirectional.centerStart,
           child: Text(
-            'الجنس',
+            context.l10n.genderLabel,
             style: AppStyles.bodySmall.copyWith(
               color: AppColors.textSecondaryColor,
               fontWeight: FontWeight.w600,
@@ -82,22 +82,26 @@ class PersonalInfoForm extends StatelessWidget {
         ),
         SizedBox(height: 8.h),
         DropdownButtonFormField<String>(
-          initialValue: _sexOptions.contains(sex) ? sex : null,
-          items: _sexOptions
-              .map(
-                (value) =>
-                    DropdownMenuItem<String>(value: value, child: Text(value)),
-              )
-              .toList(),
+          initialValue: sex,
+          items: [
+            DropdownMenuItem<String>(
+              value: _male.contains(sex) ? sex : 'ذكر',
+              child: Text(context.l10n.male),
+            ),
+            DropdownMenuItem<String>(
+              value: _female.contains(sex) ? sex : 'أنثى',
+              child: Text(context.l10n.female),
+            ),
+          ],
           onChanged: onSexChanged,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'الجنس مطلوب';
+              return context.l10n.genderRequired;
             }
             return null;
           },
           decoration: InputDecoration(
-            hintText: 'الجنس',
+            hintText: context.l10n.genderLabel,
             contentPadding: EdgeInsets.symmetric(
               horizontal: 18.w,
               vertical: 18.h,
@@ -108,7 +112,7 @@ class PersonalInfoForm extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.r),
-              borderSide: BorderSide(color: _profilePrimaryColor, width: 1),
+              borderSide: BorderSide(color: AppColors.primaryColor, width: 1),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.r),

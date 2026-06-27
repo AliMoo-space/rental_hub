@@ -14,8 +14,12 @@ abstract class MyProductsRemoteDataSource {
   Future<String> activateProduct({required int id});
   Future<OwnerStatsModel> getOwnerStats();
   Future<ProductStatsModel> getProductStats({required int id});
-  Future<List<ProductTransactionModel>> getProductTransactions({required int id});
-  Future<List<ProductRentalRequestModel>> getProductRentalRequests({required int id});
+  Future<List<ProductTransactionModel>> getProductTransactions({
+    required int id,
+  });
+  Future<List<ProductRentalRequestModel>> getProductRentalRequests({
+    required int id,
+  });
   Future<double> getCommissionSetting();
 }
 
@@ -79,7 +83,9 @@ class MyProductsRemoteDataSourceImpl implements MyProductsRemoteDataSource {
   }
 
   @override
-  Future<List<ProductTransactionModel>> getProductTransactions({required int id}) async {
+  Future<List<ProductTransactionModel>> getProductTransactions({
+    required int id,
+  }) async {
     final response = await apiConsumer.get(EndPoints.productTransactions(id));
     final payload = ResponseParser.extractDataPayload(response.data);
     return _extractModels(
@@ -89,7 +95,9 @@ class MyProductsRemoteDataSourceImpl implements MyProductsRemoteDataSource {
   }
 
   @override
-  Future<List<ProductRentalRequestModel>> getProductRentalRequests({required int id}) async {
+  Future<List<ProductRentalRequestModel>> getProductRentalRequests({
+    required int id,
+  }) async {
     final response = await apiConsumer.get(EndPoints.productRentalRequests(id));
     final payload = ResponseParser.extractDataPayload(response.data);
     return _extractModels(
@@ -102,7 +110,8 @@ class MyProductsRemoteDataSourceImpl implements MyProductsRemoteDataSource {
   Future<double> getCommissionSetting() async {
     final response = await apiConsumer.get(EndPoints.productCommission);
     final payload = ResponseParser.extractDataPayload(response.data);
-    final commissionValue = payload['commission'] ?? payload['value'] ?? payload['data'];
+    final commissionValue =
+        payload['commission'] ?? payload['value'] ?? payload['data'];
     if (commissionValue is num) return commissionValue.toDouble();
     if (commissionValue is Map<String, dynamic>) {
       final nestedValue =

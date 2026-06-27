@@ -30,10 +30,7 @@ class OwnerStatsCubit extends Cubit<OwnerStatsState> {
         ),
       ),
       (ownerStats) => emit(
-        state.copyWith(
-          isOwnerStatsLoading: false,
-          ownerStats: ownerStats,
-        ),
+        state.copyWith(isOwnerStatsLoading: false, ownerStats: ownerStats),
       ),
     );
   }
@@ -87,10 +84,7 @@ class OwnerStatsCubit extends Cubit<OwnerStatsState> {
         ),
       ),
       (requests) => emit(
-        state.copyWith(
-          isRequestsLoading: false,
-          rentalRequests: requests,
-        ),
+        state.copyWith(isRequestsLoading: false, rentalRequests: requests),
       ),
     );
   }

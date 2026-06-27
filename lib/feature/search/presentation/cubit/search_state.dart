@@ -23,9 +23,15 @@ class SearchLoading extends SearchState {}
 class SearchLoaded extends SearchState {
   final SearchResultEntity results;
   final bool hasMore;
-  SearchLoaded(this.results, this.hasMore);
+  final Set<int> favoriteLoadingProductIds;
+
+  SearchLoaded(this.results, this.hasMore, {this.favoriteLoadingProductIds = const {}});
+
+  bool isFavoriteLoading(int productId) =>
+      favoriteLoadingProductIds.contains(productId);
+
   @override
-  List<Object?> get props => [results, hasMore];
+  List<Object?> get props => [results, hasMore, favoriteLoadingProductIds];
 }
 
 class SearchLoadingMore extends SearchState {}

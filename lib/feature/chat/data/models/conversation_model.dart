@@ -48,44 +48,72 @@ class ConversationModel extends ConversationEntity {
     final id = _parseInt(
       _firstValue(json, const ['id', 'conversationId', 'chatId', 'roomId']),
     );
-    final sellerId = _stringValue(
-      json,
-      const ['sellerId', 'seller_id', 'receiverId', 'receiver_id', 'otherUserId', 'participantId', 'userId'],
-    );
-    final sellerName = _stringValue(
-      json,
-      const ['sellerName', 'sellerFullName', 'receiverName', 'otherUserName', 'participantName', 'fullName', 'name'],
-    );
-    final sellerAvatar = _stringValue(
-      json,
-      const ['sellerAvatar', 'receiverAvatar', 'avatar', 'profileImage', 'image'],
-    );
-    final buyerId = _stringValue(
-      json,
-      const ['buyerId', 'buyer_id', 'currentUserId', 'initiatorId', 'ownerId'],
-    );
+    final sellerId = _stringValue(json, const [
+      'sellerId',
+      'seller_id',
+      'receiverId',
+      'receiver_id',
+      'otherUserId',
+      'participantId',
+      'userId',
+    ]);
+    final sellerName = _stringValue(json, const [
+      'sellerName',
+      'sellerFullName',
+      'receiverName',
+      'otherUserName',
+      'participantName',
+      'fullName',
+      'name',
+    ]);
+    final sellerAvatar = _stringValue(json, const [
+      'sellerAvatar',
+      'receiverAvatar',
+      'avatar',
+      'profileImage',
+      'image',
+    ]);
+    final buyerId = _stringValue(json, const [
+      'buyerId',
+      'buyer_id',
+      'currentUserId',
+      'initiatorId',
+      'ownerId',
+    ]);
     final buyerName = _stringValue(json, const ['buyerName', 'buyerFullName']);
     final productId = _nullableInt(
-      _firstValue(json, const ['productId', 'product_id', 'itemId', 'listingId']),
+      _firstValue(json, const [
+        'productId',
+        'product_id',
+        'itemId',
+        'listingId',
+      ]),
     );
-    final productName = _stringValue(
-      json,
-      const ['productName', 'listingName', 'itemName', 'title'],
-    );
-    final lastMessage = _stringValue(
-      json,
-      const ['lastMessage', 'last_message', 'message', 'preview'],
-    );
+    final productName = _stringValue(json, const [
+      'productName',
+      'listingName',
+      'itemName',
+      'title',
+    ]);
+    final lastMessage = _stringValue(json, const [
+      'lastMessage',
+      'last_message',
+      'message',
+      'preview',
+    ]);
     final lastMessageAt = _nullableDateTime(
-      _firstValue(json, const ['lastMessageAt', 'last_message_at', 'updatedAt', 'createdAt']),
+      _firstValue(json, const [
+        'lastMessageAt',
+        'last_message_at',
+        'updatedAt',
+        'createdAt',
+      ]),
     );
     final unreadCount = _parseInt(
       _firstValue(json, const ['unreadCount', 'unread_count', 'pendingCount']),
     );
-    final isDraft = _parseBool(
-          _firstValue(json, const ['isDraft', 'draft']),
-        ) ||
-        id <= 0;
+    final isDraft =
+        _parseBool(_firstValue(json, const ['isDraft', 'draft'])) || id <= 0;
 
     return ConversationModel(
       id: id,

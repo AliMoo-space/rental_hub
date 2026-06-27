@@ -9,6 +9,8 @@ class AppRoutes {
   static const String mainScreen = '/mainScreen';
   static const String homeScreen = '/homeScreen';
   static const String communityScreen = '/communityScreen';
+  static const String createCommunityRequestScreen =
+      '/createCommunityRequestScreen';
   static const String favoritesScreen = '/favoritesScreen';
   static const String dealsScreen = '/dealsScreen';
   static const String notificationsScreen = '/notificationsScreen';
@@ -30,6 +32,14 @@ class AppRoutes {
   static const String conversationsScreen = '/conversationsScreen';
   static const String chatScreen = '/chatScreen';
   static const String subscriptionScreen = '/subscriptionScreen';
+  static const String communityRequestDetailsScreen =
+      '/communityRequestDetailsScreen';
+  static const String communityRequestDetailsPath =
+      '/community-request-details';
+
+  static String communityRequestDetailsLocation(int id) =>
+      '$communityRequestDetailsPath/$id';
+
   static const String searchScreen = '/searchScreen';
   static const String productReviewsScreen = '/productReviewsScreen';
   static const String myOrdersScreen = '/myOrdersScreen';
@@ -39,10 +49,16 @@ class AppRoutes {
   static String productReviewsLocation(int productId) =>
       '$productReviewsPath/$productId';
 
+  static const String orderDetailScreen = '/orderDetailScreen';
+  static const String orderDetailPath = '/order-detail';
+
+  static String orderDetailLocation(int id) => '$orderDetailPath/$id';
+
   static const String myProductsScreen = '/myProductsScreen';
   static const String ownerStatsScreen = '/ownerStatsScreen';
   static const String productTransactionsScreen = '/productTransactionsScreen';
-  static const String productRentalRequestsScreen = '/productRentalRequestsScreen';
+  static const String productRentalRequestsScreen =
+      '/productRentalRequestsScreen';
   static const String productStatsScreen = '/productStatsScreen';
 
   static String productTransactionsLocation(int productId) =>
@@ -52,4 +68,3 @@ class AppRoutes {
   static String productStatsLocation(int productId) =>
       '$productStatsScreen/$productId';
 }
-

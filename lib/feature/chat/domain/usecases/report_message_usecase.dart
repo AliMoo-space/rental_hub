@@ -8,10 +8,7 @@ class ReportMessageUseCase {
 
   ReportMessageUseCase(this.repository);
 
-  Future<Either<Failure, void>> call({
-    required int messageId,
-    String? reason,
-  }) {
+  Future<Either<Failure, void>> call({required int messageId, String? reason}) {
     return repository.reportMessage(messageId: messageId, reason: reason);
   }
 }

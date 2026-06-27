@@ -12,15 +12,24 @@ class ProductRemoteDataSourceImp implements ProductRemoteDataSource {
 
   @override
   Future<ProductsModel> getProducts({required int pageNumber}) async {
-    developer.log('API count start: getProducts page $pageNumber', name: 'Instrumentation');
+    developer.log(
+      'API count start: getProducts page $pageNumber',
+      name: 'Instrumentation',
+    );
     final response = await _api.get(
       EndPoints.productsEndpoint,
       queryParameters: {'pageNumber': pageNumber, 'pageSize': 10},
     );
     final payload = ResponseParser.extractDataPayload(response.data);
-    developer.log('Parsed count pre-model payload items: ${(payload['items'] as List?)?.length}', name: 'Instrumentation');
+    developer.log(
+      'Parsed count pre-model payload items: ${(payload['items'] as List?)?.length}',
+      name: 'Instrumentation',
+    );
     final model = ProductsModel.fromJson(payload);
-    developer.log('Parsed count post-model: ${model.items.length}', name: 'Instrumentation');
+    developer.log(
+      'Parsed count post-model: ${model.items.length}',
+      name: 'Instrumentation',
+    );
     return model;
   }
 }

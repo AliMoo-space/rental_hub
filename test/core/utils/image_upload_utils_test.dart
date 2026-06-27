@@ -20,14 +20,17 @@ void main() {
       expect(ImageUploadUtils.compressionQuality, inInclusiveRange(60, 70));
     });
 
-    test('dioMultipartOptions uses multipart content type and upload timeouts', () {
-      final options = ImageUploadUtils.dioMultipartOptions(skipAuth: false);
+    test(
+      'dioMultipartOptions uses multipart content type and upload timeouts',
+      () {
+        final options = ImageUploadUtils.dioMultipartOptions(skipAuth: false);
 
-      expect(options.contentType, Headers.multipartFormDataContentType);
-      expect(options.sendTimeout, ImageUploadUtils.uploadSendTimeout);
-      expect(options.receiveTimeout, ImageUploadUtils.uploadSendTimeout);
-      expect(options.headers?[Headers.contentTypeHeader], isNull);
-      expect(options.extra?['skipAuth'], isFalse);
-    });
+        expect(options.contentType, Headers.multipartFormDataContentType);
+        expect(options.sendTimeout, ImageUploadUtils.uploadSendTimeout);
+        expect(options.receiveTimeout, ImageUploadUtils.uploadSendTimeout);
+        expect(options.headers?[Headers.contentTypeHeader], isNull);
+        expect(options.extra?['skipAuth'], isFalse);
+      },
+    );
   });
 }

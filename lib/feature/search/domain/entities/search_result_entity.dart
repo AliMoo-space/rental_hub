@@ -7,6 +7,8 @@ class ProductItemEntity {
   final String condition;
   final List<String> images;
   final double rating;
+  final DateTime createdAt;
+  final bool isFavorite;
 
   ProductItemEntity({
     required this.id,
@@ -17,7 +19,9 @@ class ProductItemEntity {
     required this.condition,
     required this.images,
     required this.rating,
-  });
+    DateTime? createdAt,
+    this.isFavorite = false,
+  }) : createdAt = createdAt ?? DateTime.now();
 }
 
 class SearchResultEntity {

@@ -36,7 +36,10 @@ class NotificationCubit extends Cubit<NotificationState> {
       emit(NotificationLoading());
     }
 
-    final result = await getNotificationsUseCase(page: _currentPage, pageSize: _pageSize);
+    final result = await getNotificationsUseCase(
+      page: _currentPage,
+      pageSize: _pageSize,
+    );
 
     result.fold(
       (failure) {
@@ -45,22 +48,28 @@ class NotificationCubit extends Cubit<NotificationState> {
         }
       },
       (data) {
-        final List<NotificationEntity> newNotifications = data['notifications'] ?? [];
+        final List<NotificationEntity> newNotifications =
+            data['notifications'] ?? [];
         final int unreadCount = data['unreadCount'] ?? 0;
 
         if (state is NotificationLoaded && !isRefresh) {
           final currentState = state as NotificationLoaded;
-          emit(currentState.copyWith(
-            notifications: List.of(currentState.notifications)..addAll(newNotifications),
-            unreadCount: unreadCount,
-            hasReachedMax: newNotifications.length < _pageSize,
-          ));
+          emit(
+            currentState.copyWith(
+              notifications: List.of(currentState.notifications)
+                ..addAll(newNotifications),
+              unreadCount: unreadCount,
+              hasReachedMax: newNotifications.length < _pageSize,
+            ),
+          );
         } else {
-          emit(NotificationLoaded(
-            notifications: newNotifications,
-            unreadCount: unreadCount,
-            hasReachedMax: newNotifications.length < _pageSize,
-          ));
+          emit(
+            NotificationLoaded(
+              notifications: newNotifications,
+              unreadCount: unreadCount,
+              hasReachedMax: newNotifications.length < _pageSize,
+            ),
+          );
         }
         _currentPage++;
       },
@@ -75,7 +84,9 @@ class NotificationCubit extends Cubit<NotificationState> {
       (_) {
         if (state is NotificationLoaded) {
           final currentState = state as NotificationLoaded;
-          final updatedNotifications = currentState.notifications.map((notification) {
+          final updatedNotifications = currentState.notifications.map((
+            notification,
+          ) {
             if (notification.id == id && !notification.isRead) {
               return NotificationEntity(
                 id: notification.id,
@@ -93,10 +104,12 @@ class NotificationCubit extends Cubit<NotificationState> {
               ? currentState.unreadCount - 1
               : 0;
 
-          emit(currentState.copyWith(
-            notifications: updatedNotifications,
-            unreadCount: updatedUnreadCount,
-          ));
+          emit(
+            currentState.copyWith(
+              notifications: updatedNotifications,
+              unreadCount: updatedUnreadCount,
+            ),
+          );
         }
       },
     );
@@ -105,46 +118,44 @@ class NotificationCubit extends Cubit<NotificationState> {
   Future<void> readAllNotifications() async {
     final result = await readAllNotificationsUseCase();
 
-    result.fold(
-      (failure) {},
-      (_) {
-        if (state is NotificationLoaded) {
-          final currentState = state as NotificationLoaded;
-          final updatedNotifications = currentState.notifications.map((notification) {
-            if (!notification.isRead) {
-              return NotificationEntity(
-                id: notification.id,
-                title: notification.title,
-                body: notification.body,
-                isRead: true,
-                createdAt: notification.createdAt,
-                readAt: DateTime.now(),
-              );
-            }
-            return notification;
-          }).toList();
+    result.fold((failure) {}, (_) {
+      if (state is NotificationLoaded) {
+        final currentState = state as NotificationLoaded;
+        final updatedNotifications = currentState.notifications.map((
+          notification,
+        ) {
+          if (!notification.isRead) {
+            return NotificationEntity(
+              id: notification.id,
+              title: notification.title,
+              body: notification.body,
+              isRead: true,
+              createdAt: notification.createdAt,
+              readAt: DateTime.now(),
+            );
+          }
+          return notification;
+        }).toList();
 
-          emit(currentState.copyWith(
+        emit(
+          currentState.copyWith(
             notifications: updatedNotifications,
             unreadCount: 0,
-          ));
-        }
-      },
-    );
+          ),
+        );
+      }
+    });
   }
 
   Future<void> fetchUnreadCount() async {
     final result = await getUnreadCountUseCase();
 
-    result.fold(
-      (failure) {},
-      (count) {
-        if (state is NotificationLoaded) {
-          emit((state as NotificationLoaded).copyWith(unreadCount: count));
-        } else if (state is NotificationInitial) {
-          // Keep it initial but maybe we can't store count until loaded.
-        }
-      },
-    );
+    result.fold((failure) {}, (count) {
+      if (state is NotificationLoaded) {
+        emit((state as NotificationLoaded).copyWith(unreadCount: count));
+      } else if (state is NotificationInitial) {
+        // Keep it initial but maybe we can't store count until loaded.
+      }
+    });
   }
 }

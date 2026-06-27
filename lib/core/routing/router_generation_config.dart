@@ -17,6 +17,8 @@ import 'package:rental_hub/feature/auth/presentation/widgets/animated_auth_toggl
 import 'package:rental_hub/feature/booking/presentation/screens/booking_flow_screen.dart';
 import 'package:rental_hub/feature/booking/presentation/screens/my_orders_screen.dart';
 import 'package:rental_hub/feature/booking/presentation/screens/my_listings_orders_screen.dart';
+import 'package:rental_hub/feature/booking/domain/entities/rental_order_entity.dart';
+import 'package:rental_hub/feature/booking/presentation/screens/order_detail_screen.dart';
 import 'package:rental_hub/feature/ai_chat/presentation/screens/ai_chat_screen.dart';
 import 'package:rental_hub/feature/chat/presentation/cubit/chat_cubit.dart';
 import 'package:rental_hub/feature/chat/presentation/cubit/conversations_cubit.dart';
@@ -43,6 +45,8 @@ import 'package:rental_hub/feature/my_products/presentation/screens/product_tran
 import 'package:rental_hub/feature/profile/presentation/screens/settings_screen.dart';
 import 'package:rental_hub/feature/community/presentation/cubit/community_offers_cubit.dart';
 import 'package:rental_hub/feature/community/presentation/cubit/community_requests_cubit.dart';
+import 'package:rental_hub/feature/community/presentation/screens/create_community_request_screen.dart';
+import 'package:rental_hub/feature/community/presentation/screens/community_request_details_screen.dart';
 import 'package:rental_hub/feature/community/presentation/screens/community_screen.dart';
 import 'package:rental_hub/feature/profile/presentation/screens/user_profile_screen.dart';
 import 'package:rental_hub/feature/splash/splash_view.dart';
@@ -186,6 +190,20 @@ class RouterGenerationConfig {
         builder: (context, state) => const MyListingsOrdersScreen(),
       ),
       GoRoute(
+        name: AppRoutes.orderDetailScreen,
+        path: '${AppRoutes.orderDetailPath}/:id',
+        builder: (context, state) {
+          final orderId = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
+          final previewOrder = state.extra is RentalOrderEntity
+              ? state.extra as RentalOrderEntity
+              : null;
+          return OrderDetailScreen(
+            orderId: orderId,
+            previewOrder: previewOrder,
+          );
+        },
+      ),
+      GoRoute(
         name: AppRoutes.userProfileScreen,
         path: AppRoutes.userProfileScreen,
         builder: (context, state) => BlocProvider.value(
@@ -216,6 +234,31 @@ class RouterGenerationConfig {
           ],
           child: const CommunityScreen(),
         ),
+      ),
+      GoRoute(
+        name: AppRoutes.createCommunityRequestScreen,
+        path: AppRoutes.createCommunityRequestScreen,
+        builder: (context, state) => BlocProvider(
+          create: (context) => getIt<CommunityRequestsCubit>(),
+          child: const CreateCommunityRequestScreen(),
+        ),
+      ),
+      GoRoute(
+        name: AppRoutes.communityRequestDetailsScreen,
+        path: '${AppRoutes.communityRequestDetailsPath}/:requestId',
+        builder: (context, state) {
+          final requestId =
+              int.tryParse(state.pathParameters['requestId'] ?? '') ?? 0;
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => getIt<CommunityRequestsCubit>(),
+              ),
+              BlocProvider(create: (context) => getIt<CommunityOffersCubit>()),
+            ],
+            child: CommunityRequestDetailsScreen(requestId: requestId),
+          );
+        },
       ),
 
       GoRoute(

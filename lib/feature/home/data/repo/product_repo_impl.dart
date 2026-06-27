@@ -20,10 +20,16 @@ class ProductRepoImpl implements ProductRepo {
       final products = await remoteDataSource.getProducts(
         pageNumber: pageNumber,
       );
-      developer.log('Repository count success: ${products.items.length}', name: 'Instrumentation');
+      developer.log(
+        'Repository count success: ${products.items.length}',
+        name: 'Instrumentation',
+      );
       return Right(products);
     } on ServerException catch (e) {
-      developer.log('Repository count error ServerException: ${e.errorModel.firstErrorMessage}', name: 'Instrumentation');
+      developer.log(
+        'Repository count error ServerException: ${e.errorModel.firstErrorMessage}',
+        name: 'Instrumentation',
+      );
       return Left(
         Failure(
           statusCode: e.errorModel.statusCode,
@@ -31,7 +37,10 @@ class ProductRepoImpl implements ProductRepo {
         ),
       );
     } catch (e) {
-      developer.log('Repository count error Exception: $e', name: 'Instrumentation');
+      developer.log(
+        'Repository count error Exception: $e',
+        name: 'Instrumentation',
+      );
       return Left(Failure(errMessage: 'فشل تحميل المنتجات: ${e.toString()}'));
     }
   }

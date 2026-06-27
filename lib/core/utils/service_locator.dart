@@ -10,7 +10,9 @@ import 'package:rental_hub/feature/favorites/data/repo/favorite_repo_imp.dart';
 import 'package:rental_hub/feature/favorites/domain/repo/favorite_repo.dart';
 import 'package:rental_hub/feature/favorites/domain/usecase/add_to_favorite_usecase.dart';
 import 'package:rental_hub/feature/favorites/domain/usecase/remove_favorite_use_case.dart';
+import 'package:rental_hub/feature/favorites/domain/usecase/get_favorite_usecase.dart';
 import 'package:rental_hub/feature/favorites/presentation/cubit/favorite_cubit.dart';
+import 'package:rental_hub/core/utils/favorite_state_manager.dart';
 import 'package:rental_hub/feature/add_listing/data/datasource/add_listing_remote_data_source.dart';
 import 'package:rental_hub/feature/add_listing/data/repo/add_listing_repo_impl.dart';
 import 'package:rental_hub/feature/add_listing/domain/repo/add_listing_repo.dart';
@@ -138,6 +140,7 @@ import 'package:rental_hub/feature/community/domain/usecases/get_community_reque
 import 'package:rental_hub/feature/community/domain/usecases/get_my_offers_use_case.dart';
 import 'package:rental_hub/feature/community/domain/usecases/get_my_requests_offers_use_case.dart';
 import 'package:rental_hub/feature/community/domain/usecases/get_my_requests_use_case.dart';
+import 'package:rental_hub/feature/community/domain/usecases/get_request_offers_use_case.dart';
 import 'package:rental_hub/feature/community/domain/usecases/reject_offer_use_case.dart';
 import 'package:rental_hub/feature/community/presentation/cubit/community_offers_cubit.dart';
 import 'package:rental_hub/feature/community/presentation/cubit/community_requests_cubit.dart';
@@ -183,6 +186,8 @@ import 'package:rental_hub/feature/booking/domain/usecases/return_rental_order_u
 import 'package:rental_hub/feature/booking/domain/usecases/ship_rental_order_usecase.dart';
 import 'package:rental_hub/feature/booking/presentation/cubit/booking_action_cubit.dart';
 import 'package:rental_hub/feature/booking/presentation/cubit/my_orders_cubit.dart';
+import 'package:rental_hub/feature/booking/presentation/cubit/order_detail_cubit.dart';
+import 'package:rental_hub/feature/booking/presentation/cubit/renter_stats_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -208,6 +213,7 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerLazySingleton(() => DataConnectionChecker());
   getIt.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(getIt()));
+  getIt.registerLazySingleton(() => FavoriteStateManager());
 
   // Dedicated ApiConsumer for AI endpoints (separate Dio instance)
   getIt.registerLazySingleton<ApiConsumer>(
@@ -299,6 +305,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton(
     () => RemoveFavoriteUseCase(favoriteRepo: getIt()),
   );
+  getIt.registerLazySingleton(() => GetFavorites(getIt()));
 
   getIt.registerLazySingleton(() => GetSubscriptionsUseCase(getIt()));
   getIt.registerLazySingleton(() => SubscribeToPlanUseCase(getIt()));
@@ -337,6 +344,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton(() => GetMyRequestsOffersUseCase(getIt()));
   getIt.registerLazySingleton(() => GetMyOffersUseCase(getIt()));
   getIt.registerLazySingleton(() => GetMyRequestsUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetRequestOffersUseCase(getIt()));
   getIt.registerLazySingleton(() => AcceptOfferUseCase(getIt()));
   getIt.registerLazySingleton(() => RejectOfferUseCase(getIt()));
 
@@ -389,7 +397,14 @@ Future<void> setupServiceLocator() async {
     () => CommunityRequestsCubit(getIt(), getIt(), getIt(), getIt()),
   );
   getIt.registerFactory(
-    () => CommunityOffersCubit(getIt(), getIt(), getIt(), getIt(), getIt()),
+    () => CommunityOffersCubit(
+      getIt(),
+      getIt(),
+      getIt(),
+      getIt(),
+      getIt(),
+      getIt(),
+    ),
   );
 
   // ======================= AI CHAT ========================
@@ -462,7 +477,16 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton(() => SearchProductsUseCase(getIt()));
   getIt.registerLazySingleton(() => GetRecommendationsUseCase(getIt()));
 
-  getIt.registerFactory(() => SearchCubit(getIt(), getIt(), getIt()));
+  getIt.registerFactory(
+    () => SearchCubit(
+      getIt(),
+      getIt(),
+      getIt(),
+      getIt(),
+      getIt(),
+      getIt<FavoriteStateManager>(),
+    ),
+  );
 
   // ===================== DATA SOURCES =======================
 
@@ -539,13 +563,26 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory(() => SignUpCubit(getIt()));
   getIt.registerFactory(() => ForgotPasswordCubit(getIt()));
   getIt.registerFactory(() => CategoryCubit(getIt()));
-  getIt.registerFactory(() => ProductCubit(getIt(), getIt(), getIt()));
+  getIt.registerFactory(
+    () =>
+        ProductCubit(getIt(), getIt(), getIt(), getIt<FavoriteStateManager>()),
+  );
   getIt.registerFactory<FavoriteCubit>(
-    () => FavoriteCubit(getFavorites: getIt()),
+    () => FavoriteCubit(
+      getFavorites: getIt(),
+      addToFavoriteUseCase: getIt(),
+      removeFavoriteUseCase: getIt(),
+      favoriteStateManager: getIt(),
+    ),
   );
   getIt.registerFactory(() => SubscriptionCubit(getIt(), getIt()));
   getIt.registerFactory<ProductDetailsCubit>(
-    () => ProductDetailsCubit(getIt()),
+    () => ProductDetailsCubit(
+      useCase: getIt(),
+      addToFavoriteUseCase: getIt(),
+      removeFavoriteUseCase: getIt(),
+      favoriteStateManager: getIt(),
+    ),
   );
   getIt.registerFactory(
     () => MyProductsCubit(getIt(), getIt(), getIt(), getIt()),
@@ -577,12 +614,14 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory(
     () => WalletCubit(getIt(), getIt(), getIt(), getIt(), getIt()),
   );
-  getIt.registerLazySingleton(
+  getIt.registerFactory(
     () => UserProfileCubit(getIt(), getIt(), getIt(), getIt()),
   );
   getIt.registerFactory(
     () => AddListingCubit(getIt(), getIt(), getIt(), getIt()),
   );
+  getIt.registerFactory(() => OrderDetailCubit(getOrderByIdUseCase: getIt()));
+  getIt.registerFactory(() => RenterStatsCubit(getStatsUseCase: getIt()));
   getIt.registerFactory(
     () => BookingActionCubit(
       createOrderUseCase: getIt(),

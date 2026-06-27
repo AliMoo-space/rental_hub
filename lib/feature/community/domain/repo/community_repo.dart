@@ -17,11 +17,17 @@ abstract class CommunityRepository {
     CreateCommunityRequestParams params,
   );
 
-  Future<Either<Failure, String>> createOffer(CreateCommunityOfferParams params);
+  Future<Either<Failure, String>> createOffer(
+    CreateCommunityOfferParams params,
+  );
 
   Future<Either<Failure, List<CommunityOfferEntity>>> getMyRequestsOffers();
 
   Future<Either<Failure, List<CommunityOfferEntity>>> getMyOffers();
+
+  Future<Either<Failure, List<CommunityOfferEntity>>> getRequestOffers(
+    int requestId,
+  );
 
   Future<Either<Failure, CommunityRequestsPageEntity>> getMyRequests(
     MyCommunityRequestsQuery query,

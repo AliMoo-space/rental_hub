@@ -27,18 +27,14 @@ class CommunityRequestsCubit extends Cubit<CommunityRequestsState> {
     bool refresh = false,
     CommunityRequestsQuery? query,
   }) async {
+    if (isClosed) return;
     if (state.isLoading && !refresh) return;
 
     final nextQuery = query ?? state.query;
-    emit(
-      state.copyWith(
-        isLoading: true,
-        errorMessage: null,
-        query: nextQuery,
-      ),
-    );
+    emit(state.copyWith(isLoading: true, errorMessage: null, query: nextQuery));
 
     final result = await getCommunityRequestsUseCase(nextQuery);
+    if (isClosed) return;
     result.fold(
       (failure) => emit(
         state.copyWith(isLoading: false, errorMessage: failure.errMessage),
@@ -55,12 +51,14 @@ class CommunityRequestsCubit extends Cubit<CommunityRequestsState> {
   }
 
   Future<void> loadMoreRequests() async {
+    if (isClosed) return;
     if (state.isLoadingMore || !state.hasNextPage) return;
 
     emit(state.copyWith(isLoadingMore: true, errorMessage: null));
 
     final nextQuery = state.query.copyWith(pageNumber: state.pageNumber + 1);
     final result = await getCommunityRequestsUseCase(nextQuery);
+    if (isClosed) return;
 
     result.fold(
       (failure) => emit(
@@ -86,11 +84,13 @@ class CommunityRequestsCubit extends Cubit<CommunityRequestsState> {
   }
 
   Future<void> loadMyRequests({String? status}) async {
+    if (isClosed) return;
     emit(state.copyWith(isLoadingMyRequests: true, errorMessage: null));
 
     final result = await getMyRequestsUseCase(
       MyCommunityRequestsQuery(status: status),
     );
+    if (isClosed) return;
 
     result.fold(
       (failure) => emit(
@@ -100,57 +100,56 @@ class CommunityRequestsCubit extends Cubit<CommunityRequestsState> {
         ),
       ),
       (page) => emit(
-        state.copyWith(
-          isLoadingMyRequests: false,
-          myRequests: page.items,
-        ),
+        state.copyWith(isLoadingMyRequests: false, myRequests: page.items),
       ),
     );
   }
 
   Future<CommunityRequestEntity?> loadRequestDetails(int id) async {
+    if (isClosed) return null;
     emit(state.copyWith(isLoadingDetails: true, errorMessage: null));
 
     final result = await getCommunityRequestDetailsUseCase(id);
+    if (isClosed) return null;
     return result.fold(
       (failure) {
-        emit(state.copyWith(isLoadingDetails: false, errorMessage: failure.errMessage));
-        return null;
-      },
-      (request) {
         emit(
           state.copyWith(
             isLoadingDetails: false,
-            selectedRequest: request,
+            errorMessage: failure.errMessage,
           ),
         );
+        return null;
+      },
+      (request) {
+        emit(state.copyWith(isLoadingDetails: false, selectedRequest: request));
         return request;
       },
     );
   }
 
   Future<bool> createRequest(CreateCommunityRequestParams params) async {
-    emit(state.copyWith(isSubmitting: true, errorMessage: null, actionMessage: null));
+    if (isClosed) return false;
+    emit(
+      state.copyWith(
+        isSubmitting: true,
+        errorMessage: null,
+        actionMessage: null,
+      ),
+    );
 
     final result = await createCommunityRequestUseCase(params);
+    if (isClosed) return false;
 
     return result.fold(
       (failure) {
         emit(
-          state.copyWith(
-            isSubmitting: false,
-            errorMessage: failure.errMessage,
-          ),
+          state.copyWith(isSubmitting: false, errorMessage: failure.errMessage),
         );
         return false;
       },
       (message) {
-        emit(
-          state.copyWith(
-            isSubmitting: false,
-            actionMessage: message,
-          ),
-        );
+        emit(state.copyWith(isSubmitting: false, actionMessage: message));
         loadRequests(refresh: true);
         loadMyRequests();
         return true;
@@ -159,6 +158,8 @@ class CommunityRequestsCubit extends Cubit<CommunityRequestsState> {
   }
 
   void clearMessages() {
-    emit(state.copyWith(errorMessage: null, actionMessage: null));
+    if (!isClosed) {
+      emit(state.copyWith(errorMessage: null, actionMessage: null));
+    }
   }
 }

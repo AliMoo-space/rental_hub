@@ -1356,6 +1356,48 @@
                 }
             }
         },
+        "/api/admin/AdminNotification/{id}/edit": {
+            "put": {
+                "tags": [
+                    "AdminNotification"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Rental_hub.Models.DTOs.User.EditBroadcastDto"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Rental_hub.Models.DTOs.User.EditBroadcastDto"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Rental_hub.Models.DTOs.User.EditBroadcastDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/api/AdminProductReview/reviews/all": {
             "get": {
                 "tags": [
@@ -4499,6 +4541,52 @@
                 }
             }
         },
+        "/api/Review/order/{orderId}/my-review": {
+            "get": {
+                "tags": [
+                    "Review"
+                ],
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/Review/order/{orderId}/other-review": {
+            "get": {
+                "tags": [
+                    "Review"
+                ],
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/api/Admin/SubCategory/{categoryId}/subcategories": {
             "get": {
                 "tags": [
@@ -5666,6 +5754,33 @@
                 "additionalProperties": false
             },
             "Rental_hub.Models.DTOs.User.CreateBroadcastDto": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "body": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "targetType": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "governorate": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "scheduledAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Rental_hub.Models.DTOs.User.EditBroadcastDto": {
                 "type": "object",
                 "properties": {
                     "title": {

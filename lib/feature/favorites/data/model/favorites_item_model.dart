@@ -31,7 +31,8 @@ class FavoriteItemModel extends FavoriteItemEntity {
     if (imageObj is String) {
       url = imageObj;
     } else if (imageObj is Map) {
-      url = imageObj['imageUrl']?.toString() ?? imageObj['url']?.toString() ?? '';
+      url =
+          imageObj['imageUrl']?.toString() ?? imageObj['url']?.toString() ?? '';
     }
     if (url.isEmpty || url.toLowerCase() == 'null') return '';
     if (url.startsWith('http://') || url.startsWith('https://')) return url;

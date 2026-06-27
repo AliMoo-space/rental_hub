@@ -32,6 +32,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
     final cubit = context.watch<FavoriteCubit>();
+    final state = cubit.state;
 
     return Scaffold(
       appBar: AppBar(
@@ -60,24 +61,24 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             Expanded(
               child: PagedListView<int, FavoriteItemModel>(
                 state: cubit.pagingController.value,
-
                 fetchNextPage: cubit.pagingController.fetchNextPage,
-
                 builderDelegate: PagedChildBuilderDelegate<FavoriteItemModel>(
                   itemBuilder: (context, item, index) {
                     return HomeRecommendedItemCardWidget(
                       product: item.toProductEntity(),
                       rating: item.averageRating,
                       onRatingChanged: (_) {},
+                      onFavoritePressed: () =>
+                          cubit.toggleFavorite(item.productId),
+                      isFavoriteLoading:
+                          state is GetFavoritesSuccess &&
+                          state.isFavoriteLoading(item.productId),
                     );
                   },
-
                   firstPageProgressIndicatorBuilder: (_) =>
                       const Center(child: CircularProgressIndicator()),
-
                   newPageProgressIndicatorBuilder: (_) =>
                       const Center(child: CircularProgressIndicator()),
-
                   noItemsFoundIndicatorBuilder: (_) =>
                       const Center(child: Text('No favorites yet')),
                 ),

@@ -9,9 +9,26 @@ class ProductStatsModel extends ProductStatsEntity {
 
   factory ProductStatsModel.fromJson(Map<String, dynamic> json) {
     return ProductStatsModel(
-      rentalsCount: _parseInt(json['rentalsCount'] ?? json['rentalCount'] ?? json['totalRentals'] ?? json['rentals'] ?? json['count']),
-      earnings: _parseDouble(json['earnings'] ?? json['totalEarnings'] ?? json['revenue'] ?? json['totalRevenue'] ?? json['totalPlatformProfit']),
-      averageRating: _parseDouble(json['averageRating'] ?? json['avgRating'] ?? json['rating'] ?? json['average_rating']),
+      rentalsCount: _parseInt(
+        json['rentalsCount'] ??
+            json['rentalCount'] ??
+            json['totalRentals'] ??
+            json['rentals'] ??
+            json['count'],
+      ),
+      earnings: _parseDouble(
+        json['earnings'] ??
+            json['totalEarnings'] ??
+            json['revenue'] ??
+            json['totalRevenue'] ??
+            json['totalPlatformProfit'],
+      ),
+      averageRating: _parseDouble(
+        json['averageRating'] ??
+            json['avgRating'] ??
+            json['rating'] ??
+            json['average_rating'],
+      ),
     );
   }
 

@@ -19,6 +19,7 @@ class CommunityRequestEntity extends Equatable {
   final String userFullName;
   final String? userImageUrl;
   final String status;
+  final String? rejectionReason;
   final DateTime? createdAt;
   final int offersCount;
 
@@ -41,6 +42,7 @@ class CommunityRequestEntity extends Equatable {
     required this.userFullName,
     this.userImageUrl,
     required this.status,
+    this.rejectionReason,
     this.createdAt,
     this.offersCount = 0,
   });
@@ -70,6 +72,7 @@ class CommunityRequestEntity extends Equatable {
     userFullName,
     userImageUrl,
     status,
+    rejectionReason,
     createdAt,
     offersCount,
   ];

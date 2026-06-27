@@ -15,18 +15,14 @@ void main() {
       expect(model.firstErrorMessage, 'The Images field is required.');
     });
 
-    test('firstErrorMessage falls back to status code when message is empty', () {
-      final model = ErrorModel(
-        statusCode: 500,
-        message: '',
-        errors: {},
-      );
+    test(
+      'firstErrorMessage falls back to status code when message is empty',
+      () {
+        final model = ErrorModel(statusCode: 500, message: '', errors: {});
 
-      expect(
-        model.firstErrorMessage,
-        'حدث خطأ أثناء تنفيذ الطلب (رمز: 500)',
-      );
-    });
+        expect(model.firstErrorMessage, 'حدث خطأ أثناء تنفيذ الطلب (رمز: 500)');
+      },
+    );
 
     test('logMessage includes validation details', () {
       final model = ErrorModel(

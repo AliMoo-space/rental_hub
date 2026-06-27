@@ -81,15 +81,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             appBar: AppBar(title: Text(context.l10n.searchRentals)),
             body: _ErrorState(
               message: state.message,
-              onRetry: () =>
-                  context.read<ProductDetailsCubit>().fetchProductDetails(
-                        widget.productId,
-                      ),
+              onRetry: () => context
+                  .read<ProductDetailsCubit>()
+                  .fetchProductDetails(widget.productId),
             ),
           );
         }
 
-        final details = state is ProductDetailsLoaded ? state.productDetails : null;
+        final details = state is ProductDetailsLoaded
+            ? state.productDetails
+            : null;
         final product = details != null
             ? _toProductEntity(details)
             : widget.previewProduct;
@@ -114,7 +115,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   children: [
                     if (state is ProductDetailsLoading)
                       const LinearProgressIndicator(minHeight: 2),
-                    ProductHeaderWidget(product: product),
+                    ProductHeaderWidget(
+                      product: product,
+                      onFavoritePressed: () => _toggleFavorite(context),
+                      isFavoriteLoading:
+                          state is ProductDetailsLoaded &&
+                          state.isFavoriteLoading(widget.productId),
+                    ),
                     ProductInfoWidget(product: product),
                     verticalSpacing(8),
                     Divider(color: AppColors.borderColor, height: 1),
@@ -127,10 +134,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         isSuspended: _isSuspended(product.status),
                         onEdit: () => _openEdit(context, product),
                         onDelete: () => _deleteProduct(context, product),
-                        onToggleStatus: () =>
-                            _toggleStatus(context, product, details?.id ?? product.id),
+                        onToggleStatus: () => _toggleStatus(
+                          context,
+                          product,
+                          details?.id ?? product.id,
+                        ),
                         onStats: () => _openProductStats(context, product),
-                        onTransactions: () => _openTransactions(context, product),
+                        onTransactions: () =>
+                            _openTransactions(context, product),
                         onRequests: () => _openRequests(context, product),
                       )
                     else
@@ -138,11 +149,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         onChat: () => _openSellerChat(context, product),
                         onReview: () => _openReviews(context, product),
                         onBookNow: () async {
-                          final dto = await context.pushNamed(AppRoutes.bookingFlowScreen, extra: product);
+                          final dto = await context.pushNamed(
+                            AppRoutes.bookingFlowScreen,
+                            extra: product,
+                          );
                           if (dto != null) {
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('تم الحجز بنجاح!')),
+                                const SnackBar(
+                                  content: Text('تم الحجز بنجاح!'),
+                                ),
                               );
                             }
                           }
@@ -164,7 +180,36 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Future<void> _deleteProduct(BuildContext context, ProductEntity product) async {
+  Future<void> _toggleFavorite(BuildContext context) async {
+    final cubit = context.read<ProductDetailsCubit>();
+    final currentState = cubit.state;
+    final wasFav = currentState is ProductDetailsLoaded
+        ? currentState.productDetails.isFavorite
+        : widget.previewProduct?.isFavorite ?? false;
+
+    await cubit.toggleFavorite(widget.productId);
+
+    if (!context.mounted) return;
+
+    final newState = cubit.state;
+    final nowFav = newState is ProductDetailsLoaded
+        ? newState.productDetails.isFavorite
+        : !wasFav;
+
+    if (wasFav != nowFav) {
+      showMsg(
+        nowFav ? 'تمت الإضافة إلى المفضلة' : 'تمت الإزالة من المفضلة',
+        context,
+      );
+    } else {
+      showMsg('حدث خطأ، يرجى المحاولة مرة أخرى', context, isError: true);
+    }
+  }
+
+  Future<void> _deleteProduct(
+    BuildContext context,
+    ProductEntity product,
+  ) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -185,7 +230,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
     if (confirmed != true || !context.mounted) return;
 
-    final result = await context.read<MyProductsCubit>().deleteProduct(id: product.id);
+    final result = await context.read<MyProductsCubit>().deleteProduct(
+      id: product.id,
+    );
     if (!context.mounted) return;
 
     result.fold(
@@ -219,10 +266,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   void _openEdit(BuildContext context, ProductEntity product) {
-    context.pushNamed(
-      AppRoutes.addListingScreen,
-      extra: product,
-    );
+    context.pushNamed(AppRoutes.addListingScreen, extra: product);
   }
 
   void _openProductStats(BuildContext context, ProductEntity product) {
@@ -299,6 +343,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       totalRentalCount: details.totalRentalCount,
       totalPlatformProfit: details.totalPlatformProfit,
       images: details.images,
+      isFavorite: details.isFavorite,
     );
   }
 }
@@ -334,13 +379,8 @@ class _OwnerActionsSection extends StatelessWidget {
               ? double.infinity
               : (availableWidth - 12.w) / 2;
 
-          Widget buildActionButton({
-            required Widget child,
-          }) {
-            return SizedBox(
-              width: buttonWidth,
-              child: child,
-            );
+          Widget buildActionButton({required Widget child}) {
+            return SizedBox(width: buttonWidth, child: child);
           }
 
           final actions = [
@@ -394,19 +434,17 @@ class _OwnerActionsSection extends StatelessWidget {
           if (singleColumn) {
             return Column(
               children: actions
-                  .map((action) => Padding(
-                        padding: EdgeInsets.only(bottom: 12.h),
-                        child: action,
-                      ))
+                  .map(
+                    (action) => Padding(
+                      padding: EdgeInsets.only(bottom: 12.h),
+                      child: action,
+                    ),
+                  )
                   .toList(),
             );
           }
 
-          return Wrap(
-            spacing: 12.w,
-            runSpacing: 12.h,
-            children: actions,
-          );
+          return Wrap(spacing: 12.w, runSpacing: 12.h, children: actions);
         },
       ),
     );

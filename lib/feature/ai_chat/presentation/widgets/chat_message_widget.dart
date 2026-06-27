@@ -62,8 +62,9 @@ class ChatMessageWidget extends StatelessWidget {
                               totalReviews: 0,
                               totalRentalCount: 0,
                               totalPlatformProfit: 0,
-                              images:
-                                  p.imageUrl != null ? [p.imageUrl!] : const [],
+                              images: p.imageUrl != null
+                                  ? [p.imageUrl!]
+                                  : const [],
                             ),
                           ),
                         ),

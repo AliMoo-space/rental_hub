@@ -8,8 +8,16 @@ import 'package:rental_hub/core/widgets/app_image.dart';
 class SearchResultCard extends StatelessWidget {
   final ProductItemEntity item;
   final VoidCallback onTap;
+  final VoidCallback? onFavoritePressed;
+  final bool isFavoriteLoading;
 
-  const SearchResultCard({super.key, required this.item, required this.onTap});
+  const SearchResultCard({
+    super.key,
+    required this.item,
+    required this.onTap,
+    this.onFavoritePressed,
+    this.isFavoriteLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +89,35 @@ class SearchResultCard extends StatelessWidget {
                               ),
                             ),
                           ],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 10.h,
+                      left: 10.w,
+                      child: GestureDetector(
+                        onTap: isFavoriteLoading ? null : onFavoritePressed,
+                        child: CircleAvatar(
+                          radius: 16.r,
+                          backgroundColor:
+                              Colors.white.withValues(alpha: 0.8),
+                          child: isFavoriteLoading
+                              ? SizedBox(
+                                  width: 16.w,
+                                  height: 16.w,
+                                  child: const CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Icon(
+                                  item.isFavorite
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: item.isFavorite
+                                      ? AppColors.primaryColor
+                                      : AppColors.secondaryColor,
+                                  size: 18.sp,
+                                ),
                         ),
                       ),
                     ),

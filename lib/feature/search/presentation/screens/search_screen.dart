@@ -1,5 +1,3 @@
-// ignore_for_file: unused_element, unused_import
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -212,6 +210,12 @@ class _SearchScreenState extends State<SearchScreen> {
                               item: item,
                               onTap: () =>
                                   _openSearchResultDetails(context, item),
+                              onFavoritePressed: () =>
+                                  context
+                                      .read<SearchCubit>()
+                                      .toggleFavorite(item.id),
+                              isFavoriteLoading:
+                                  state.isFavoriteLoading(item.id),
                             );
                           },
                         ),
@@ -241,6 +245,7 @@ void _openSearchResultDetails(BuildContext context, ProductItemEntity item) {
     finalPricePerDay: item.basePricePerDay,
     images: item.images,
     averageRating: item.rating,
+    isFavorite: item.isFavorite,
   );
 
   context.pushNamed(
@@ -280,6 +285,7 @@ ProductEntity _buildProductEntity({
   required num finalPricePerDay,
   required List<String> images,
   required double averageRating,
+  bool isFavorite = false,
 }) {
   return ProductEntity(
     id: id,
@@ -307,6 +313,7 @@ ProductEntity _buildProductEntity({
     totalRentalCount: 0,
     totalPlatformProfit: 0,
     images: images,
+    isFavorite: isFavorite,
   );
 }
 

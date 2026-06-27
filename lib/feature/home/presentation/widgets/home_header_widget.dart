@@ -50,9 +50,10 @@ class _HomeHeaderWidgetState extends State<HomeHeaderWidget> {
                   if (state is NotificationLoaded) {
                     unreadCount = state.unreadCount;
                   }
-                  
+
                   return GestureDetector(
-                    onTap: () => context.pushNamed(AppRoutes.notificationsScreen),
+                    onTap: () =>
+                        context.pushNamed(AppRoutes.notificationsScreen),
                     child: Stack(
                       clipBehavior: Clip.none,
                       children: [
@@ -72,8 +73,13 @@ class _HomeHeaderWidgetState extends State<HomeHeaderWidget> {
                                 shape: BoxShape.circle,
                               ),
                               child: Text(
-                                unreadCount > 99 ? '99+' : unreadCount.toString(),
-                                style: AppStyles.labelSmall.copyWith(color: Colors.white, fontSize: 8.sp),
+                                unreadCount > 99
+                                    ? '99+'
+                                    : unreadCount.toString(),
+                                style: AppStyles.labelSmall.copyWith(
+                                  color: Colors.white,
+                                  fontSize: 8.sp,
+                                ),
                               ),
                             ),
                           ),

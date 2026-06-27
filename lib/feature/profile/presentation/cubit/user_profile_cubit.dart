@@ -71,7 +71,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
         if (!success) {
           emit(
             UserProfileError(
-              message: 'تعذر حفظ التغييرات',
+              message: 'Failed to save changes',
               userProfile: currentProfile,
             ),
           );
@@ -151,7 +151,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
         if (!success) {
           emit(
             UserProfileError(
-              message: 'تعذر تغيير كلمة المرور',
+              message: 'Failed to change password',
               userProfile: currentProfile,
             ),
           );

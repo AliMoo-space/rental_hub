@@ -7,7 +7,7 @@ class ReturnRentalOrderUseCase {
 
   ReturnRentalOrderUseCase({required this.repository});
 
-  Future<Either<Failure, void>> call(int id) async {
-    return await repository.returnRentalOrder(id);
+  Future<Either<Failure, void>> call(int id, {String? reason}) async {
+    return await repository.returnRentalOrder(id, reason: reason);
   }
 }

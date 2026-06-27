@@ -13,10 +13,19 @@ class ProductTransactionModel extends ProductTransactionEntity {
   factory ProductTransactionModel.fromJson(Map<String, dynamic> json) {
     return ProductTransactionModel(
       id: _parseInt(json['id'] ?? json['transactionId']),
-      renterName: json['renterName']?.toString() ?? json['renterFullName']?.toString() ?? 'مستأجر',
-      startDate: _parseDateTime(json['startDate'] ?? json['start_date'] ?? json['rentDate']),
-      endDate: _parseDateTime(json['endDate'] ?? json['end_date'] ?? json['returnDate']),
-      totalPrice: _parseDouble(json['totalPrice'] ?? json['amount'] ?? json['total_price']),
+      renterName:
+          json['renterName']?.toString() ??
+          json['renterFullName']?.toString() ??
+          'مستأجر',
+      startDate: _parseDateTime(
+        json['startDate'] ?? json['start_date'] ?? json['rentDate'],
+      ),
+      endDate: _parseDateTime(
+        json['endDate'] ?? json['end_date'] ?? json['returnDate'],
+      ),
+      totalPrice: _parseDouble(
+        json['totalPrice'] ?? json['amount'] ?? json['total_price'],
+      ),
       status: json['status']?.toString() ?? 'Completed',
     );
   }

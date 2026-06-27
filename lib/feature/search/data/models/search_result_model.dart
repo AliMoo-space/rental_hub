@@ -12,6 +12,7 @@ class SearchResultModel extends SearchResultEntity {
   factory SearchResultModel.fromJson(Map<String, dynamic> json) {
     final items = (json['items'] as List<dynamic>? ?? []).map((e) {
       final map = e as Map<String, dynamic>;
+      final createdAtValue = map['createdAt'] ?? map['created_at'];
       return ProductItemEntity(
         id: map['id'] as int,
         name: map['name'] as String? ?? '',
@@ -38,6 +39,9 @@ class SearchResultModel extends SearchResultEntity {
             .where((s) => s.isNotEmpty)
             .toList(),
         rating: (map['rating'] as num?)?.toDouble() ?? 0.0,
+        createdAt:
+            DateTime.tryParse(createdAtValue?.toString() ?? '') ??
+            DateTime.now(),
       );
     }).toList();
 
@@ -62,6 +66,7 @@ class SearchResultModel extends SearchResultEntity {
         condition: map['condition'] as String? ?? '',
         images: imageUrl.isNotEmpty ? [imageUrl] : const [],
         rating: 0.0,
+        createdAt: DateTime.tryParse(map['created_at']?.toString() ?? ''),
       );
     }).toList();
 

@@ -15,12 +15,21 @@ class MyProductsRepoImpl implements MyProductsRepo {
   MyProductsRepoImpl(this.remoteDataSource);
 
   @override
-  Future<Either<Failure, ProductsEntity>> getMyProducts({required int pageNumber}) async {
+  Future<Either<Failure, ProductsEntity>> getMyProducts({
+    required int pageNumber,
+  }) async {
     try {
-      final result = await remoteDataSource.getMyProducts(pageNumber: pageNumber);
+      final result = await remoteDataSource.getMyProducts(
+        pageNumber: pageNumber,
+      );
       return Right(result);
     } on ServerException catch (e) {
-      return Left(Failure(statusCode: e.errorModel.statusCode, errMessage: e.errorModel.firstErrorMessage));
+      return Left(
+        Failure(
+          statusCode: e.errorModel.statusCode,
+          errMessage: e.errorModel.firstErrorMessage,
+        ),
+      );
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }
@@ -32,7 +41,12 @@ class MyProductsRepoImpl implements MyProductsRepo {
       final result = await remoteDataSource.deleteProduct(id: id);
       return Right(result);
     } on ServerException catch (e) {
-      return Left(Failure(statusCode: e.errorModel.statusCode, errMessage: e.errorModel.firstErrorMessage));
+      return Left(
+        Failure(
+          statusCode: e.errorModel.statusCode,
+          errMessage: e.errorModel.firstErrorMessage,
+        ),
+      );
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }
@@ -44,7 +58,12 @@ class MyProductsRepoImpl implements MyProductsRepo {
       final result = await remoteDataSource.suspendProduct(id: id);
       return Right(result);
     } on ServerException catch (e) {
-      return Left(Failure(statusCode: e.errorModel.statusCode, errMessage: e.errorModel.firstErrorMessage));
+      return Left(
+        Failure(
+          statusCode: e.errorModel.statusCode,
+          errMessage: e.errorModel.firstErrorMessage,
+        ),
+      );
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }
@@ -56,7 +75,12 @@ class MyProductsRepoImpl implements MyProductsRepo {
       final result = await remoteDataSource.activateProduct(id: id);
       return Right(result);
     } on ServerException catch (e) {
-      return Left(Failure(statusCode: e.errorModel.statusCode, errMessage: e.errorModel.firstErrorMessage));
+      return Left(
+        Failure(
+          statusCode: e.errorModel.statusCode,
+          errMessage: e.errorModel.firstErrorMessage,
+        ),
+      );
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }
@@ -68,43 +92,67 @@ class MyProductsRepoImpl implements MyProductsRepo {
       final result = await remoteDataSource.getOwnerStats();
       return Right(result);
     } on ServerException catch (e) {
-      return Left(Failure(statusCode: e.errorModel.statusCode, errMessage: e.errorModel.firstErrorMessage));
+      return Left(
+        Failure(
+          statusCode: e.errorModel.statusCode,
+          errMessage: e.errorModel.firstErrorMessage,
+        ),
+      );
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, ProductStatsEntity>> getProductStats({required int id}) async {
+  Future<Either<Failure, ProductStatsEntity>> getProductStats({
+    required int id,
+  }) async {
     try {
       final result = await remoteDataSource.getProductStats(id: id);
       return Right(result);
     } on ServerException catch (e) {
-      return Left(Failure(statusCode: e.errorModel.statusCode, errMessage: e.errorModel.firstErrorMessage));
+      return Left(
+        Failure(
+          statusCode: e.errorModel.statusCode,
+          errMessage: e.errorModel.firstErrorMessage,
+        ),
+      );
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, List<ProductTransactionEntity>>> getProductTransactions({required int id}) async {
+  Future<Either<Failure, List<ProductTransactionEntity>>>
+  getProductTransactions({required int id}) async {
     try {
       final result = await remoteDataSource.getProductTransactions(id: id);
       return Right(result);
     } on ServerException catch (e) {
-      return Left(Failure(statusCode: e.errorModel.statusCode, errMessage: e.errorModel.firstErrorMessage));
+      return Left(
+        Failure(
+          statusCode: e.errorModel.statusCode,
+          errMessage: e.errorModel.firstErrorMessage,
+        ),
+      );
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, List<ProductRentalRequestEntity>>> getProductRentalRequests({required int id}) async {
+  Future<Either<Failure, List<ProductRentalRequestEntity>>>
+  getProductRentalRequests({required int id}) async {
     try {
       final result = await remoteDataSource.getProductRentalRequests(id: id);
       return Right(result);
     } on ServerException catch (e) {
-      return Left(Failure(statusCode: e.errorModel.statusCode, errMessage: e.errorModel.firstErrorMessage));
+      return Left(
+        Failure(
+          statusCode: e.errorModel.statusCode,
+          errMessage: e.errorModel.firstErrorMessage,
+        ),
+      );
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }

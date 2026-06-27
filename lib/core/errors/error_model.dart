@@ -24,7 +24,8 @@ class ErrorModel {
       });
     }
 
-    final statusCode = _parseInt(json['statusCode']) ?? _parseInt(json['status']);
+    final statusCode =
+        _parseInt(json['statusCode']) ?? _parseInt(json['status']);
     final message = (json['message'] ?? json['title'] ?? json['detail'] ?? '')
         .toString()
         .trim();

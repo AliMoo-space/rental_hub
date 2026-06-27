@@ -28,7 +28,8 @@ class NotificationRepositoryImpl implements NotificationRepository {
       List<NotificationEntity> notifications = [];
       int unreadCount = 0;
 
-      if (payload.containsKey('notifications') && payload['notifications'] is List) {
+      if (payload.containsKey('notifications') &&
+          payload['notifications'] is List) {
         notifications = (payload['notifications'] as List)
             .map((e) => NotificationModel.fromJson(e as Map<String, dynamic>))
             .toList();

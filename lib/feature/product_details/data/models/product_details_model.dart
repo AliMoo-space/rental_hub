@@ -32,6 +32,7 @@ class ProductDetailsModel extends ProductDetailsEntity {
     required super.subcategoryId,
     required super.subcategoryName,
     required super.images,
+    required super.isFavorite,
   });
 
   factory ProductDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -66,19 +67,27 @@ class ProductDetailsModel extends ProductDetailsEntity {
       categoryName: json['categoryName']?.toString() ?? '',
       subcategoryId: _parseInt(json['subcategoryId']),
       subcategoryName: json['subcategoryName']?.toString() ?? '',
-      images: imagesValue.map((image) {
-        if (image == null) return '';
-        String url = '';
-        if (image is String) {
-          url = image;
-        } else if (image is Map) {
-          url = image['imageUrl']?.toString() ?? image['url']?.toString() ?? '';
-        }
-        if (url.isEmpty || url.toLowerCase() == 'null') return '';
-        if (url.startsWith('http://') || url.startsWith('https://')) return url;
-        if (!url.startsWith('/')) url = '/$url';
-        return '${EndPoints.baseUrl}$url';
-      }).where((s) => s.isNotEmpty).toList(),
+      isFavorite: _parseBool(json['isFavorite'] ?? json['is_favorite']),
+      images: imagesValue
+          .map((image) {
+            if (image == null) return '';
+            String url = '';
+            if (image is String) {
+              url = image;
+            } else if (image is Map) {
+              url =
+                  image['imageUrl']?.toString() ??
+                  image['url']?.toString() ??
+                  '';
+            }
+            if (url.isEmpty || url.toLowerCase() == 'null') return '';
+            if (url.startsWith('http://') || url.startsWith('https://'))
+              return url;
+            if (!url.startsWith('/')) url = '/$url';
+            return '${EndPoints.baseUrl}$url';
+          })
+          .where((s) => s.isNotEmpty)
+          .toList(),
     );
   }
 
@@ -107,5 +116,12 @@ class ProductDetailsModel extends ProductDetailsEntity {
     final text = value?.toString();
     if (text == null || text.isEmpty) return null;
     return DateTime.parse(text);
+  }
+
+  static bool _parseBool(dynamic value) {
+    if (value is bool) return value;
+    if (value == null) return false;
+    final normalized = value.toString().toLowerCase();
+    return normalized == 'true' || normalized == '1';
   }
 }

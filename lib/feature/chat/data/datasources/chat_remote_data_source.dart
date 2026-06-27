@@ -81,9 +81,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     return collection
         .whereType<Map>()
         .map(
-          (item) => ConversationModel.fromJson(
-            Map<String, dynamic>.from(item),
-          ),
+          (item) => ConversationModel.fromJson(Map<String, dynamic>.from(item)),
         )
         .toList();
   }
@@ -102,7 +100,9 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     }
 
     if (raw is Map) {
-      final map = Map<String, dynamic>.from(ResponseParser.extractDataPayload(raw));
+      final map = Map<String, dynamic>.from(
+        ResponseParser.extractDataPayload(raw),
+      );
       final directItems = map['items'];
       if (directItems is List) return directItems;
 

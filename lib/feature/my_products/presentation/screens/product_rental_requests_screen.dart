@@ -26,9 +26,9 @@ class _ProductRentalRequestsScreenState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      context
-          .read<OwnerStatsCubit>()
-          .loadProductRentalRequests(widget.productId);
+      context.read<OwnerStatsCubit>().loadProductRentalRequests(
+        widget.productId,
+      );
     });
   }
 

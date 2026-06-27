@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreateCommunityOfferParams extends Equatable {
   final int requestId;
@@ -7,6 +8,8 @@ class CreateCommunityOfferParams extends Equatable {
   final String governorate;
   final String city;
   final String address;
+  final double? insuranceAmount;
+  final XFile? image;
 
   const CreateCommunityOfferParams({
     required this.requestId,
@@ -15,6 +18,8 @@ class CreateCommunityOfferParams extends Equatable {
     required this.governorate,
     required this.city,
     required this.address,
+    this.insuranceAmount,
+    this.image,
   });
 
   @override
@@ -25,5 +30,7 @@ class CreateCommunityOfferParams extends Equatable {
     governorate,
     city,
     address,
+    insuranceAmount,
+    image,
   ];
 }

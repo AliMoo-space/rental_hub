@@ -20,14 +20,10 @@ class BookingFlowStateListener extends StatelessWidget {
         final messenger = ScaffoldMessenger.of(context);
 
         if (state is BookingActionSuccess) {
-          messenger.showSnackBar(
-            SnackBar(content: Text(state.errMessage)),
-          );
+          messenger.showSnackBar(SnackBar(content: Text(state.errMessage)));
           Navigator.of(context).pop(true);
         } else if (state is BookingActionFailure) {
-          messenger.showSnackBar(
-            SnackBar(content: Text(state.errMessage)),
-          );
+          messenger.showSnackBar(SnackBar(content: Text(state.errMessage)));
         }
       },
       child: child,

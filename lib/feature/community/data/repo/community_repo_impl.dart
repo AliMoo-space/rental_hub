@@ -58,6 +58,13 @@ class CommunityRepositoryImpl implements CommunityRepository {
   }
 
   @override
+  Future<Either<Failure, List<CommunityOfferEntity>>> getRequestOffers(
+    int requestId,
+  ) {
+    return _run(() => remoteDataSource.getRequestOffers(requestId));
+  }
+
+  @override
   Future<Either<Failure, String>> acceptOffer(int offerId) {
     return _run(() => remoteDataSource.acceptOffer(offerId));
   }

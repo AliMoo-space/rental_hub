@@ -6,6 +6,7 @@ import 'package:rental_hub/feature/favorites/domain/usecase/add_to_favorite_usec
 import 'package:rental_hub/feature/favorites/domain/usecase/remove_favorite_use_case.dart';
 import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
 import 'package:rental_hub/feature/home/domain/usecases/get_products.dart';
+import 'package:rental_hub/core/utils/favorite_state_manager.dart';
 import 'dart:developer' as developer;
 
 part 'product_state.dart';
@@ -14,6 +15,7 @@ class ProductCubit extends Cubit<ProductState> {
   final GetProducts _getProducts;
   final AddToFavoriteUseCase _addToFavoriteUseCase;
   final RemoveFavoriteUseCase _removeFavoriteUseCase;
+  final FavoriteStateManager _favoriteStateManager;
 
   late final PagingController<int, ProductEntity> pagingController;
 
@@ -21,16 +23,24 @@ class ProductCubit extends Cubit<ProductState> {
     this._getProducts,
     this._addToFavoriteUseCase,
     this._removeFavoriteUseCase,
+    this._favoriteStateManager,
   ) : super(ProductInitial()) {
+    _favoriteStateManager.notifier.addListener(_onFavoritesChanged);
     _initializePagingController();
   }
 
   @override
   void onChange(Change<ProductState> change) {
     super.onChange(change);
-    developer.log('Cubit state transition: ${change.currentState.runtimeType} -> ${change.nextState.runtimeType}', name: 'Instrumentation');
+    developer.log(
+      'Cubit state transition: ${change.currentState.runtimeType} -> ${change.nextState.runtimeType}',
+      name: 'Instrumentation',
+    );
     if (change.nextState is ProductLoaded) {
-      developer.log('Cubit count: ${(change.nextState as ProductLoaded).products.items.length}', name: 'Instrumentation');
+      developer.log(
+        'Cubit count: ${(change.nextState as ProductLoaded).products.items.length}',
+        name: 'Instrumentation',
+      );
     }
   }
 
@@ -43,25 +53,48 @@ class ProductCubit extends Cubit<ProductState> {
         return lastKey + 1;
       },
       fetchPage: (pageKey) async {
-        developer.log('PagingController count start fetchPage $pageKey', name: 'Instrumentation');
+        developer.log(
+          'PagingController count start fetchPage $pageKey',
+          name: 'Instrumentation',
+        );
         try {
           final result = await _getProducts(pageKey);
           return result.fold(
             (failure) {
-              developer.log('PagingController count fetchPage error: ${failure.errMessage}', name: 'Instrumentation');
+              developer.log(
+                'PagingController count fetchPage error: ${failure.errMessage}',
+                name: 'Instrumentation',
+              );
               _handleError(failure.errMessage);
               throw Exception(failure.errMessage);
             },
             (response) {
-              developer.log('PagingController count success: ${response.items.length}', name: 'Instrumentation');
+              developer.log(
+                'PagingController count success: ${response.items.length}',
+                name: 'Instrumentation',
+              );
+              final sortedItems = List<ProductEntity>.from(response.items)
+                ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+              final overriddenItems = sortedItems.map((product) {
+                final managerFav =
+                    _favoriteStateManager.contains(product.id);
+                if (managerFav != product.isFavorite) {
+                  return product.copyWith(isFavorite: managerFav);
+                }
+                return product;
+              }).toList();
+              final sortedResponse = response.copyWith(items: overriddenItems);
               if (pageKey == 1) {
-                emit(ProductLoaded(response));
+                emit(ProductLoaded(sortedResponse));
               }
-              return response.items;
+              return sortedItems;
             },
           );
         } catch (e) {
-          developer.log('PagingController count fetchPage catch error: $e', name: 'Instrumentation');
+          developer.log(
+            'PagingController count fetchPage catch error: $e',
+            name: 'Instrumentation',
+          );
           _handleError(e.toString());
           rethrow;
         }
@@ -74,9 +107,7 @@ class ProductCubit extends Cubit<ProductState> {
   void _handleError(String message) {
     try {
       emit(ProductError(message: message));
-    } catch (_) {
-      // ignore
-    }
+    } catch (_) {}
   }
 
   void _syncLoadedProductsFromPagingController() {
@@ -86,8 +117,16 @@ class ProductCubit extends Cubit<ProductState> {
     final items = pagingController.items;
     if (items == null) return;
 
+    final syncedItems = items.map((product) {
+      final managerFav = _favoriteStateManager.contains(product.id);
+      if (managerFav != product.isFavorite) {
+        return product.copyWith(isFavorite: managerFav);
+      }
+      return product;
+    }).toList(growable: false);
+
     final syncedProducts = currentState.products.copyWith(
-      items: List<ProductEntity>.unmodifiable(items),
+      items: syncedItems,
     );
 
     if (_areProductsEqual(currentState.products.items, syncedProducts.items)) {
@@ -100,6 +139,26 @@ class ProductCubit extends Cubit<ProductState> {
         favoriteLoadingProductIds: currentState.favoriteLoadingProductIds,
       ),
     );
+  }
+
+  void _onFavoritesChanged() {
+    final currentState = state;
+    if (currentState is! ProductLoaded) return;
+
+    final updatedItems = currentState.products.items.map((product) {
+      final managerFav = _favoriteStateManager.contains(product.id);
+      if (managerFav != product.isFavorite) {
+        return product.copyWith(isFavorite: managerFav);
+      }
+      return product;
+    }).toList(growable: false);
+
+    if (_areProductsEqual(currentState.products.items, updatedItems)) return;
+
+    emit(ProductLoaded(
+      currentState.products.copyWith(items: updatedItems),
+      favoriteLoadingProductIds: currentState.favoriteLoadingProductIds,
+    ));
   }
 
   bool _areProductsEqual(
@@ -162,6 +221,11 @@ class ProductCubit extends Cubit<ProductState> {
         );
       },
       (_) {
+        if (toggledFavorite) {
+          _favoriteStateManager.add(productId);
+        } else {
+          _favoriteStateManager.remove(productId);
+        }
         final successLoadingIds = Set<int>.from(optimisticLoadingIds)
           ..remove(productId);
         _applyFavoriteUpdate(
@@ -237,6 +301,7 @@ class ProductCubit extends Cubit<ProductState> {
 
   @override
   Future<void> close() {
+    _favoriteStateManager.notifier.removeListener(_onFavoritesChanged);
     pagingController.dispose();
     return super.close();
   }

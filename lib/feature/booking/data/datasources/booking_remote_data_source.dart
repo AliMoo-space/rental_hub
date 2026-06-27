@@ -1,5 +1,6 @@
 import 'package:rental_hub/core/databases/api/api_consumer.dart';
 import 'package:rental_hub/core/databases/api/end_points.dart';
+import 'package:rental_hub/core/utils/response_parser.dart';
 import 'package:rental_hub/feature/booking/data/models/create_rental_order_dto.dart';
 import 'package:rental_hub/feature/booking/data/models/rental_order_model.dart';
 import 'package:rental_hub/feature/booking/data/models/rental_order_stats_model.dart';
@@ -7,15 +8,25 @@ import 'package:rental_hub/feature/booking/data/models/rental_order_stats_model.
 abstract class BookingRemoteDataSource {
   Future<RentalOrderModel> createRentalOrder(CreateRentalOrderDto dto);
   Future<RentalOrderStatsModel> getRenterOrderStats();
-  Future<List<RentalOrderModel>> getMyOrders({String? status, int pageNumber = 1, int pageSize = 10});
-  Future<List<RentalOrderModel>> getMyListingsOrders({String? status, int pageNumber = 1, int pageSize = 10});
+  Future<List<RentalOrderModel>> getMyOrders({
+    String? status,
+    String? searchTerm,
+    int pageNumber = 1,
+    int pageSize = 10,
+  });
+  Future<List<RentalOrderModel>> getMyListingsOrders({
+    String? status,
+    String? searchTerm,
+    int pageNumber = 1,
+    int pageSize = 10,
+  });
   Future<RentalOrderModel> getRentalOrderById(int id);
   Future<void> approveRentalOrder(int id);
-  Future<void> rejectRentalOrder(int id);
+  Future<void> rejectRentalOrder(int id, {String? reason});
   Future<void> cancelRentalOrder(int id);
   Future<void> shipRentalOrder(int id);
   Future<void> confirmReceiptRentalOrder(int id);
-  Future<void> returnRentalOrder(int id);
+  Future<void> returnRentalOrder(int id, {String? reason});
 }
 
 class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
@@ -25,39 +36,52 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
 
   @override
   Future<RentalOrderModel> createRentalOrder(CreateRentalOrderDto dto) async {
-    final response = await api.post(
-      EndPoints.rentalOrder,
-      data: dto.toJson(),
-    );
-    return RentalOrderModel.fromJson(response.data);
+    final response = await api.post(EndPoints.rentalOrder, data: dto.toJson());
+    final payload = ResponseParser.extractDataPayload(response.data);
+    return RentalOrderModel.fromJson(payload);
   }
 
   @override
   Future<RentalOrderStatsModel> getRenterOrderStats() async {
     final response = await api.get(EndPoints.renterOrderStats);
-    return RentalOrderStatsModel.fromJson(response.data);
+    final payload = ResponseParser.extractDataPayload(response.data);
+    return RentalOrderStatsModel.fromJson(payload);
   }
 
   @override
-  Future<List<RentalOrderModel>> getMyOrders({String? status, int pageNumber = 1, int pageSize = 10}) async {
+  Future<List<RentalOrderModel>> getMyOrders({
+    String? status,
+    String? searchTerm,
+    int pageNumber = 1,
+    int pageSize = 10,
+  }) async {
     final Map<String, dynamic> queryParams = {
       'pageNumber': pageNumber,
       'pageSize': pageSize,
     };
     if (status != null && status.isNotEmpty) {
       queryParams['status'] = status;
+    }
+    if (searchTerm != null && searchTerm.isNotEmpty) {
+      queryParams['searchTerm'] = searchTerm;
     }
     final response = await api.get(
       EndPoints.rentalMyOrders,
       queryParameters: queryParams,
     );
-    return (response.data['data'] as List)
-        .map((e) => RentalOrderModel.fromJson(e))
-        .toList();
+    final payload = ResponseParser.extractDataPayload(response.data);
+    final items =
+        payload['items'] as List? ?? response.data['data'] as List? ?? [];
+    return items.map((e) => RentalOrderModel.fromJson(e)).toList();
   }
 
   @override
-  Future<List<RentalOrderModel>> getMyListingsOrders({String? status, int pageNumber = 1, int pageSize = 10}) async {
+  Future<List<RentalOrderModel>> getMyListingsOrders({
+    String? status,
+    String? searchTerm,
+    int pageNumber = 1,
+    int pageSize = 10,
+  }) async {
     final Map<String, dynamic> queryParams = {
       'pageNumber': pageNumber,
       'pageSize': pageSize,
@@ -65,19 +89,24 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
     if (status != null && status.isNotEmpty) {
       queryParams['status'] = status;
     }
+    if (searchTerm != null && searchTerm.isNotEmpty) {
+      queryParams['searchTerm'] = searchTerm;
+    }
     final response = await api.get(
       EndPoints.rentalMyListings,
       queryParameters: queryParams,
     );
-    return (response.data['data'] as List)
-        .map((e) => RentalOrderModel.fromJson(e))
-        .toList();
+    final payload = ResponseParser.extractDataPayload(response.data);
+    final items =
+        payload['items'] as List? ?? response.data['data'] as List? ?? [];
+    return items.map((e) => RentalOrderModel.fromJson(e)).toList();
   }
 
   @override
   Future<RentalOrderModel> getRentalOrderById(int id) async {
     final response = await api.get(EndPoints.rentalOrderById(id));
-    return RentalOrderModel.fromJson(response.data);
+    final payload = ResponseParser.extractDataPayload(response.data);
+    return RentalOrderModel.fromJson(payload);
   }
 
   @override
@@ -86,8 +115,8 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
   }
 
   @override
-  Future<void> rejectRentalOrder(int id) async {
-    await api.put(EndPoints.rejectRentalOrder(id));
+  Future<void> rejectRentalOrder(int id, {String? reason}) async {
+    await api.put(EndPoints.rejectRentalOrder(id), data: reason);
   }
 
   @override
@@ -106,7 +135,7 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
   }
 
   @override
-  Future<void> returnRentalOrder(int id) async {
-    await api.put(EndPoints.returnRentalOrder(id));
+  Future<void> returnRentalOrder(int id, {String? reason}) async {
+    await api.put(EndPoints.returnRentalOrder(id), data: reason);
   }
 }

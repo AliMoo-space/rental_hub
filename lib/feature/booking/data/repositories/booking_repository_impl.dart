@@ -18,9 +18,28 @@ class BookingRepositoryImpl implements BookingRepository {
   });
 
   @override
-  Future<Either<Failure, RentalOrderEntity>> createRentalOrder(CreateRentalOrderDto dto) async {
+  Future<Either<Failure, RentalOrderEntity>> createRentalOrder({
+    required int productId,
+    required DateTime startDate,
+    required DateTime endDate,
+    required String deliveryMethod,
+    required String street,
+    required String city,
+    required String governorate,
+    required bool termsAgreed,
+  }) async {
     if (await networkInfo.isConnected) {
       try {
+        final dto = CreateRentalOrderDto(
+          productId: productId,
+          startDate: startDate,
+          endDate: endDate,
+          deliveryMethod: deliveryMethod,
+          street: street,
+          city: city,
+          governorate: governorate,
+          termsAgreed: termsAgreed,
+        );
         final remoteOrder = await remoteDataSource.createRentalOrder(dto);
         return Right(remoteOrder);
       } on ServerException catch (e) {
@@ -46,11 +65,17 @@ class BookingRepositoryImpl implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, List<RentalOrderEntity>>> getMyOrders({String? status, int pageNumber = 1, int pageSize = 10}) async {
+  Future<Either<Failure, List<RentalOrderEntity>>> getMyOrders({
+    String? status,
+    String? searchTerm,
+    int pageNumber = 1,
+    int pageSize = 10,
+  }) async {
     if (await networkInfo.isConnected) {
       try {
         final orders = await remoteDataSource.getMyOrders(
           status: status,
+          searchTerm: searchTerm,
           pageNumber: pageNumber,
           pageSize: pageSize,
         );
@@ -64,11 +89,17 @@ class BookingRepositoryImpl implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, List<RentalOrderEntity>>> getMyListingsOrders({String? status, int pageNumber = 1, int pageSize = 10}) async {
+  Future<Either<Failure, List<RentalOrderEntity>>> getMyListingsOrders({
+    String? status,
+    String? searchTerm,
+    int pageNumber = 1,
+    int pageSize = 10,
+  }) async {
     if (await networkInfo.isConnected) {
       try {
         final orders = await remoteDataSource.getMyListingsOrders(
           status: status,
+          searchTerm: searchTerm,
           pageNumber: pageNumber,
           pageSize: pageSize,
         );
@@ -110,10 +141,13 @@ class BookingRepositoryImpl implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, void>> rejectRentalOrder(int id) async {
+  Future<Either<Failure, void>> rejectRentalOrder(
+    int id, {
+    String? reason,
+  }) async {
     if (await networkInfo.isConnected) {
       try {
-        await remoteDataSource.rejectRentalOrder(id);
+        await remoteDataSource.rejectRentalOrder(id, reason: reason);
         return const Right(null);
       } on ServerException catch (e) {
         return Left(Failure(errMessage: e.errorModel.message));
@@ -166,10 +200,13 @@ class BookingRepositoryImpl implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, void>> returnRentalOrder(int id) async {
+  Future<Either<Failure, void>> returnRentalOrder(
+    int id, {
+    String? reason,
+  }) async {
     if (await networkInfo.isConnected) {
       try {
-        await remoteDataSource.returnRentalOrder(id);
+        await remoteDataSource.returnRentalOrder(id, reason: reason);
         return const Right(null);
       } on ServerException catch (e) {
         return Left(Failure(errMessage: e.errorModel.message));

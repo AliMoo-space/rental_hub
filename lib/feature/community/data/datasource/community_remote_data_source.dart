@@ -5,6 +5,7 @@ import 'package:rental_hub/core/errors/error_model.dart';
 import 'package:rental_hub/core/utils/response_parser.dart';
 import 'package:rental_hub/feature/community/data/models/community_offer_model.dart';
 import 'package:rental_hub/feature/community/data/models/community_request_model.dart';
+import 'package:rental_hub/feature/community/data/models/create_community_offer_body.dart';
 import 'package:rental_hub/feature/community/data/models/create_community_request_body.dart';
 import 'package:rental_hub/feature/community/domain/entities/community_requests_query.dart';
 import 'package:rental_hub/feature/community/domain/entities/create_community_offer_params.dart';
@@ -26,6 +27,8 @@ abstract class CommunityRemoteDataSource {
   Future<CommunityRequestsPageModel> getMyRequests(
     MyCommunityRequestsQuery query,
   );
+
+  Future<List<CommunityOfferModel>> getRequestOffers(int requestId);
 
   Future<String> acceptOffer(int offerId);
 
@@ -69,14 +72,8 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
   Future<String> createOffer(CreateCommunityOfferParams params) async {
     final response = await apiConsumer.post(
       EndPoints.communityOffers,
-      data: {
-        'requestId': params.requestId,
-        'proposedPrice': params.proposedPrice,
-        'message': params.message,
-        'governorate': params.governorate,
-        'city': params.city,
-        'address': params.address,
-      },
+      data: await CreateCommunityOfferBody(params).toFormData(),
+      isFormData: true,
     );
     return _extractActionMessage(response.data, 'Offer submitted successfully');
   }
@@ -107,6 +104,14 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
       },
     );
     return _parseRequestsPage(response.data);
+  }
+
+  @override
+  Future<List<CommunityOfferModel>> getRequestOffers(int requestId) async {
+    final response = await apiConsumer.get(
+      EndPoints.communityRequestOffers(requestId),
+    );
+    return _parseOffersList(response.data);
   }
 
   @override
@@ -186,13 +191,13 @@ class CommunityRemoteDataSourceImpl implements CommunityRemoteDataSource {
     if (payload.containsKey('items')) {
       return CommunityOffersPageModel.fromJson(
         payload,
-      ).items.whereType<CommunityOfferModel>().toList();
+      ).items.cast<CommunityOfferModel>().toList();
     }
 
     if (raw is List) {
       return CommunityOffersPageModel.fromJson(
         raw,
-      ).items.whereType<CommunityOfferModel>().toList();
+      ).items.cast<CommunityOfferModel>().toList();
     }
 
     if (payload.isNotEmpty && payload['id'] != null) {

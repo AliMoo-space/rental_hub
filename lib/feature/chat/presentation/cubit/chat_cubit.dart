@@ -79,18 +79,15 @@ class ChatCubit extends Cubit<ChatState> {
         productName: routeArgs.productName,
       );
 
-      conversation = conversationResult.fold<ConversationEntity?>(
-        (failure) {
-          emit(
-            state.copyWith(
-              status: ChatStatus.error,
-              errorMessage: failure.errMessage,
-            ),
-          );
-          return null;
-        },
-        (value) => value,
-      );
+      conversation = conversationResult.fold<ConversationEntity?>((failure) {
+        emit(
+          state.copyWith(
+            status: ChatStatus.error,
+            errorMessage: failure.errMessage,
+          ),
+        );
+        return null;
+      }, (value) => value);
     }
 
     if (conversation == null) {
@@ -103,19 +100,16 @@ class ChatCubit extends Cubit<ChatState> {
         conversationId: conversation.id,
       );
 
-      messages = messagesResult.fold(
-        (failure) {
-          emit(
-            state.copyWith(
-              status: ChatStatus.error,
-              conversation: conversation,
-              errorMessage: failure.errMessage,
-            ),
-          );
-          return const <MessageEntity>[];
-        },
-        (value) => value,
-      );
+      messages = messagesResult.fold((failure) {
+        emit(
+          state.copyWith(
+            status: ChatStatus.error,
+            conversation: conversation,
+            errorMessage: failure.errMessage,
+          ),
+        );
+        return const <MessageEntity>[];
+      }, (value) => value);
     }
 
     final connectionResult = await connectToChatUseCase();
@@ -218,10 +212,7 @@ class ChatCubit extends Cubit<ChatState> {
         emit(
           current.copyWith(
             status: ChatStatus.error,
-            messages: _removeMessageByClientId(
-              state.messages,
-              clientMessageId,
-            ),
+            messages: _removeMessageByClientId(state.messages, clientMessageId),
             isSending: false,
             errorMessage: failure.errMessage,
           ),
@@ -247,10 +238,7 @@ class ChatCubit extends Cubit<ChatState> {
     );
   }
 
-  Future<void> reportMessage({
-    required int messageId,
-    String? reason,
-  }) async {
+  Future<void> reportMessage({required int messageId, String? reason}) async {
     final result = await reportMessageUseCase(
       messageId: messageId,
       reason: reason,
@@ -322,9 +310,7 @@ class ChatCubit extends Cubit<ChatState> {
             ? [...state.messages, normalizedMessage]
             : _replaceMessage(
                 state.messages,
-                normalizedMessage.copyWith(
-                  status: ChatMessageStatus.delivered,
-                ),
+                normalizedMessage.copyWith(status: ChatMessageStatus.delivered),
               );
 
         emit(
@@ -340,11 +326,11 @@ class ChatCubit extends Cubit<ChatState> {
           unawaited(sendReadReceiptUseCase(messageId: normalizedMessage.id));
         }
       case ChatTypingEvent(
-          :final conversationId,
-          :final senderId,
-          :final senderName,
-          :final isTyping,
-        ):
+        :final conversationId,
+        :final senderId,
+        :final senderName,
+        :final isTyping,
+      ):
         final currentConversation = state.conversation;
         if (currentConversation == null ||
             (conversationId > 0 &&
@@ -456,7 +442,8 @@ class ChatCubit extends Cubit<ChatState> {
       if (message.isMine &&
           message.content == incoming.content &&
           message.senderId == incoming.senderId &&
-          incoming.timestamp.difference(message.timestamp).inSeconds.abs() <= 10) {
+          incoming.timestamp.difference(message.timestamp).inSeconds.abs() <=
+              10) {
         return message;
       }
     }

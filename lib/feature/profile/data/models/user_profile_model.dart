@@ -1,9 +1,8 @@
+import 'package:rental_hub/core/databases/api/end_points.dart';
 import 'package:rental_hub/core/utils/validation_utils.dart';
 import 'package:rental_hub/feature/profile/domain/entities/user_profile_entity.dart';
 
 class UserProfileModel extends UserProfileEntity {
-  static const String _imageBaseUrl = 'http://rentalplatform.runasp.net';
-
   const UserProfileModel({
     super.fullName,
     super.phoneNumber,
@@ -84,9 +83,9 @@ class UserProfileModel extends UserProfileEntity {
     }
 
     if (trimmed.startsWith('/')) {
-      return '$_imageBaseUrl$trimmed';
+      return '${EndPoints.baseUrl}$trimmed';
     }
 
-    return '$_imageBaseUrl/$trimmed';
+    return '${EndPoints.baseUrl}/$trimmed';
   }
 }

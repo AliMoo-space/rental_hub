@@ -4,6 +4,8 @@ import 'package:rental_hub/feature/booking/domain/usecases/get_my_listings_order
 import 'package:rental_hub/feature/booking/domain/usecases/get_my_orders_usecase.dart';
 import 'package:rental_hub/feature/booking/presentation/cubit/my_orders_state.dart';
 
+enum _OrdersMode { myOrders, myListings }
+
 class MyOrdersCubit extends Cubit<MyOrdersState> {
   final GetMyOrdersUseCase getMyOrdersUseCase;
   final GetMyListingsOrdersUseCase getMyListingsOrdersUseCase;
@@ -12,19 +14,30 @@ class MyOrdersCubit extends Cubit<MyOrdersState> {
   bool _isFetching = false;
   final int _pageSize = 10;
   String? _currentStatus;
+  String? _currentSearchTerm;
+  _OrdersMode _currentMode = _OrdersMode.myOrders;
 
   MyOrdersCubit({
     required this.getMyOrdersUseCase,
     required this.getMyListingsOrdersUseCase,
   }) : super(MyOrdersInitial());
 
-  Future<void> loadMyOrders({bool refresh = false, String? status}) async {
+  Future<void> loadMyOrders({
+    bool refresh = false,
+    String? status,
+    String? searchTerm,
+  }) async {
     if (_isFetching) return;
     _isFetching = true;
 
-    if (refresh || status != _currentStatus) {
+    if (refresh ||
+        _currentMode != _OrdersMode.myOrders ||
+        status != _currentStatus ||
+        searchTerm != _currentSearchTerm) {
       _page = 1;
+      _currentMode = _OrdersMode.myOrders;
       _currentStatus = status;
+      _currentSearchTerm = searchTerm;
       emit(MyOrdersLoading([], isFirstFetch: true));
     } else {
       final currentState = state;
@@ -39,6 +52,7 @@ class MyOrdersCubit extends Cubit<MyOrdersState> {
 
     final result = await getMyOrdersUseCase(
       status: _currentStatus,
+      searchTerm: _currentSearchTerm,
       pageNumber: _page,
       pageSize: _pageSize,
     );
@@ -59,19 +73,33 @@ class MyOrdersCubit extends Cubit<MyOrdersState> {
         }
 
         allOrders.addAll(newOrders);
-        emit(MyOrdersLoaded(allOrders, hasReachedMax: newOrders.length < _pageSize));
+        emit(
+          MyOrdersLoaded(
+            allOrders,
+            hasReachedMax: newOrders.length < _pageSize,
+          ),
+        );
         _isFetching = false;
       },
     );
   }
 
-  Future<void> loadMyListingsOrders({bool refresh = false, String? status}) async {
+  Future<void> loadMyListingsOrders({
+    bool refresh = false,
+    String? status,
+    String? searchTerm,
+  }) async {
     if (_isFetching) return;
     _isFetching = true;
 
-    if (refresh || status != _currentStatus) {
+    if (refresh ||
+        _currentMode != _OrdersMode.myListings ||
+        status != _currentStatus ||
+        searchTerm != _currentSearchTerm) {
       _page = 1;
+      _currentMode = _OrdersMode.myListings;
       _currentStatus = status;
+      _currentSearchTerm = searchTerm;
       emit(MyOrdersLoading([], isFirstFetch: true));
     } else {
       final currentState = state;
@@ -86,6 +114,7 @@ class MyOrdersCubit extends Cubit<MyOrdersState> {
 
     final result = await getMyListingsOrdersUseCase(
       status: _currentStatus,
+      searchTerm: _currentSearchTerm,
       pageNumber: _page,
       pageSize: _pageSize,
     );
@@ -106,7 +135,12 @@ class MyOrdersCubit extends Cubit<MyOrdersState> {
         }
 
         allOrders.addAll(newOrders);
-        emit(MyOrdersLoaded(allOrders, hasReachedMax: newOrders.length < _pageSize));
+        emit(
+          MyOrdersLoaded(
+            allOrders,
+            hasReachedMax: newOrders.length < _pageSize,
+          ),
+        );
         _isFetching = false;
       },
     );

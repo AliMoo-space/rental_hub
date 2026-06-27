@@ -19,8 +19,6 @@ class ProfileImagePicker extends StatelessWidget {
     required this.onEditPressed,
   });
 
-  static const Color _profilePrimaryColor = Color(0xFF6C63FF);
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -33,10 +31,10 @@ class ProfileImagePicker extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: _profilePrimaryColor, width: 3),
+                border: Border.all(color: AppColors.primaryColor, width: 3),
                 boxShadow: [
                   BoxShadow(
-                    color: _profilePrimaryColor.withValues(alpha: 0.12),
+                    color: AppColors.primaryColor.withValues(alpha: 0.12),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
@@ -62,13 +60,12 @@ class ProfileImagePicker extends StatelessWidget {
                             height: 16.w,
                             child: const CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: _profilePrimaryColor,
                             ),
                           )
                         : Icon(
                             Icons.camera_alt_rounded,
                             size: 18.sp,
-                            color: _profilePrimaryColor,
+                            color: AppColors.primaryColor,
                           ),
                   ),
                 ),

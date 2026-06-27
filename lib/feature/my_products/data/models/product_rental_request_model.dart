@@ -13,11 +13,23 @@ class ProductRentalRequestModel extends ProductRentalRequestEntity {
   factory ProductRentalRequestModel.fromJson(Map<String, dynamic> json) {
     return ProductRentalRequestModel(
       id: _parseInt(json['id'] ?? json['requestId'] ?? json['rentalRequestId']),
-      renterName: json['renterName']?.toString() ?? json['renterFullName']?.toString() ?? 'مستأجر',
-      startDate: _parseDateTime(json['startDate'] ?? json['start_date'] ?? json['rentDate']),
-      endDate: _parseDateTime(json['endDate'] ?? json['end_date'] ?? json['returnDate']),
+      renterName:
+          json['renterName']?.toString() ??
+          json['renterFullName']?.toString() ??
+          'مستأجر',
+      startDate: _parseDateTime(
+        json['startDate'] ?? json['start_date'] ?? json['rentDate'],
+      ),
+      endDate: _parseDateTime(
+        json['endDate'] ?? json['end_date'] ?? json['returnDate'],
+      ),
       status: json['status']?.toString() ?? 'Pending',
-      totalPrice: _parseDouble(json['totalPrice'] ?? json['amount'] ?? json['total_price'] ?? json['price']),
+      totalPrice: _parseDouble(
+        json['totalPrice'] ??
+            json['amount'] ??
+            json['total_price'] ??
+            json['price'],
+      ),
     );
   }
 

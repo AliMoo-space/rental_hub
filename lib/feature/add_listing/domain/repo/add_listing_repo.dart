@@ -5,6 +5,8 @@ import 'package:rental_hub/feature/add_listing/data/models/update_product_reques
 
 abstract class AddListingRepo {
   Future<Either<Failure, String>> createProduct(CreateProductRequest request);
-  Future<Either<Failure, String>> updateProduct(int id, UpdateProductRequest request);
+  Future<Either<Failure, String>> updateProduct(
+    int id,
+    UpdateProductRequest request,
+  );
 }
-

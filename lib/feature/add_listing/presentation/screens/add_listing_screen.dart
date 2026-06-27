@@ -546,7 +546,9 @@ class _AddListingScreenState extends State<AddListingScreen> {
 
   Widget _buildCombinedImageGrid() {
     final canAddMore = _productImagesCount < 10;
-    final gridItemCount = canAddMore ? _productImagesCount + 1 : _productImagesCount;
+    final gridItemCount = canAddMore
+        ? _productImagesCount + 1
+        : _productImagesCount;
 
     return GridView.builder(
       shrinkWrap: true,
@@ -669,7 +671,9 @@ class _AddListingScreenState extends State<AddListingScreen> {
 
   Widget _buildConditionImageGrid() {
     final canAddMore = _conditionImagesCount < 10;
-    final gridItemCount = canAddMore ? _conditionImagesCount + 1 : _conditionImagesCount;
+    final gridItemCount = canAddMore
+        ? _conditionImagesCount + 1
+        : _conditionImagesCount;
 
     return GridView.builder(
       shrinkWrap: true,
@@ -754,7 +758,9 @@ class _AddListingScreenState extends State<AddListingScreen> {
     }
 
     setState(() {
-      final currentTotal = targetImages == _productImages ? _productImagesCount : targetImages.length;
+      final currentTotal = targetImages == _productImages
+          ? _productImagesCount
+          : targetImages.length;
       final remainingSlots = 10 - currentTotal;
       if (remainingSlots <= 0) {
         return;
@@ -803,13 +809,15 @@ class _AddListingScreenState extends State<AddListingScreen> {
                 SizedBox(
                   height: 300,
                   child: ListView(
-                    children: options.map(
-                      (option) => ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(option.label),
-                        onTap: () => Navigator.of(sheetContext).pop(option),
-                      ),
-                    ).toList(),
+                    children: options
+                        .map(
+                          (option) => ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: Text(option.label),
+                            onTap: () => Navigator.of(sheetContext).pop(option),
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
               ],
@@ -909,7 +917,10 @@ class _AddListingScreenState extends State<AddListingScreen> {
         primaryImageId: null,
       );
 
-      context.read<AddListingCubit>().updateListing(widget.productToEdit!.id, request);
+      context.read<AddListingCubit>().updateListing(
+        widget.productToEdit!.id,
+        request,
+      );
     } else {
       final request = CreateProductRequest(
         city: _cityController.text.trim(),

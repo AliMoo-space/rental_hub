@@ -1,4 +1,6 @@
-class RentalOrderEntity {
+import 'package:equatable/equatable.dart';
+
+class RentalOrderEntity extends Equatable {
   final int id;
   final int productId;
   final String productName;
@@ -41,25 +43,48 @@ class RentalOrderEntity {
     required this.totalPrice,
   });
 
+  @override
+  List<Object?> get props => [
+    id,
+    productId,
+    productName,
+    productImage,
+    renterId,
+    renterName,
+    ownerId,
+    ownerName,
+    startDate,
+    endDate,
+    status,
+    deliveryMethod,
+    street,
+    city,
+    governorate,
+    rentalPrice,
+    insurancePrice,
+    serviceFee,
+    totalPrice,
+  ];
+
   factory RentalOrderEntity.empty() => RentalOrderEntity(
-        id: 0,
-        productId: 0,
-        productName: '',
-        productImage: '',
-        renterId: '',
-        renterName: '',
-        ownerId: '',
-        ownerName: '',
-        startDate: DateTime.now(),
-        endDate: DateTime.now(),
-        status: '',
-        deliveryMethod: '',
-        street: '',
-        city: '',
-        governorate: '',
-        rentalPrice: 0,
-        insurancePrice: 0,
-        serviceFee: 0,
-        totalPrice: 0,
-      );
+    id: 0,
+    productId: 0,
+    productName: '',
+    productImage: '',
+    renterId: '',
+    renterName: '',
+    ownerId: '',
+    ownerName: '',
+    startDate: DateTime.now(),
+    endDate: DateTime.now(),
+    status: '',
+    deliveryMethod: '',
+    street: '',
+    city: '',
+    governorate: '',
+    rentalPrice: 0,
+    insurancePrice: 0,
+    serviceFee: 0,
+    totalPrice: 0,
+  );
 }

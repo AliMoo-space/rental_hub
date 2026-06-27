@@ -116,13 +116,174 @@ class AppLocalizationsAr extends AppLocalizations {
   String get getEverythingYouWant => 'احصل على كل ما تريد ';
 
   @override
-  String get searchHint => 'ابحث هنا ...';
+  String get searchHint => 'البحث في الطلبات...';
 
   @override
   String get home => 'الرئيسية';
 
   @override
-  String get community => 'المجمتع';
+  String get community => 'المجتمع';
+
+  @override
+  String get addCommunityRequest => 'إضافة طلب مجتمع';
+
+  @override
+  String get communityRequests => 'طلبات المجتمع';
+
+  @override
+  String get incomingOffers => 'العروض الواردة';
+
+  @override
+  String get myActivity => 'نشاطي';
+
+  @override
+  String get noRequestsYet => 'لا توجد طلبات بعد';
+
+  @override
+  String get noOffersYet => 'لا توجد عروض بعد';
+
+  @override
+  String get noIncomingOffers => 'لا توجد عروض واردة';
+
+  @override
+  String get beFirstToAddRequest => 'كن أول من يضيف طلباً في المجتمع';
+
+  @override
+  String get beFirstToSubmitOffer => 'كن أول من يقدم عرضاً لهذا الطلب';
+
+  @override
+  String get submitOffer => 'تقديم عرض';
+
+  @override
+  String get acceptOffer => 'قبول العرض';
+
+  @override
+  String get rejectOffer => 'رفض العرض';
+
+  @override
+  String get confirmAcceptOffer =>
+      'هل أنت متأكد من قبول هذا العرض؟ سيتم إعلام مقدم العرض بقرارك.';
+
+  @override
+  String get confirmRejectOffer =>
+      'هل أنت متأكد من رفض هذا العرض؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get confirmAction => 'تأكيد';
+
+  @override
+  String get requestDetails => 'تفاصيل الطلب';
+
+  @override
+  String get offersList => 'العروض';
+
+  @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
+  String get loadingFailed => 'فشل التحميل. حاول مرة أخرى.';
+
+  @override
+  String get openStatus => 'مفتوح';
+
+  @override
+  String get closedStatus => 'مغلق';
+
+  @override
+  String get pendingStatus => 'قيد الانتظار';
+
+  @override
+  String get acceptedStatus => 'مقبول';
+
+  @override
+  String get rejectedStatus => 'مرفوض';
+
+  @override
+  String get offersCount => 'العروض';
+
+  @override
+  String get category => 'التصنيف';
+
+  @override
+  String get subcategory => 'التصنيف الفرعي';
+
+  @override
+  String get budget => 'الميزانية';
+
+  @override
+  String get description => 'الوصف';
+
+  @override
+  String get createRequest => 'إنشاء طلب';
+
+  @override
+  String get publishRequest => 'نشر الطلب';
+
+  @override
+  String get requestTitle => 'العنوان';
+
+  @override
+  String get requestDescription => 'الوصف';
+
+  @override
+  String get requestBudget => 'الميزانية';
+
+  @override
+  String get startDate => 'تاريخ البدء';
+
+  @override
+  String get endDate => 'تاريخ الانتهاء';
+
+  @override
+  String get selectCategory => 'اختر التصنيف';
+
+  @override
+  String get selectSubcategory => 'اختر النوع الفرعي';
+
+  @override
+  String get loadingSubcategories => 'جارِ تحميل الأنواع الفرعية...';
+
+  @override
+  String get locationInfo => 'الموقع';
+
+  @override
+  String get images => 'الصور';
+
+  @override
+  String get addImage => 'إضافة صورة';
+
+  @override
+  String get imageSelected => 'تم اختيار صورة';
+
+  @override
+  String get noRequests => 'لا توجد طلبات';
+
+  @override
+  String get noOffers => 'لا توجد عروض';
+
+  @override
+  String get offersCountLabel => 'عرض';
+
+  @override
+  String get requestDetailsTitle => 'تفاصيل الطلب';
+
+  @override
+  String get filterComingSoon => 'قريباً...';
+
+  @override
+  String get communityFeedTitle => 'طلبات المجتمع';
+
+  @override
+  String get myRequests => 'طلباتي';
+
+  @override
+  String get myOffers => 'عروضي';
+
+  @override
+  String get egpCurrency => 'ج.م';
+
+  @override
+  String get userName => 'مستخدم';
 
   @override
   String get myProfile => 'ملفي الشخصي';
@@ -431,4 +592,334 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get openingChat => 'جاري فتح المحادثة...';
+
+  @override
+  String get myListingsOrders => 'طلبات الإيجار لمنتجاتي';
+
+  @override
+  String get editProfileTitle => 'تعديل الملف الشخصي';
+
+  @override
+  String get personalInfo => 'البيانات الشخصية';
+
+  @override
+  String get changePassword => 'تغيير كلمة المرور';
+
+  @override
+  String get saveChanges => 'حفظ التغييرات';
+
+  @override
+  String get myOrders => 'طلباتي';
+
+  @override
+  String get noOrders => 'لا توجد طلبات';
+
+  @override
+  String get statusLabel => 'الحالة';
+
+  @override
+  String get renterLabel => 'المستأجر';
+
+  @override
+  String get productDetails => 'تفاصيل المنتج';
+
+  @override
+  String get selectDates => 'تحديد التواريخ';
+
+  @override
+  String get pickupDate => 'تاريخ الاستلام';
+
+  @override
+  String get returnDate => 'تاريخ الإرجاع';
+
+  @override
+  String get returnDateAfterPickup =>
+      'تاريخ الإرجاع يجب أن يكون بعد تاريخ الاستلام';
+
+  @override
+  String get deliveryDetails => 'تفاصيل التوصيل';
+
+  @override
+  String get governorate => 'المحافظة';
+
+  @override
+  String get streetAddress => 'الشارع / العنوان';
+
+  @override
+  String get requiredField => 'مطلوب';
+
+  @override
+  String get continueText => 'متابعة';
+
+  @override
+  String get city => 'المدينة';
+
+  @override
+  String get productNumber => 'منتج #';
+
+  @override
+  String get egp => 'ج.م';
+
+  @override
+  String get male => 'ذكر';
+
+  @override
+  String get female => 'أنثى';
+
+  @override
+  String get country => 'الدولة';
+
+  @override
+  String get currentPassword => 'كلمة المرور الحالية';
+
+  @override
+  String get loadingProfile => 'جارٍ تحميل الملف الشخصي...';
+
+  @override
+  String get guestUser => 'مستخدم ضيف';
+
+  @override
+  String get darkMode => 'الوضع الليلي';
+
+  @override
+  String get lightMode => 'الوضع النهاري';
+
+  @override
+  String get accountSettings => 'الحساب';
+
+  @override
+  String get accountData => 'بيانات الحساب';
+
+  @override
+  String get notificationSettings => 'التنبيهات والإشعارات';
+
+  @override
+  String get pushNotifications => 'إشعارات التطبيق';
+
+  @override
+  String get emailUpdates => 'تحديثات البريد الإلكتروني';
+
+  @override
+  String get smsNotifications => 'رسائل نصية';
+
+  @override
+  String get privacySecurity => 'الخصوصية والأمان';
+
+  @override
+  String get termsOfUse => 'شروط الاستخدام';
+
+  @override
+  String get support => 'الدعم';
+
+  @override
+  String get helpSupport => 'المساعدة والدعم';
+
+  @override
+  String get contactUs => 'اتصل بنا';
+
+  @override
+  String get rateApp => 'قيم التطبيق';
+
+  @override
+  String get aboutApp => 'عن التطبيق';
+
+  @override
+  String get appVersion => 'الإصدار';
+
+  @override
+  String get checkUpdates => 'البحث عن التحديثات';
+
+  @override
+  String get disableAccount => 'تعطيل الحساب';
+
+  @override
+  String get confirmLogout => 'تأكيد تسجيل الخروج';
+
+  @override
+  String get logoutConfirmation => 'هل أنت متأكد من رغبتك في تسجيل الخروج؟';
+
+  @override
+  String get fullNameRequired => 'الاسم بالكامل مطلوب';
+
+  @override
+  String get fullNameMinLength => 'يجب أن يكون الاسم 3 أحرف على الأقل';
+
+  @override
+  String get phoneNumberRequired => 'رقم الهاتف مطلوب';
+
+  @override
+  String get phoneNumberInvalid =>
+      'رقم الهاتف يجب أن يكون أرقام فقط وبحد أدنى 11 رقم';
+
+  @override
+  String get genderRequired => 'الجنس مطلوب';
+
+  @override
+  String get cityRequired => 'المدينة مطلوبة';
+
+  @override
+  String get governorateRequired => 'المحافظة مطلوبة';
+
+  @override
+  String get countryRequired => 'الدولة مطلوبة';
+
+  @override
+  String get currentPasswordRequired => 'كلمة المرور الحالية مطلوبة';
+
+  @override
+  String get newPasswordRequired => 'كلمة المرور الجديدة مطلوبة';
+
+  @override
+  String get confirmNewPassword => 'تأكيد كلمة المرور';
+
+  @override
+  String get confirmNewPasswordRequired => 'تأكيد كلمة المرور مطلوب';
+
+  @override
+  String get passwordMinRequirements =>
+      '8 أحرف على الأقل مع حرف كبير ورقم ورمز خاص';
+
+  @override
+  String get passwordsNotMatch => 'كلمتا المرور غير متطابقتين';
+
+  @override
+  String get phoneNumberLabel => 'رقم الهاتف';
+
+  @override
+  String get genderLabel => 'الجنس';
+
+  @override
+  String get privacyPolicy => 'سياسة الخصوصية';
+
+  @override
+  String get quickActions => 'إجراءات سريعة';
+
+  @override
+  String get retryLabel => 'إعادة المحاولة';
+
+  @override
+  String get searchOrders => 'البحث عن الطلبات...';
+
+  @override
+  String get noSearchResults => 'لا توجد نتائج';
+
+  @override
+  String get rentalPeriod => 'فترة الإيجار';
+
+  @override
+  String get orderTotal => 'الإجمالي';
+
+  @override
+  String get deliveryMethodLabel => 'التوصيل';
+
+  @override
+  String get errorLoadingOrders => 'فشل تحميل الطلبات. حاول مرة أخرى.';
+
+  @override
+  String get orderDetailLabel => 'الطلب';
+
+  @override
+  String get ownerLabel => 'المالك';
+
+  @override
+  String get dayLabel => 'يوم';
+
+  @override
+  String get pricingSummary => 'ملخص الأسعار';
+
+  @override
+  String get rentalPriceLabel => 'سعر الإيجار';
+
+  @override
+  String get insurancePriceLabel => 'تأمين';
+
+  @override
+  String get serviceFeeLabel => 'رسوم الخدمة';
+
+  @override
+  String get approveOrderLabel => 'موافقة';
+
+  @override
+  String get rejectOrderLabel => 'رفض';
+
+  @override
+  String get shipOrderLabel => 'تحديد كـ تم الشحن';
+
+  @override
+  String get cancelOrderLabel => 'إلغاء الطلب';
+
+  @override
+  String get confirmReceiptLabel => 'تأكيد الاستلام';
+
+  @override
+  String get returnOrderLabel => 'إرجاع';
+
+  @override
+  String get rejectReasonTitle => 'سبب الرفض';
+
+  @override
+  String get rejectReasonHint => 'أدخل سبب الرفض';
+
+  @override
+  String get returnReasonTitle => 'سبب الإرجاع';
+
+  @override
+  String get returnReasonHint => 'أدخل سبب الإرجاع';
+
+  @override
+  String get cancelOrderTitle => 'إلغاء الطلب؟';
+
+  @override
+  String get cancelOrderMessage =>
+      'هل أنت متأكد من إلغاء هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get returnOrderTitle => 'إرجاع الطلب؟';
+
+  @override
+  String get returnOrderMessage =>
+      'هل أنت متأكد من إرجاع هذا المنتج؟ يرجى التأكد من أنه في نفس الحالة.';
+
+  @override
+  String get orderStatusTimeline => 'مخطط حالة الطلب';
+
+  @override
+  String get orderPlaced => 'تم إنشاء الطلب';
+
+  @override
+  String get orderPlacedDesc => 'تم إنشاء طلبك وهو في انتظار موافقة المالك.';
+
+  @override
+  String get pendingApproval => 'بانتظار الموافقة';
+
+  @override
+  String get pendingApprovalDesc =>
+      'في انتظار موافقة المالك على طلب الإيجار الخاص بك.';
+
+  @override
+  String get orderApproved => 'تمت الموافقة';
+
+  @override
+  String get orderApprovedDesc => 'وافق المالك على طلبك. جاري التجهيز للشحن.';
+
+  @override
+  String get orderShipped => 'تم الشحن';
+
+  @override
+  String get orderShippedDesc => 'تم شحن طلبك وهو في الطريق إليك.';
+
+  @override
+  String get confirmedReceipt => 'تأكيد الاستلام';
+
+  @override
+  String get confirmedReceiptDesc => 'لقد أكدت استلام المنتج.';
+
+  @override
+  String get orderReturned => 'تم الإرجاع';
+
+  @override
+  String get orderReturnedDesc => 'تم إرجاع المنتج إلى المالك.';
+
+  @override
+  String get cancelledLabel => 'ملغية';
 }

@@ -30,7 +30,9 @@ class ChatRepositoryImpl implements ChatRepository {
       final response = await remoteDataSource.getConversations();
       return Right(
         response
-            .map((conversation) => _mapConversation(conversation, currentUserId))
+            .map(
+              (conversation) => _mapConversation(conversation, currentUserId),
+            )
             .toList(),
       );
     } on ServerException catch (e) {
@@ -55,9 +57,7 @@ class ChatRepositoryImpl implements ChatRepository {
         conversationId: conversationId,
       );
       return Right(
-        response
-            .map((message) => _mapMessage(message, currentUserId))
-            .toList(),
+        response.map((message) => _mapMessage(message, currentUserId)).toList(),
       );
     } on ServerException catch (e) {
       return Left(
@@ -167,7 +167,10 @@ class ChatRepositoryImpl implements ChatRepository {
     String? reason,
   }) async {
     try {
-      await remoteDataSource.reportMessage(messageId: messageId, reason: reason);
+      await remoteDataSource.reportMessage(
+        messageId: messageId,
+        reason: reason,
+      );
       return const Right(null);
     } on ServerException catch (e) {
       return Left(

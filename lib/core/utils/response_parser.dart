@@ -38,7 +38,7 @@ class ResponseParser {
           map['detail'] ??
           (nestedData is Map
               ? (Map<String, dynamic>.from(nestedData))['message'] ??
-                  (Map<String, dynamic>.from(nestedData))['title']
+                    (Map<String, dynamic>.from(nestedData))['title']
               : null);
 
       final message = (messageCandidate ?? '').toString().trim();

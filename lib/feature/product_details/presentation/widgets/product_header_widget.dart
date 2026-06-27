@@ -8,8 +8,15 @@ import 'package:rental_hub/feature/home/domain/entities/product_entity.dart';
 
 class ProductHeaderWidget extends StatelessWidget {
   final ProductEntity product;
+  final VoidCallback? onFavoritePressed;
+  final bool isFavoriteLoading;
 
-  const ProductHeaderWidget({super.key, required this.product});
+  const ProductHeaderWidget({
+    super.key,
+    required this.product,
+    this.onFavoritePressed,
+    this.isFavoriteLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +30,33 @@ class ProductHeaderWidget extends StatelessWidget {
             images: product.images,
             width: double.infinity,
             height: double.infinity,
+          ),
+        ),
+        // Favorite Button
+        Positioned(
+          top: 16.h,
+          right: 16.w,
+          child: GestureDetector(
+            onTap: isFavoriteLoading ? null : onFavoritePressed,
+            child: CircleAvatar(
+              radius: 18.r,
+              backgroundColor: const Color(0xffFFFFFF).withValues(alpha: .8),
+              child: isFavoriteLoading
+                  ? SizedBox(
+                      width: 18.w,
+                      height: 18.w,
+                      child: const CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Icon(
+                      product.isFavorite
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: product.isFavorite
+                          ? AppColors.primaryColor
+                          : AppColors.secondaryColor,
+                      size: 20.sp,
+                    ),
+            ),
           ),
         ),
         // Location Badge

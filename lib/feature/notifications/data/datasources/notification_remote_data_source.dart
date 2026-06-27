@@ -23,10 +23,7 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   }) async {
     final response = await apiConsumer.get(
       EndPoints.notificationsEndpoint,
-      queryParameters: {
-        'page': page,
-        'pageSize': pageSize,
-      },
+      queryParameters: {'page': page, 'pageSize': pageSize},
     );
 
     return response.data;
@@ -44,7 +41,9 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
 
   @override
   Future<int> getUnreadCount() async {
-    final response = await apiConsumer.get(EndPoints.unreadNotificationsCountEndpoint);
+    final response = await apiConsumer.get(
+      EndPoints.unreadNotificationsCountEndpoint,
+    );
     final data = response.data;
     if (data is Map<String, dynamic> && data.containsKey('unreadCount')) {
       return data['unreadCount'] as int;

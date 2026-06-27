@@ -116,13 +116,174 @@ class AppLocalizationsEn extends AppLocalizations {
   String get getEverythingYouWant => 'Get everything you want';
 
   @override
-  String get searchHint => 'Search here ...';
+  String get searchHint => 'Search requests...';
 
   @override
   String get home => 'Home';
 
   @override
   String get community => 'Community';
+
+  @override
+  String get addCommunityRequest => 'Add Community Request';
+
+  @override
+  String get communityRequests => 'Community Requests';
+
+  @override
+  String get incomingOffers => 'Incoming Offers';
+
+  @override
+  String get myActivity => 'My Activity';
+
+  @override
+  String get noRequestsYet => 'No requests yet';
+
+  @override
+  String get noOffersYet => 'No offers yet';
+
+  @override
+  String get noIncomingOffers => 'No incoming offers';
+
+  @override
+  String get beFirstToAddRequest => 'Be the first to add a community request';
+
+  @override
+  String get beFirstToSubmitOffer => 'Be the first to submit an offer';
+
+  @override
+  String get submitOffer => 'Submit Offer';
+
+  @override
+  String get acceptOffer => 'Accept Offer';
+
+  @override
+  String get rejectOffer => 'Reject Offer';
+
+  @override
+  String get confirmAcceptOffer =>
+      'Are you sure you want to accept this offer? The offerer will be notified.';
+
+  @override
+  String get confirmRejectOffer =>
+      'Are you sure you want to reject this offer? This action cannot be undone.';
+
+  @override
+  String get confirmAction => 'Confirm';
+
+  @override
+  String get requestDetails => 'Request Details';
+
+  @override
+  String get offersList => 'Offers';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get loadingFailed => 'Failed to load. Please try again.';
+
+  @override
+  String get openStatus => 'Open';
+
+  @override
+  String get closedStatus => 'Closed';
+
+  @override
+  String get pendingStatus => 'Pending';
+
+  @override
+  String get acceptedStatus => 'Accepted';
+
+  @override
+  String get rejectedStatus => 'Rejected';
+
+  @override
+  String get offersCount => 'Offers';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get subcategory => 'Subcategory';
+
+  @override
+  String get budget => 'Budget';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get createRequest => 'Create Request';
+
+  @override
+  String get publishRequest => 'Publish Request';
+
+  @override
+  String get requestTitle => 'Title';
+
+  @override
+  String get requestDescription => 'Description';
+
+  @override
+  String get requestBudget => 'Budget';
+
+  @override
+  String get startDate => 'Start Date';
+
+  @override
+  String get endDate => 'End Date';
+
+  @override
+  String get selectCategory => 'Select Category';
+
+  @override
+  String get selectSubcategory => 'Select Subcategory';
+
+  @override
+  String get loadingSubcategories => 'Loading subcategories...';
+
+  @override
+  String get locationInfo => 'Location';
+
+  @override
+  String get images => 'Images';
+
+  @override
+  String get addImage => 'Add Image';
+
+  @override
+  String get imageSelected => 'Image selected';
+
+  @override
+  String get noRequests => 'No requests';
+
+  @override
+  String get noOffers => 'No offers';
+
+  @override
+  String get offersCountLabel => 'offers';
+
+  @override
+  String get requestDetailsTitle => 'Request Details';
+
+  @override
+  String get filterComingSoon => 'Coming soon...';
+
+  @override
+  String get communityFeedTitle => 'Community Feed';
+
+  @override
+  String get myRequests => 'My Requests';
+
+  @override
+  String get myOffers => 'My Offers';
+
+  @override
+  String get egpCurrency => 'EGP';
+
+  @override
+  String get userName => 'User';
 
   @override
   String get myProfile => 'My Profile';
@@ -432,4 +593,336 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openingChat => 'Opening chat...';
+
+  @override
+  String get myListingsOrders => 'My Listings Orders';
+
+  @override
+  String get editProfileTitle => 'Edit Profile';
+
+  @override
+  String get personalInfo => 'Personal Information';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get myOrders => 'My Orders';
+
+  @override
+  String get noOrders => 'No orders';
+
+  @override
+  String get statusLabel => 'Status';
+
+  @override
+  String get renterLabel => 'Renter';
+
+  @override
+  String get productDetails => 'Product Details';
+
+  @override
+  String get selectDates => 'Select Dates';
+
+  @override
+  String get pickupDate => 'Pickup Date';
+
+  @override
+  String get returnDate => 'Return Date';
+
+  @override
+  String get returnDateAfterPickup => 'Return date must be after pickup date';
+
+  @override
+  String get deliveryDetails => 'Delivery Details';
+
+  @override
+  String get governorate => 'Governorate';
+
+  @override
+  String get streetAddress => 'Street / Address';
+
+  @override
+  String get requiredField => 'Required';
+
+  @override
+  String get continueText => 'Continue';
+
+  @override
+  String get city => 'City';
+
+  @override
+  String get productNumber => 'Product #';
+
+  @override
+  String get egp => 'EGP';
+
+  @override
+  String get male => 'Male';
+
+  @override
+  String get female => 'Female';
+
+  @override
+  String get country => 'Country';
+
+  @override
+  String get currentPassword => 'Current Password';
+
+  @override
+  String get loadingProfile => 'Loading profile...';
+
+  @override
+  String get guestUser => 'Guest User';
+
+  @override
+  String get darkMode => 'Dark Mode';
+
+  @override
+  String get lightMode => 'Light Mode';
+
+  @override
+  String get accountSettings => 'Account';
+
+  @override
+  String get accountData => 'Account Data';
+
+  @override
+  String get notificationSettings => 'Notifications';
+
+  @override
+  String get pushNotifications => 'Push Notifications';
+
+  @override
+  String get emailUpdates => 'Email Updates';
+
+  @override
+  String get smsNotifications => 'SMS Notifications';
+
+  @override
+  String get privacySecurity => 'Privacy & Security';
+
+  @override
+  String get termsOfUse => 'Terms of Use';
+
+  @override
+  String get support => 'Support';
+
+  @override
+  String get helpSupport => 'Help & Support';
+
+  @override
+  String get contactUs => 'Contact Us';
+
+  @override
+  String get rateApp => 'Rate App';
+
+  @override
+  String get aboutApp => 'About App';
+
+  @override
+  String get appVersion => 'Version';
+
+  @override
+  String get checkUpdates => 'Check for Updates';
+
+  @override
+  String get disableAccount => 'Deactivate Account';
+
+  @override
+  String get confirmLogout => 'Confirm Logout';
+
+  @override
+  String get logoutConfirmation => 'Are you sure you want to log out?';
+
+  @override
+  String get fullNameRequired => 'Full name is required';
+
+  @override
+  String get fullNameMinLength => 'Name must be at least 3 characters';
+
+  @override
+  String get phoneNumberRequired => 'Phone number is required';
+
+  @override
+  String get phoneNumberInvalid =>
+      'Phone number must be digits only (minimum 11 digits)';
+
+  @override
+  String get genderRequired => 'Gender is required';
+
+  @override
+  String get cityRequired => 'City is required';
+
+  @override
+  String get governorateRequired => 'Governorate is required';
+
+  @override
+  String get countryRequired => 'Country is required';
+
+  @override
+  String get currentPasswordRequired => 'Current password is required';
+
+  @override
+  String get newPasswordRequired => 'New password is required';
+
+  @override
+  String get confirmNewPassword => 'Confirm New Password';
+
+  @override
+  String get confirmNewPasswordRequired => 'Confirm new password is required';
+
+  @override
+  String get passwordMinRequirements =>
+      'At least 8 characters with uppercase letter, number and special character';
+
+  @override
+  String get passwordsNotMatch => 'Passwords do not match';
+
+  @override
+  String get phoneNumberLabel => 'Phone Number';
+
+  @override
+  String get genderLabel => 'Gender';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get quickActions => 'Quick Actions';
+
+  @override
+  String get retryLabel => 'Retry';
+
+  @override
+  String get searchOrders => 'Search orders...';
+
+  @override
+  String get noSearchResults => 'No results found';
+
+  @override
+  String get rentalPeriod => 'Rental Period';
+
+  @override
+  String get orderTotal => 'Total';
+
+  @override
+  String get deliveryMethodLabel => 'Delivery';
+
+  @override
+  String get errorLoadingOrders => 'Failed to load orders. Please try again.';
+
+  @override
+  String get orderDetailLabel => 'Order';
+
+  @override
+  String get ownerLabel => 'Owner';
+
+  @override
+  String get dayLabel => 'day(s)';
+
+  @override
+  String get pricingSummary => 'Pricing Summary';
+
+  @override
+  String get rentalPriceLabel => 'Rental Price';
+
+  @override
+  String get insurancePriceLabel => 'Insurance Deposit';
+
+  @override
+  String get serviceFeeLabel => 'Service Fee';
+
+  @override
+  String get approveOrderLabel => 'Approve';
+
+  @override
+  String get rejectOrderLabel => 'Reject';
+
+  @override
+  String get shipOrderLabel => 'Mark as Shipped';
+
+  @override
+  String get cancelOrderLabel => 'Cancel Order';
+
+  @override
+  String get confirmReceiptLabel => 'Confirm Receipt';
+
+  @override
+  String get returnOrderLabel => 'Return';
+
+  @override
+  String get rejectReasonTitle => 'Rejection Reason';
+
+  @override
+  String get rejectReasonHint => 'Enter reason for rejection';
+
+  @override
+  String get returnReasonTitle => 'Return Reason';
+
+  @override
+  String get returnReasonHint => 'Enter reason for return';
+
+  @override
+  String get cancelOrderTitle => 'Cancel Order?';
+
+  @override
+  String get cancelOrderMessage =>
+      'Are you sure you want to cancel this order? This action cannot be undone.';
+
+  @override
+  String get returnOrderTitle => 'Return Order?';
+
+  @override
+  String get returnOrderMessage =>
+      'Are you sure you want to return this item? Please ensure it is in the same condition.';
+
+  @override
+  String get orderStatusTimeline => 'Status Timeline';
+
+  @override
+  String get orderPlaced => 'Order Placed';
+
+  @override
+  String get orderPlacedDesc =>
+      'Your order has been placed and is awaiting owner approval.';
+
+  @override
+  String get pendingApproval => 'Pending Approval';
+
+  @override
+  String get pendingApprovalDesc =>
+      'Waiting for the owner to approve your rental request.';
+
+  @override
+  String get orderApproved => 'Approved';
+
+  @override
+  String get orderApprovedDesc =>
+      'The owner has approved your order. Preparing for shipment.';
+
+  @override
+  String get orderShipped => 'Shipped';
+
+  @override
+  String get orderShippedDesc =>
+      'Your order has been shipped and is on the way.';
+
+  @override
+  String get confirmedReceipt => 'Confirmed Receipt';
+
+  @override
+  String get confirmedReceiptDesc => 'You have confirmed receipt of the item.';
+
+  @override
+  String get orderReturned => 'Returned';
+
+  @override
+  String get orderReturnedDesc => 'The item has been returned to the owner.';
+
+  @override
+  String get cancelledLabel => 'Cancelled';
 }

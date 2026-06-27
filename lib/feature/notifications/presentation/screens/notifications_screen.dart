@@ -26,7 +26,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
       context.read<NotificationCubit>().fetchNotifications();
     }
   }
@@ -44,7 +45,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       appBar: AppBar(
         title: Text(
           "Notifications", // Consider moving to context.l10n later if needed
-          style: AppStyles.titleMedium.copyWith(color: AppColors.textPrimaryColor),
+          style: AppStyles.titleMedium.copyWith(
+            color: AppColors.textPrimaryColor,
+          ),
         ),
         centerTitle: true,
         actions: [
@@ -54,7 +57,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             },
             child: Text(
               "Mark all as read", // Consider moving to context.l10n
-              style: AppStyles.bodySmall.copyWith(color: AppColors.primaryColor),
+              style: AppStyles.bodySmall.copyWith(
+                color: AppColors.primaryColor,
+              ),
             ),
           ),
         ],
@@ -71,7 +76,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   Text(state.message, style: AppStyles.bodyMedium),
                   SizedBox(height: 16.h),
                   ElevatedButton(
-                    onPressed: () => context.read<NotificationCubit>().fetchNotifications(isRefresh: true),
+                    onPressed: () => context
+                        .read<NotificationCubit>()
+                        .fetchNotifications(isRefresh: true),
                     child: Text("Retry"),
                   ),
                 ],
@@ -82,18 +89,23 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               return Center(
                 child: Text(
                   "No notifications yet.", // Consider moving to context.l10n later
-                  style: AppStyles.bodyMedium.copyWith(color: AppColors.textSecondaryColor),
+                  style: AppStyles.bodyMedium.copyWith(
+                    color: AppColors.textSecondaryColor,
+                  ),
                 ),
               );
             }
 
             return RefreshIndicator(
-              onRefresh: () => context.read<NotificationCubit>().fetchNotifications(isRefresh: true),
+              onRefresh: () => context
+                  .read<NotificationCubit>()
+                  .fetchNotifications(isRefresh: true),
               color: AppColors.primaryColor,
               child: ListView.builder(
                 controller: _scrollController,
                 physics: const AlwaysScrollableScrollPhysics(),
-                itemCount: state.notifications.length + (state.hasReachedMax ? 0 : 1),
+                itemCount:
+                    state.notifications.length + (state.hasReachedMax ? 0 : 1),
                 itemBuilder: (context, index) {
                   if (index >= state.notifications.length) {
                     return Padding(
@@ -107,7 +119,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     notification: notification,
                     onTap: () {
                       if (!notification.isRead) {
-                        context.read<NotificationCubit>().readNotification(notification.id);
+                        context.read<NotificationCubit>().readNotification(
+                          notification.id,
+                        );
                       }
                     },
                   );

@@ -19,43 +19,74 @@ class MessageModel extends MessageEntity {
     Map<String, dynamic> json, {
     String? currentUserId,
   }) {
-    final senderId = _stringValue(
-      json,
-      const ['senderId', 'sender_id', 'fromUserId', 'userId', 'ownerId'],
-    );
-    final content = _stringValue(
-      json,
-      const ['content', 'text', 'body', 'message', 'messageText'],
-    );
+    final senderId = _stringValue(json, const [
+      'senderId',
+      'sender_id',
+      'fromUserId',
+      'userId',
+      'ownerId',
+    ]);
+    final content = _stringValue(json, const [
+      'content',
+      'text',
+      'body',
+      'message',
+      'messageText',
+    ]);
     final conversationId = _parseInt(
-      _firstValue(json, const ['conversationId', 'conversation_id', 'chatId', 'roomId']),
+      _firstValue(json, const [
+        'conversationId',
+        'conversation_id',
+        'chatId',
+        'roomId',
+      ]),
     );
-    final id = _parseInt(_firstValue(json, const ['id', 'messageId', 'message_id']));
-    final timestamp = _nullableDateTime(
-          _firstValue(json, const ['timestamp', 'createdAt', 'sentAt', 'date', 'time']),
+    final id = _parseInt(
+      _firstValue(json, const ['id', 'messageId', 'message_id']),
+    );
+    final timestamp =
+        _nullableDateTime(
+          _firstValue(json, const [
+            'timestamp',
+            'createdAt',
+            'sentAt',
+            'date',
+            'time',
+          ]),
         ) ??
         DateTime.now();
     final status = ChatMessageStatusX.fromValue(
-      _firstValue(json, const ['status', 'messageStatus', 'deliveryStatus', 'state']),
+      _firstValue(json, const [
+        'status',
+        'messageStatus',
+        'deliveryStatus',
+        'state',
+      ]),
     );
-    final senderName = _stringValue(
-      json,
-      const ['senderName', 'fullName', 'name', 'userName'],
-    );
-    final senderAvatar = _stringValue(
-      json,
-      const ['senderAvatar', 'avatar', 'profileImage', 'image'],
-    );
-    final clientMessageId = _stringValue(
-      json,
-      const ['clientMessageId', 'client_message_id', 'localId', 'tempId'],
-    );
+    final senderName = _stringValue(json, const [
+      'senderName',
+      'fullName',
+      'name',
+      'userName',
+    ]);
+    final senderAvatar = _stringValue(json, const [
+      'senderAvatar',
+      'avatar',
+      'profileImage',
+      'image',
+    ]);
+    final clientMessageId = _stringValue(json, const [
+      'clientMessageId',
+      'client_message_id',
+      'localId',
+      'tempId',
+    ]);
     final isMineValue = _firstValue(json, const ['isMine', 'mine', 'sentByMe']);
     final isMine = isMineValue is bool
         ? isMineValue
         : currentUserId != null && currentUserId.isNotEmpty
-            ? senderId == currentUserId
-            : false;
+        ? senderId == currentUserId
+        : false;
 
     return MessageModel(
       id: id,

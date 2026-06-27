@@ -111,23 +111,17 @@ class _BookingFlowScreenState extends State<BookingFlowScreen> {
                   BookingDetailsScreen(
                     product: widget.product,
                     onBackPressed: () => Navigator.of(context).pop(),
-                    onNextStep: (
-                      step,
-                      startDate,
-                      endDate,
-                      street,
-                      city,
-                      governorate,
-                    ) {
-                      setState(() {
-                        _startDate = startDate;
-                        _endDate = endDate;
-                        _street = street;
-                        _city = city;
-                        _governorate = governorate;
-                      });
-                      _goToStep(step);
-                    },
+                    onNextStep:
+                        (step, startDate, endDate, street, city, governorate) {
+                          setState(() {
+                            _startDate = startDate;
+                            _endDate = endDate;
+                            _street = street;
+                            _city = city;
+                            _governorate = governorate;
+                          });
+                          _goToStep(step);
+                        },
                   ),
                   BookingInsuranceScreen(
                     onBackPressed: () => _goToStep(1),

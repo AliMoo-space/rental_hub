@@ -8,7 +8,17 @@ class GetMyOrdersUseCase {
 
   GetMyOrdersUseCase({required this.repository});
 
-  Future<Either<Failure, List<RentalOrderEntity>>> call({String? status, int pageNumber = 1, int pageSize = 10}) async {
-    return await repository.getMyOrders(status: status, pageNumber: pageNumber, pageSize: pageSize);
+  Future<Either<Failure, List<RentalOrderEntity>>> call({
+    String? status,
+    String? searchTerm,
+    int pageNumber = 1,
+    int pageSize = 10,
+  }) async {
+    return await repository.getMyOrders(
+      status: status,
+      searchTerm: searchTerm,
+      pageNumber: pageNumber,
+      pageSize: pageSize,
+    );
   }
 }

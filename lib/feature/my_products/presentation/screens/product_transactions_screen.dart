@@ -25,9 +25,7 @@ class _ProductTransactionsScreenState extends State<ProductTransactionsScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      context
-          .read<OwnerStatsCubit>()
-          .loadProductTransactions(widget.productId);
+      context.read<OwnerStatsCubit>().loadProductTransactions(widget.productId);
     });
   }
 

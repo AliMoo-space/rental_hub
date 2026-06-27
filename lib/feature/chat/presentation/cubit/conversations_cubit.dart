@@ -9,10 +9,12 @@ class ConversationsCubit extends Cubit<ConversationsState> {
   final GetConversationsUseCase getConversationsUseCase;
 
   ConversationsCubit(this.getConversationsUseCase)
-      : super(const ConversationsState());
+    : super(const ConversationsState());
 
   Future<void> loadConversations() async {
-    emit(state.copyWith(status: ConversationsStatus.loading, errorMessage: null));
+    emit(
+      state.copyWith(status: ConversationsStatus.loading, errorMessage: null),
+    );
 
     final result = await getConversationsUseCase();
 

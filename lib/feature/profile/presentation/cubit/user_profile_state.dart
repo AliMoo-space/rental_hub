@@ -9,7 +9,7 @@ abstract class UserProfileState extends Equatable {
   const UserProfileState({this.userProfile, this.message, this.imageUrl});
 
   @override
-  List<Object?> get props => [userProfile, message, imageUrl, runtimeType];
+  List<Object?> get props => [userProfile, message, imageUrl];
 }
 
 class UserProfileInitial extends UserProfileState {
@@ -29,10 +29,7 @@ class UserProfileUpdating extends UserProfileState {
 }
 
 class UserProfileUpdateSuccess extends UserProfileState {
-  const UserProfileUpdateSuccess({
-    required super.userProfile,
-    super.message = 'تم حفظ التغييرات بنجاح',
-  });
+  const UserProfileUpdateSuccess({required super.userProfile, super.message});
 }
 
 class ImageUploading extends UserProfileState {
@@ -43,7 +40,7 @@ class ImageUploadSuccess extends UserProfileState {
   const ImageUploadSuccess({
     required super.userProfile,
     required super.imageUrl,
-    super.message = 'تم تحديث الصورة الشخصية',
+    super.message,
   });
 }
 
@@ -52,10 +49,7 @@ class PasswordChanging extends UserProfileState {
 }
 
 class PasswordChangeSuccess extends UserProfileState {
-  const PasswordChangeSuccess({
-    super.userProfile,
-    super.message = 'تم تغيير كلمة المرور بنجاح',
-  });
+  const PasswordChangeSuccess({super.userProfile, super.message});
 }
 
 class UserProfileError extends UserProfileState {

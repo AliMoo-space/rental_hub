@@ -28,6 +28,7 @@ class ProductDetailsEntity {
   final int subcategoryId;
   final String subcategoryName;
   final List<String> images;
+  final bool isFavorite;
 
   ProductDetailsEntity({
     required this.id,
@@ -59,5 +60,6 @@ class ProductDetailsEntity {
     required this.subcategoryId,
     required this.subcategoryName,
     required this.images,
+    this.isFavorite = false,
   });
 }

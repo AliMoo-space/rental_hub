@@ -34,7 +34,6 @@ abstract class UserProfileRemoteDataSource {
 
 class UserProfileRemoteDataSourceImpl implements UserProfileRemoteDataSource {
   final ApiConsumer apiConsumer;
-  static const String _imageBaseUrl = 'http://rentalplatform.runasp.net';
 
   UserProfileRemoteDataSourceImpl(this.apiConsumer);
 
@@ -160,9 +159,9 @@ class UserProfileRemoteDataSourceImpl implements UserProfileRemoteDataSource {
     }
 
     if (trimmed.startsWith('/')) {
-      return '$_imageBaseUrl$trimmed';
+      return '${EndPoints.baseUrl}$trimmed';
     }
 
-    return '$_imageBaseUrl/$trimmed';
+    return '${EndPoints.baseUrl}/$trimmed';
   }
 }

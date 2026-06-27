@@ -41,8 +41,8 @@ class _ProductStatsScreenState extends State<ProductStatsScreen> {
           appBar: AppBar(title: const Text('إحصائيات المنتج')),
           body: RefreshIndicator(
             onRefresh: () => context.read<OwnerStatsCubit>().loadProductStats(
-                  widget.productId,
-                ),
+              widget.productId,
+            ),
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.all(16.w),

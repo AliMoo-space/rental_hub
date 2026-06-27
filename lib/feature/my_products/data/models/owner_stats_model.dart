@@ -11,11 +11,30 @@ class OwnerStatsModel extends OwnerStatsEntity {
 
   factory OwnerStatsModel.fromJson(Map<String, dynamic> json) {
     return OwnerStatsModel(
-      totalProducts: _parseInt(json['totalProducts'] ?? json['total_products'] ?? json['productsCount']),
-      activeProducts: _parseInt(json['activeProducts'] ?? json['active_products'] ?? json['activeCount']),
-      suspendedProducts: _parseInt(json['suspendedProducts'] ?? json['suspended_products'] ?? json['suspendedCount']),
-      totalRentals: _parseInt(json['totalRentals'] ?? json['total_rentals'] ?? json['rentalsCount']),
-      totalEarnings: _parseDouble(json['totalEarnings'] ?? json['total_earnings'] ?? json['earnings'] ?? json['totalRevenue']),
+      totalProducts: _parseInt(
+        json['totalProducts'] ??
+            json['total_products'] ??
+            json['productsCount'],
+      ),
+      activeProducts: _parseInt(
+        json['activeProducts'] ??
+            json['active_products'] ??
+            json['activeCount'],
+      ),
+      suspendedProducts: _parseInt(
+        json['suspendedProducts'] ??
+            json['suspended_products'] ??
+            json['suspendedCount'],
+      ),
+      totalRentals: _parseInt(
+        json['totalRentals'] ?? json['total_rentals'] ?? json['rentalsCount'],
+      ),
+      totalEarnings: _parseDouble(
+        json['totalEarnings'] ??
+            json['total_earnings'] ??
+            json['earnings'] ??
+            json['totalRevenue'],
+      ),
     );
   }
 

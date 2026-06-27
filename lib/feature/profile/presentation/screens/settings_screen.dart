@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
 import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
+import 'package:rental_hub/feature/localization/presentation/cubit/locale_cubit.dart';
+import 'package:rental_hub/l10n/generated/app_localizations.dart';
 
-/// Settings screen with various app and account settings
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -21,7 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffF5F6FA),
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         title: Text(context.l10n.settings, style: AppStyles.titleMedium),
       ),
@@ -29,174 +31,157 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Column(
           children: [
             verticalSpacing(16),
-
-            // Account Settings Section
             _SettingsSection(
-              title: 'حساب',
+              title: context.l10n.accountSettings,
               children: [
                 _SettingsTile(
                   icon: Icons.person_outline,
-                  title: 'بيانات الحساب',
-                  onTap: () {
-                    // Navigate to account settings
-                  },
+                  title: context.l10n.accountData,
+                  onTap: () {},
                 ),
                 _SettingsTile(
                   icon: Icons.security_outlined,
-                  title: 'تغيير كلمة المرور',
-                  onTap: () {
-                    // Navigate to change password
-                  },
+                  title: context.l10n.changePassword,
+                  onTap: () {},
                 ),
-                _SettingsTile(
-                  icon: Icons.language_outlined,
-                  title: 'اللغة',
-                  onTap: () {
-                    // Change language
+                BlocBuilder<LocaleCubit, LocaleState>(
+                  builder: (context, localeState) {
+                    final isArabic = localeState.locale.languageCode == 'ar';
+                    return _SettingsTile(
+                      icon: Icons.language_outlined,
+                      title: context.l10n.language,
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            isArabic
+                                ? context.l10n.arabic
+                                : context.l10n.english,
+                            style: AppStyles.bodyMedium.copyWith(
+                              color: AppColors.textSecondaryColor,
+                            ),
+                          ),
+                          SizedBox(width: 4.w),
+                          Icon(
+                            Icons.g_translate_rounded,
+                            size: 18.sp,
+                            color: AppColors.textSecondaryColor,
+                          ),
+                        ],
+                      ),
+                      onTap: () => context.read<LocaleCubit>().toggleLanguage(
+                        AppLocalizations.supportedLocales,
+                      ),
+                    );
                   },
                 ),
               ],
             ),
             verticalSpacing(16),
-
-            // Notification Settings
             _SettingsSection(
-              title: 'التنبيهات والإشعارات',
+              title: context.l10n.notificationSettings,
               children: [
                 _SettingsToggleTile(
                   icon: Icons.notifications_outlined,
-                  title: 'تنبيهات التطبيق',
+                  title: context.l10n.pushNotifications,
                   value: _notificationsEnabled,
-                  onChanged: (value) {
-                    setState(() => _notificationsEnabled = value);
-                  },
+                  onChanged: (v) => setState(() => _notificationsEnabled = v),
                 ),
                 _SettingsToggleTile(
                   icon: Icons.mail_outline,
-                  title: 'تحديثات البريد الإلكتروني',
+                  title: context.l10n.emailUpdates,
                   value: _emailNotificationsEnabled,
-                  onChanged: (value) {
-                    setState(() => _emailNotificationsEnabled = value);
-                  },
+                  onChanged: (v) =>
+                      setState(() => _emailNotificationsEnabled = v),
                 ),
                 _SettingsToggleTile(
                   icon: Icons.sms_outlined,
-                  title: 'رسائل نصية',
+                  title: context.l10n.smsNotifications,
                   value: _smsNotificationsEnabled,
-                  onChanged: (value) {
-                    setState(() => _smsNotificationsEnabled = value);
-                  },
+                  onChanged: (v) =>
+                      setState(() => _smsNotificationsEnabled = v),
                 ),
               ],
             ),
             verticalSpacing(16),
-
-            // Privacy & Security
             _SettingsSection(
-              title: 'الخصوصية والأمان',
+              title: context.l10n.privacySecurity,
               children: [
                 _SettingsTile(
                   icon: Icons.privacy_tip_outlined,
-                  title: 'سياسة الخصوصية',
-                  onTap: () {
-                    // Open privacy policy
-                  },
+                  title: context.l10n.privacyPolicy,
+                  onTap: () {},
                 ),
                 _SettingsTile(
                   icon: Icons.description_outlined,
-                  title: 'شروط الاستخدام',
-                  onTap: () {
-                    // Open terms of service
-                  },
+                  title: context.l10n.termsOfUse,
+                  onTap: () {},
                 ),
               ],
             ),
             verticalSpacing(16),
-
-            // Support
             _SettingsSection(
-              title: 'دعم',
+              title: context.l10n.support,
               children: [
                 _SettingsTile(
                   icon: Icons.help_outline,
-                  title: 'المساعدة والدعم',
-                  onTap: () {
-                    // Open help center
-                  },
+                  title: context.l10n.helpSupport,
+                  onTap: () {},
                 ),
                 _SettingsTile(
                   icon: Icons.mail_outline,
-                  title: 'اتصل بنا',
-                  onTap: () {
-                    // Open contact form
-                  },
+                  title: context.l10n.contactUs,
+                  onTap: () {},
                 ),
                 _SettingsTile(
                   icon: Icons.rate_review_outlined,
-                  title: 'قيم التطبيق',
-                  onTap: () {
-                    // Open app store to rate
-                  },
+                  title: context.l10n.rateApp,
+                  onTap: () {},
                 ),
               ],
             ),
             verticalSpacing(16),
-
-            // About
             _SettingsSection(
-              title: 'حول التطبيق',
+              title: context.l10n.aboutApp,
               children: [
                 _SettingsTile(
                   icon: Icons.info_outline,
-                  title: 'عن التطبيق',
+                  title: context.l10n.aboutApp,
                   subtitle: 'v1.0.0',
-                  onTap: () {
-                    // Show about dialog
-                  },
+                  onTap: () {},
                 ),
                 _SettingsTile(
                   icon: Icons.update_outlined,
-                  title: 'البحث عن التحديثات',
-                  onTap: () {
-                    // Check for updates
-                  },
+                  title: context.l10n.checkUpdates,
+                  onTap: () {},
                 ),
               ],
             ),
             verticalSpacing(32),
-
-            // Danger Zone
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50.h,
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(
-                          color: AppColors.errorColor,
-                          width: 1.5,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                      ),
-                      onPressed: () {
-                        // Logout
-                        _showLogoutConfirmation();
-                      },
-                      child: Text(
-                        'تعطيل الحساب',
-                        style: AppStyles.bodyLarge.copyWith(
-                          color: AppColors.errorColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+              child: SizedBox(
+                width: double.infinity,
+                height: 50.h,
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(
+                      color: AppColors.errorColor,
+                      width: 1.5,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
                   ),
-                ],
+                  onPressed: _showLogoutConfirmation,
+                  child: Text(
+                    context.l10n.disableAccount,
+                    style: AppStyles.bodyLarge.copyWith(
+                      color: AppColors.errorColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
               ),
             ),
             verticalSpacing(32),
@@ -209,15 +194,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _showLogoutConfirmation() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('تأكيد تسجيل الخروج', style: AppStyles.titleMedium),
+      builder: (ctx) => AlertDialog(
+        title: Text(context.l10n.confirmLogout, style: AppStyles.titleMedium),
         content: Text(
-          'هل أنت متأكد من رغبتك في تسجيل الخروج؟',
+          context.l10n.logoutConfirmation,
           style: AppStyles.bodyMedium,
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(ctx),
             child: Text(
               context.l10n.cancel,
               style: AppStyles.bodyLarge.copyWith(
@@ -227,7 +212,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(ctx);
               // Perform logout
             },
             child: Text(
@@ -272,16 +257,15 @@ class _SettingsSection extends StatelessWidget {
               border: Border.all(color: AppColors.borderColor),
             ),
             child: Column(
-              children: List.generate(
-                children.length,
-                (index) => Column(
+              children: List.generate(children.length, (index) {
+                return Column(
                   children: [
                     children[index],
                     if (index < children.length - 1)
                       Divider(color: AppColors.borderColor, height: 1),
                   ],
-                ),
-              ),
+                );
+              }),
             ),
           ),
         ],
@@ -294,12 +278,14 @@ class _SettingsTile extends StatelessWidget {
   final IconData icon;
   final String title;
   final String? subtitle;
+  final Widget? trailing;
   final VoidCallback onTap;
 
   const _SettingsTile({
     required this.icon,
     required this.title,
     this.subtitle,
+    this.trailing,
     required this.onTap,
   });
 
@@ -337,11 +323,12 @@ class _SettingsTile extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(
-                Icons.arrow_forward_ios,
-                color: AppColors.textMutedColor,
-                size: 16.w,
-              ),
+              trailing ??
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColors.textMutedColor,
+                    size: 16.w,
+                  ),
             ],
           ),
         ),
@@ -354,7 +341,7 @@ class _SettingsToggleTile extends StatelessWidget {
   final IconData icon;
   final String title;
   final bool value;
-  final Function(bool) onChanged;
+  final ValueChanged<bool> onChanged;
 
   const _SettingsToggleTile({
     required this.icon,

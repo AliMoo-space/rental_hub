@@ -23,7 +23,9 @@ class NotificationItemWidget extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: notification.isRead ? AppColors.whiteColor : AppColors.primaryColor.withValues(alpha: 0.05),
+          color: notification.isRead
+              ? AppColors.whiteColor
+              : AppColors.primaryColor.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
             color: notification.isRead
@@ -49,7 +51,9 @@ class NotificationItemWidget extends StatelessWidget {
               margin: EdgeInsets.only(top: 6.h, right: 12.w),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: notification.isRead ? Colors.transparent : AppColors.primaryColor,
+                color: notification.isRead
+                    ? Colors.transparent
+                    : AppColors.primaryColor,
               ),
             ),
             Expanded(
@@ -58,18 +62,26 @@ class NotificationItemWidget extends StatelessWidget {
                 children: [
                   Text(
                     notification.title,
-                    style: AppStyles.bodyLarge.copyWith(color: AppColors.textPrimaryColor),
+                    style: AppStyles.bodyLarge.copyWith(
+                      color: AppColors.textPrimaryColor,
+                    ),
                   ),
                   SizedBox(height: 4.h),
                   Text(
                     notification.body,
-                    style: AppStyles.bodySmall.copyWith(color: AppColors.textSecondaryColor),
+                    style: AppStyles.bodySmall.copyWith(
+                      color: AppColors.textSecondaryColor,
+                    ),
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    DateFormat('MMM dd, yyyy - hh:mm a').format(notification.createdAt),
+                    DateFormat(
+                      'MMM dd, yyyy - hh:mm a',
+                    ).format(notification.createdAt),
                     style: AppStyles.labelSmall.copyWith(
-                      color: AppColors.textSecondaryColor.withValues(alpha: 0.7),
+                      color: AppColors.textSecondaryColor.withValues(
+                        alpha: 0.7,
+                      ),
                     ),
                   ),
                 ],

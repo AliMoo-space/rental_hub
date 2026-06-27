@@ -25,14 +25,19 @@ class CommunityOfferModel extends CommunityOfferEntity {
       requestId: _parseInt(json['requestId'] ?? json['RequestId']),
       requestTitle:
           json['requestTitle']?.toString() ?? json['RequestTitle']?.toString(),
-      proposedPrice: _parseDouble(json['proposedPrice'] ?? json['ProposedPrice']),
+      proposedPrice: _parseDouble(
+        json['proposedPrice'] ?? json['ProposedPrice'],
+      ),
       message: json['message']?.toString() ?? json['Message']?.toString() ?? '',
       imageUrl: _parseImageUrl(
-          json['imageUrl']?.toString() ??
-          json['image']?.toString() ??
-          json['Image']?.toString()),
+        json['imageUrl']?.toString() ??
+            json['image']?.toString() ??
+            json['Image']?.toString(),
+      ),
       governorate:
-          json['governorate']?.toString() ?? json['Governorate']?.toString() ?? '',
+          json['governorate']?.toString() ??
+          json['Governorate']?.toString() ??
+          '',
       city: json['city']?.toString() ?? json['City']?.toString() ?? '',
       address: json['address']?.toString() ?? json['Address']?.toString() ?? '',
       offererId:
@@ -46,9 +51,10 @@ class CommunityOfferModel extends CommunityOfferEntity {
           json['UserFullName']?.toString() ??
           '',
       offererImageUrl: _parseImageUrl(
-          json['offererImageUrl']?.toString() ??
-          json['userImageUrl']?.toString() ??
-          json['UserImage']?.toString()),
+        json['offererImageUrl']?.toString() ??
+            json['userImageUrl']?.toString() ??
+            json['UserImage']?.toString(),
+      ),
       status: json['status']?.toString() ?? json['Status']?.toString() ?? '',
       createdAt: _parseDate(json['createdAt'] ?? json['CreatedAt']),
     );
@@ -88,7 +94,10 @@ class CommunityOffersPageModel extends CommunityOffersPageEntity {
     if (raw is List) {
       final items = raw
           .whereType<Map>()
-          .map((item) => CommunityOfferModel.fromJson(Map<String, dynamic>.from(item)))
+          .map(
+            (item) =>
+                CommunityOfferModel.fromJson(Map<String, dynamic>.from(item)),
+          )
           .toList();
       return CommunityOffersPageModel(items: items);
     }
@@ -97,7 +106,10 @@ class CommunityOffersPageModel extends CommunityOffersPageEntity {
       final itemsValue = raw['items'] as List? ?? const [];
       final items = itemsValue
           .whereType<Map>()
-          .map((item) => CommunityOfferModel.fromJson(Map<String, dynamic>.from(item)))
+          .map(
+            (item) =>
+                CommunityOfferModel.fromJson(Map<String, dynamic>.from(item)),
+          )
           .toList();
       return CommunityOffersPageModel(items: items);
     }

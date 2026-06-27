@@ -5,8 +5,6 @@ class FavoriteEntity {
   FavoriteEntity({required this.favoriteId, required this.message});
 }
 
-  
-
 // {
 //     "message": "تمت إضافة المنتج إلى المفضلة",
 //     "favoriteId": 3

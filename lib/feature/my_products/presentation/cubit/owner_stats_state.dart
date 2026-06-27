@@ -39,8 +39,7 @@ class OwnerStatsState extends Equatable {
     String? errorMessage,
   }) {
     return OwnerStatsState(
-      isOwnerStatsLoading:
-          isOwnerStatsLoading ?? this.isOwnerStatsLoading,
+      isOwnerStatsLoading: isOwnerStatsLoading ?? this.isOwnerStatsLoading,
       isProductStatsLoading:
           isProductStatsLoading ?? this.isProductStatsLoading,
       isTransactionsLoading:
@@ -56,14 +55,14 @@ class OwnerStatsState extends Equatable {
 
   @override
   List<Object?> get props => [
-        isOwnerStatsLoading,
-        isProductStatsLoading,
-        isTransactionsLoading,
-        isRequestsLoading,
-        ownerStats,
-        productStats,
-        transactions,
-        rentalRequests,
-        errorMessage,
-      ];
+    isOwnerStatsLoading,
+    isProductStatsLoading,
+    isTransactionsLoading,
+    isRequestsLoading,
+    ownerStats,
+    productStats,
+    transactions,
+    rentalRequests,
+    errorMessage,
+  ];
 }

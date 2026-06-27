@@ -1,6 +1,6 @@
+import 'package:rental_hub/core/databases/api/end_points.dart';
 import 'package:rental_hub/core/models/paginated_response_model.dart';
 import 'package:rental_hub/feature/community/domain/entities/community_request_entity.dart';
-import 'package:rental_hub/core/databases/api/end_points.dart';
 
 class CommunityRequestModel extends CommunityRequestEntity {
   const CommunityRequestModel({
@@ -22,6 +22,7 @@ class CommunityRequestModel extends CommunityRequestEntity {
     required super.userFullName,
     super.userImageUrl,
     required super.status,
+    super.rejectionReason,
     super.createdAt,
     super.offersCount,
   });
@@ -31,14 +32,18 @@ class CommunityRequestModel extends CommunityRequestEntity {
       id: _parseInt(json['id']),
       categoryId: _parseInt(json['categoryId'] ?? json['CategoryId']),
       categoryName:
-          json['categoryName']?.toString() ?? json['CategoryName']?.toString() ?? '',
+          json['categoryName']?.toString() ??
+          json['CategoryName']?.toString() ??
+          '',
       subcategoryId: _parseInt(json['subcategoryId'] ?? json['SubcategoryId']),
       subcategoryName:
           json['subcategoryName']?.toString() ??
           json['SubcategoryName']?.toString() ??
           '',
       governorate:
-          json['governorate']?.toString() ?? json['Governorate']?.toString() ?? '',
+          json['governorate']?.toString() ??
+          json['Governorate']?.toString() ??
+          '',
       city: json['city']?.toString() ?? json['City']?.toString() ?? '',
       address: json['address']?.toString() ?? json['Address']?.toString() ?? '',
       title: json['title']?.toString() ?? json['Title']?.toString() ?? '',
@@ -46,22 +51,31 @@ class CommunityRequestModel extends CommunityRequestEntity {
       startDate: _parseDate(json['startDate'] ?? json['StartDate']),
       endDate: _parseDate(json['endDate'] ?? json['EndDate']),
       description:
-          json['description']?.toString() ?? json['Description']?.toString() ?? '',
+          json['description']?.toString() ??
+          json['Description']?.toString() ??
+          '',
       imageUrl: _parseImageUrl(
-          json['imageUrl']?.toString() ??
-          json['image']?.toString() ??
-          json['Image']?.toString()),
+        json['imageUrl']?.toString() ??
+            json['image']?.toString() ??
+            json['Image']?.toString(),
+      ),
       userId: json['userId']?.toString() ?? json['UserId']?.toString() ?? '',
       userFullName:
           json['userFullName']?.toString() ??
           json['UserFullName']?.toString() ??
+          json['userName']?.toString() ??
+          json['UserName']?.toString() ??
           json['ownerName']?.toString() ??
           '',
       userImageUrl: _parseImageUrl(
-          json['userImageUrl']?.toString() ??
-          json['userImage']?.toString() ??
-          json['UserImage']?.toString()),
+        json['userImageUrl']?.toString() ??
+            json['userImage']?.toString() ??
+            json['UserImage']?.toString(),
+      ),
       status: json['status']?.toString() ?? json['Status']?.toString() ?? '',
+      rejectionReason:
+          json['rejectionReason']?.toString() ??
+          json['RejectionReason']?.toString(),
       createdAt: _parseDate(json['createdAt'] ?? json['CreatedAt']),
       offersCount: _parseInt(json['offersCount'] ?? json['OffersCount']),
     );
@@ -86,10 +100,21 @@ class CommunityRequestModel extends CommunityRequestEntity {
 
   static String? _parseImageUrl(dynamic imageObj) {
     if (imageObj == null) return null;
+
     String url = imageObj.toString();
-    if (url.isEmpty || url.toLowerCase() == 'null') return null;
-    if (url.startsWith('http://') || url.startsWith('https://')) return url;
-    if (!url.startsWith('/')) url = '/$url';
+
+    if (url.isEmpty || url.toLowerCase() == 'null') {
+      return null;
+    }
+
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+
+    if (!url.startsWith('/')) {
+      url = '/$url';
+    }
+
     return '${EndPoints.baseUrl}$url';
   }
 }
@@ -125,7 +150,10 @@ class CommunityRequestsPageModel extends CommunityRequestsPageEntity {
   factory CommunityRequestsPageModel.fromList(List<dynamic> raw) {
     final items = raw
         .whereType<Map>()
-        .map((item) => CommunityRequestModel.fromJson(Map<String, dynamic>.from(item)))
+        .map(
+          (item) =>
+              CommunityRequestModel.fromJson(Map<String, dynamic>.from(item)),
+        )
         .toList();
 
     return CommunityRequestsPageModel(

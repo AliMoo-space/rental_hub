@@ -38,9 +38,7 @@ class _OwnerStatsScreenState extends State<OwnerStatsScreen> {
 
         return Scaffold(
           backgroundColor: const Color(0xffF7F8FC),
-          appBar: AppBar(
-            title: const Text('لوحة المالك'),
-          ),
+          appBar: AppBar(title: const Text('لوحة المالك')),
           body: RefreshIndicator(
             onRefresh: context.read<OwnerStatsCubit>().loadOwnerStats,
             child: ListView(
@@ -75,7 +73,8 @@ class _OwnerStatsScreenState extends State<OwnerStatsScreen> {
                           ),
                           _StatCard(
                             label: 'المنتجات الموقوفة',
-                            value: state.ownerStats!.suspendedProducts.toString(),
+                            value: state.ownerStats!.suspendedProducts
+                                .toString(),
                             icon: Icons.pause_circle_outline,
                           ),
                           _StatCard(

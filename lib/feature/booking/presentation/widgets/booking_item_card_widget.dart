@@ -42,10 +42,7 @@ class BookingItemCardWidget extends StatelessWidget {
               width: 80.w,
               height: 80.w,
               color: AppColors.surfaceColor,
-              child: AppNetworkImage(
-                images: [imageUrl],
-                fit: BoxFit.cover,
-              ),
+              child: AppNetworkImage(images: [imageUrl], fit: BoxFit.cover),
             ),
           ),
           const WidthSpace(12),

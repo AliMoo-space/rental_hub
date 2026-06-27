@@ -30,7 +30,16 @@ class BookingActionCubit extends Cubit<BookingActionState> {
 
   Future<void> createRentalOrder(CreateRentalOrderDto dto) async {
     emit(BookingActionLoading());
-    final result = await createOrderUseCase(dto);
+    final result = await createOrderUseCase(
+      productId: dto.productId,
+      startDate: dto.startDate,
+      endDate: dto.endDate,
+      deliveryMethod: dto.deliveryMethod,
+      street: dto.street,
+      city: dto.city,
+      governorate: dto.governorate,
+      termsAgreed: dto.termsAgreed,
+    );
     result.fold(
       (failure) => emit(BookingActionFailure(errMessage: failure.errMessage)),
       (order) => emit(
@@ -48,9 +57,9 @@ class BookingActionCubit extends Cubit<BookingActionState> {
     );
   }
 
-  Future<void> rejectOrder(int id) async {
+  Future<void> rejectOrder(int id, {String? reason}) async {
     emit(BookingActionLoading());
-    final result = await rejectOrderUseCase(id);
+    final result = await rejectOrderUseCase(id, reason: reason);
     result.fold(
       (failure) => emit(BookingActionFailure(errMessage: failure.errMessage)),
       (_) => emit(BookingActionSuccess(errMessage: "تم رفض الطلب")),
@@ -84,9 +93,9 @@ class BookingActionCubit extends Cubit<BookingActionState> {
     );
   }
 
-  Future<void> returnOrder(int id) async {
+  Future<void> returnOrder(int id, {String? reason}) async {
     emit(BookingActionLoading());
-    final result = await returnOrderUseCase(id);
+    final result = await returnOrderUseCase(id, reason: reason);
     result.fold(
       (failure) => emit(BookingActionFailure(errMessage: failure.errMessage)),
       (_) => emit(BookingActionSuccess(errMessage: "تم إرجاع الطلب")),

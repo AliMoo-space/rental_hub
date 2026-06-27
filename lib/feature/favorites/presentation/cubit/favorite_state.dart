@@ -11,7 +11,17 @@ final class FavoriteInitial extends FavoriteState {}
 
 final class GetFavoritesLoading extends FavoriteState {}
 
-final class GetFavoritesSuccess extends FavoriteState {}
+final class GetFavoritesSuccess extends FavoriteState {
+  final Set<int> favoriteLoadingProductIds;
+
+  const GetFavoritesSuccess({this.favoriteLoadingProductIds = const {}});
+
+  bool isFavoriteLoading(int productId) =>
+      favoriteLoadingProductIds.contains(productId);
+
+  @override
+  List<Object?> get props => [favoriteLoadingProductIds];
+}
 
 final class GetFavoritesError extends FavoriteState {
   final String message;

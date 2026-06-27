@@ -24,7 +24,6 @@ class AddListingCubit extends Cubit<AddListingState> {
     this.getSubcategoriesUseCase,
   ) : super(const AddListingState());
 
-
   Future<void> loadCategories() async {
     emit(
       state.copyWith(
@@ -156,4 +155,3 @@ class AddListingCubit extends Cubit<AddListingState> {
     );
   }
 }
-

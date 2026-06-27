@@ -7,12 +7,18 @@ import 'package:rental_hub/feature/my_products/domain/entities/product_stats_ent
 import 'package:rental_hub/feature/my_products/domain/entities/product_transaction_entity.dart';
 
 abstract class MyProductsRepo {
-  Future<Either<Failure, ProductsEntity>> getMyProducts({required int pageNumber});
+  Future<Either<Failure, ProductsEntity>> getMyProducts({
+    required int pageNumber,
+  });
   Future<Either<Failure, String>> deleteProduct({required int id});
   Future<Either<Failure, String>> suspendProduct({required int id});
   Future<Either<Failure, String>> activateProduct({required int id});
   Future<Either<Failure, OwnerStatsEntity>> getOwnerStats();
-  Future<Either<Failure, ProductStatsEntity>> getProductStats({required int id});
-  Future<Either<Failure, List<ProductTransactionEntity>>> getProductTransactions({required int id});
-  Future<Either<Failure, List<ProductRentalRequestEntity>>> getProductRentalRequests({required int id});
+  Future<Either<Failure, ProductStatsEntity>> getProductStats({
+    required int id,
+  });
+  Future<Either<Failure, List<ProductTransactionEntity>>>
+  getProductTransactions({required int id});
+  Future<Either<Failure, List<ProductRentalRequestEntity>>>
+  getProductRentalRequests({required int id});
 }

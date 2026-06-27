@@ -46,7 +46,8 @@ class ChatSignalRDataSourceImpl implements ChatSignalRDataSource {
 
   @override
   Future<void> connect(String token) async {
-    if (_connection != null && _connection!.state == HubConnectionState.Connected) {
+    if (_connection != null &&
+        _connection!.state == HubConnectionState.Connected) {
       return;
     }
 
@@ -97,10 +98,7 @@ class ChatSignalRDataSourceImpl implements ChatSignalRDataSource {
     String? productName,
   }) async {
     final connection = _requireConnection();
-    final args = <Object>[
-      sellerId,
-      if (productId != null) productId,
-    ];
+    final args = <Object>[sellerId, if (productId != null) productId];
 
     final result = await connection.invoke(
       'CreateOrGetConversation',
@@ -126,10 +124,7 @@ class ChatSignalRDataSourceImpl implements ChatSignalRDataSource {
     required String message,
   }) async {
     final connection = _requireConnection();
-    await connection.invoke(
-      'SendMessage',
-      args: [conversationId, message],
-    );
+    await connection.invoke('SendMessage', args: [conversationId, message]);
   }
 
   @override
@@ -138,10 +133,7 @@ class ChatSignalRDataSourceImpl implements ChatSignalRDataSource {
     required bool isTyping,
   }) async {
     final connection = _requireConnection();
-    await connection.invoke(
-      'Typing',
-      args: [conversationId, isTyping],
-    );
+    await connection.invoke('Typing', args: [conversationId, isTyping]);
   }
 
   @override
@@ -197,8 +189,14 @@ class ChatSignalRDataSourceImpl implements ChatSignalRDataSource {
         _readFirst(map, const ['conversationId', 'conversation_id', 'chatId']),
         defaultValue: 0,
       );
-      final senderId = _readFirst(map, const ['senderId', 'sender_id', 'userId', 'fromUserId']);
-      final senderName = _readFirst(map, const ['senderName', 'fullName', 'name']) ?? '';
+      final senderId = _readFirst(map, const [
+        'senderId',
+        'sender_id',
+        'userId',
+        'fromUserId',
+      ]);
+      final senderName =
+          _readFirst(map, const ['senderName', 'fullName', 'name']) ?? '';
       final isTyping = _parseBool(
         _readFirst(map, const ['isTyping', 'typing', 'value']),
         defaultValue: true,
@@ -217,7 +215,10 @@ class ChatSignalRDataSourceImpl implements ChatSignalRDataSource {
     final values = arguments ?? const [];
     if (values.isEmpty) return;
 
-    final conversationId = _parseInt(values.elementAtOrNull(0), defaultValue: 0);
+    final conversationId = _parseInt(
+      values.elementAtOrNull(0),
+      defaultValue: 0,
+    );
     final senderId = values.elementAtOrNull(1)?.toString() ?? '';
     final isTyping = values.length > 2
         ? _parseBool(values.elementAtOrNull(2), defaultValue: true)

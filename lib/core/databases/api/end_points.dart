@@ -45,6 +45,8 @@ class EndPoints {
   static const String communityMyOffers = '/api/Community/my-offers';
   static const String communityMyRequestsOffers =
       '/api/Community/my-requests/offers';
+  static String communityRequestOffers(int requestId) =>
+      '/api/Community/requests/$requestId/offers';
   static String communityOfferAction(int offerId, String action) =>
       '/api/Community/offers/$offerId/$action';
 

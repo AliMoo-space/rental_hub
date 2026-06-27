@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rental_hub/core/extensions/localization_extension.dart';
+import 'package:rental_hub/core/styling/app_colors.dart';
 import 'package:rental_hub/core/styling/app_styles.dart';
 import 'package:rental_hub/core/widgets/primary_button_widget.dart';
 import 'package:rental_hub/core/widgets/spacing_widgets.dart';
@@ -71,9 +72,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
         } else {
           if (picked.isBefore(selectedPickupDate)) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('تاريخ الإرجاع يجب أن يكون بعد تاريخ الاستلام'),
-              ),
+              SnackBar(content: Text(context.l10n.returnDateAfterPickup)),
             );
             return;
           }
@@ -87,13 +86,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   Widget build(BuildContext context) {
     int days = selectedDropoffDate.difference(selectedPickupDate).inDays;
     if (days <= 0) days = 1;
-    final double rentalPrice = widget.product.basePricePerDay.toDouble() * days;
-    final double insurancePrice = rentalPrice * 0.1; // Example 10%
-    final double servicePrice = rentalPrice * 0.05; // Example 5%
-    final double totalPrice = rentalPrice + insurancePrice + servicePrice;
-
     return Scaffold(
-      backgroundColor: const Color(0xffF5F6FA),
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         title: Text(context.l10n.bookings, style: AppStyles.titleMedium),
         leading: IconButton(
@@ -113,7 +107,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
               verticalSpacing(24),
 
               // Product Card
-              Text('تفاصيل المنتج', style: AppStyles.titleMedium),
+              Text(context.l10n.productDetails, style: AppStyles.titleMedium),
               verticalSpacing(12),
               BookingItemCardWidget(
                 productName: widget.product.name,
@@ -127,13 +121,13 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
               verticalSpacing(24),
 
               // Dates Selection
-              Text('تحديد التواريخ', style: AppStyles.titleMedium),
+              Text(context.l10n.selectDates, style: AppStyles.titleMedium),
               verticalSpacing(12),
               Row(
                 children: [
                   Expanded(
                     child: _DateTile(
-                      label: 'تاريخ الاستلام',
+                      label: context.l10n.pickupDate,
                       date: selectedPickupDate,
                       onTap: () => _selectDate(context, true),
                     ),
@@ -141,7 +135,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                   horizontalSpacing(12),
                   Expanded(
                     child: _DateTile(
-                      label: 'تاريخ الإرجاع',
+                      label: context.l10n.returnDate,
                       date: selectedDropoffDate,
                       onTap: () => _selectDate(context, false),
                     ),
@@ -151,24 +145,30 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
               verticalSpacing(24),
 
               // Location Form
-              Text('تفاصيل التوصيل / الاستلام', style: AppStyles.titleMedium),
+              Text(context.l10n.deliveryDetails, style: AppStyles.titleMedium),
               verticalSpacing(12),
               CustomTextField(
                 controller: _governorateController,
-                hintText: 'المحافظة',
-                validator: (val) => val == null || val.isEmpty ? 'مطلوب' : null,
+                hintText: context.l10n.governorate,
+                validator: (val) => val == null || val.isEmpty
+                    ? context.l10n.requiredField
+                    : null,
               ),
               verticalSpacing(12),
               CustomTextField(
                 controller: _cityController,
-                hintText: 'المدينة',
-                validator: (val) => val == null || val.isEmpty ? 'مطلوب' : null,
+                hintText: context.l10n.city,
+                validator: (val) => val == null || val.isEmpty
+                    ? context.l10n.requiredField
+                    : null,
               ),
               verticalSpacing(12),
               CustomTextField(
                 controller: _streetController,
-                hintText: 'الشارع / العنوان',
-                validator: (val) => val == null || val.isEmpty ? 'مطلوب' : null,
+                hintText: context.l10n.streetAddress,
+                validator: (val) => val == null || val.isEmpty
+                    ? context.l10n.requiredField
+                    : null,
               ),
               verticalSpacing(24),
 
@@ -186,7 +186,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
               // Next Button
               PrimaryButtonWidget(
                 width: double.infinity,
-                buttonText: 'متابعة',
+                buttonText: context.l10n.continueText,
                 onPress: () {
                   if (_formKey.currentState?.validate() ?? false) {
                     widget.onNextStep?.call(
